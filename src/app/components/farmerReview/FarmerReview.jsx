@@ -1,14 +1,13 @@
 "use client";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-<<<<<<< HEAD
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
 import Image from "next/image";
-=======
->>>>>>> 91ad9e141eacdc0673391068f777da7bc604f98b
+
 const FarmerReview = () => {
   const reviews = [
     {
@@ -98,22 +97,24 @@ const FarmerReview = () => {
             768: { slidesPerView: 3 },
             1024: { slidesPerView: 4 },
           }}
-           autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
-        modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper"
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="mySwiper"
         >
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>
               <div className="bg-white p-4 rounded-2xl shadow flex flex-col items-center justify-between w-full text-center">
-                <img
-                  src="/farmer_user_logo.jpg"
+                <Image
+                  src="/userLogo.jpg"
+                  width={400}
+                  height={400}
                   alt={review.name}
                   className="w-20 h-20 rounded-full object-cover mb-3"
                 />
