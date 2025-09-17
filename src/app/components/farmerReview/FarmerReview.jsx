@@ -6,6 +6,7 @@ import "swiper/css";
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import Image from "next/image";
+
 const FarmerReview = () => {
   const reviews = [
     {
@@ -109,8 +110,9 @@ const FarmerReview = () => {
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>
               <div className="bg-white p-4 rounded-2xl shadow flex flex-col items-center justify-between w-full text-center">
+
                 <Image
-                  src="/userLogo.jpg"
+                  src="/userLogo.jpg"    
                   alt={review.name}
                   className="w-20 h-20 rounded-full object-cover mb-3"
                 />
