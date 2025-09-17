@@ -232,7 +232,7 @@ const Consultation = () => {
               >
                 {/* Avatar */}
                 <div className="w-20 h-20 bg-green-100 rounded-full border-4 border-white -mt-12 flex items-center justify-center text-2xl font-bold text-green-700 mb-4">
-                  {doctor.name[2]} {/* শুধু নামের একটি অক্ষর দেখাবে */}
+                  <Image src='/farmer_user_logo.jpg' width={80} height={80} className="rounded-full h-auto " alt="farmer_logo"/>
                 </div>
 
                 {/* Name */}
