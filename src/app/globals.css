@@ -3,8 +3,7 @@
 :root {
   --primary-color: #4CAF50; /* Main green */
   --secondary-color: #FFC107; /* Accent yellow */
-  --font-primary: 'Poppins', sans-serif;
-  --font-secondary: 'Hind Siliguri', sans-serif;
+  --font-primary: 'Hind Siliguri', sans-serif;
 }
 
 /* Apply globally */
@@ -25,12 +24,8 @@ button {
 ---------------------------------*/
 
 /* Font classes */
-.font-primary {
+.font-hind {
   font-family: var(--font-primary);
-}
-
-.font-secondary {
-  font-family: var(--font-secondary);
 }
 
 /* Color classes */
