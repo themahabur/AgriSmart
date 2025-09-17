@@ -3,6 +3,7 @@ import "./globals.css";
 import QuickAccess from "./components/QuickAccess/QuickAccess";
 import Feature from "./components/feature/Feature";
 import Consultation from "./components/consultation/Consultation";
+import FarmerReview from "./components/farmerReview/FarmerReview";
 
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
       {/* feature section */}
       <Feature />
       <Consultation/>
+      <FarmerReview/>
     </div>
   );
 }
