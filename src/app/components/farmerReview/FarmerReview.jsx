@@ -1,7 +1,10 @@
 "use client";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import "swiper/css";
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 const FarmerReview = () => {
   const reviews = [
     {
@@ -91,6 +94,16 @@ const FarmerReview = () => {
             768: { slidesPerView: 3 },
             1024: { slidesPerView: 4 },
           }}
+           autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Autoplay, Pagination, Navigation]}
+        className="mySwiper"
         >
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>
