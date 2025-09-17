@@ -212,14 +212,14 @@ const Consultation = () => {
   return (
     <section className="py-12 bg-green-100">
       <div className=" max-w-6xl mx-auto">
-        <div className="text-center mb-5 text-primary font-bold text-2xl md:text-3xl">
+        <div className=" -mb-5 text-primary font-bold text-2xl md:text-3xl mt-5">
           <h1>অভিজ্ঞ বিশেষজ্ঞদের পরামর্শ নিন,</h1>
           <h1>অধিক শস্য ঘরে তুলুন।</h1>
         </div>
         <div className="lg:grid lg:grid-cols-3">
           <div className="lg:col-span-1 flex justify-center items-center">
             <Image
-              src="/consultaion (2).png"
+              src="/consultaion.png"
               width={400}
               height={450}
               alt="consultaion_avater"
@@ -232,8 +232,8 @@ const Consultation = () => {
                 className="bg-white rounded-2xl shadow-lg p-3 flex flex-col items-center text-center hover:shadow-xl transition mt-4 "
               >
                 {/* Avatar */}
-                <div className="w-20 h-20 bg-green-100 rounded-full border -mt-12 flex items-center justify-center text-2xl font-bold text-green-700 mb-4">
-                  {doctor.name[2]} {/* শুধু নামের একটি অক্ষর দেখাবে */}
+                <div className="w-20 h-20 bg-green-100 rounded-full border-4 border-white -mt-12 flex items-center justify-center text-2xl font-bold text-green-700 mb-4">
+                  <Image src='/farmer_user_logo.jpg' width={80} height={80} className="rounded-full h-auto " alt="farmer_logo"/>
                 </div>
 
                 {/* Name */}
