@@ -6,9 +6,14 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [language, setLanguage] = useState("EN");
 
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
+  };
+
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === "EN" ? "BN" : "EN"));
   };
 
   const links = [
@@ -41,43 +46,57 @@ export default function Navbar() {
           </div>
           <div className="font-hind">অ্যাগ্রি স্মার্ট</div>
         </div>
+        <div className="flex justify-between items-center gap-6">
+          {/* Main Links */}
+          <ul className="hidden md:flex gap-6 text-gray-700 font-medium font-hind">
+            {links.map((link) =>
+              link.name === "সেবাসমূহ" ? (
+                <li key={link.name} className="relative">
+                  <button
+                    onClick={() => toggleDropdown("services")}
+                    className="flex items-center gap-1 hover:text-green-600"
+                  >
+                    {link.name} <IoMdArrowDropdown />
+                  </button>
 
-        {/* Main Links */}
-        <ul className="hidden md:flex gap-6 text-gray-700 font-medium font-hind">
-          {links.map((link) =>
-            link.name === "সেবাসমূহ" ? (
-              <li key={link.name} className="relative">
-                <button
-                  onClick={() => toggleDropdown("services")}
-                  className="flex items-center gap-1 hover:text-green-600"
-                >
-                  {link.name} <IoMdArrowDropdown />
-                </button>
-
-                {activeDropdown === "services" && (
-                  <ul className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
-                    {services.map((service) => (
-                      <li key={service.name}>
-                        <Link
-                          href={service.href}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                          {service.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ) : (
-              <li key={link.name}>
-                <Link href={link.href} className="hover:text-green-600">
-                  {link.name}
-                </Link>
-              </li>
-            )
-          )}
-        </ul>
+                  {activeDropdown === "services" && (
+                    <ul className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
+                      {services.map((service) => (
+                        <li key={service.name}>
+                          <Link
+                            href={service.href}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          >
+                            {service.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ) : (
+                <li key={link.name}>
+                  <Link href={link.href} className="hover:text-green-600">
+                    {link.name}
+                  </Link>
+                </li>
+              )
+            )}
+          </ul>
+          {/* Language and login button */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleLanguage}
+              className="px-4 py-1 rounded-md border border-green-600 text-green-600 hover:bg-[#33ac3d] hover:text-white transition"
+            >
+              {" "}
+              {language === "EN" ? "বাংলা" : "English"}{" "}
+            </button>
+            <Link  href={"login"} className="px-4 py-1 rounded-md bg-[#33ac3d] text-white hover:bg-[#259e2f] hover:text-white transition font-hind">
+              লগইন
+            </Link>
+          </div>
+        </div>
       </div>
     </nav>
   );
