@@ -209,14 +209,14 @@ const Consultation = () => {
   ];
 
   return (
-    <section className="py-12 bg-green-200">
+    <section className="py-12 bg-green-100">
       <div className=" max-w-6xl mx-auto">
         <div className="text-center mb-5 text-primary font-bold text-2xl md:text-3xl">
           <h1>অভিজ্ঞ বিশেষজ্ঞদের পরামর্শ নিন,</h1>
           <h1>অধিক শস্য ঘরে তুলুন।</h1>
         </div>
-        <div className="grid md:grid-cols-3">
-          <div className="col-span-1 flex justify-center items-center">
+        <div className="lg:grid lg:grid-cols-3">
+          <div className="lg:col-span-1 flex justify-center items-center">
             <Image
               src="/consultaion (2).png"
               width={400}
@@ -224,7 +224,7 @@ const Consultation = () => {
               alt="consultaion_avater"
             />
           </div>
-          <div className="col-span-2 grid md:grid-cols-3 gap-6 p-6 ">
+          <div className=" lg:col-span-2 grid sm:grid-cols-2 md:grid-cols-3 gap-6 p-6 ">
             {consultations.map((doctor) => (
               <div
                 key={doctor.id}
