@@ -2,6 +2,7 @@ import Image from "next/image";
 import "./globals.css";
 import QuickAccess from "./components/QuickAccess/QuickAccess";
 import Feature from "./components/feature/Feature";
+import Consultation from "./components/consultation/Consultation";
 
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
 
       {/* feature section */}
       <Feature />
+      <Consultation/>
     </div>
   );
 }
