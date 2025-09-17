@@ -3,11 +3,13 @@ import "./globals.css";
 import QuickAccess from "./components/QuickAccess/QuickAccess";
 import Feature from "./components/feature/Feature";
 import Consultation from "./components/consultation/Consultation";
+import Navbar from "./components/navbar/Navbar";
 
 
 export default function Home() {
   return (
     <div>
+      <Navbar/>
       <h1 className="text-3xl font-bold text-primary">Welcome to Next.js!</h1>
       <p className="text-lg text-hind">অসাধারণ টিউটোরিয়ালস</p>
       <QuickAccess />

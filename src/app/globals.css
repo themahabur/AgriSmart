@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --primary-color: #4CAF50; /* Main green */
-  --secondary-color: #FFC107; /* Accent yellow */
-  --font-primary: 'Hind Siliguri', sans-serif;
+  --primary-color: #4caf50; /* Main green */
+  --secondary-color: #ffc107; /* Accent yellow */
+  --font-primary: "Hind Siliguri", sans-serif;
 }
 
 /* Apply globally */
@@ -17,7 +17,6 @@ body {
   color: #fff;
   font-family: var(--font-primary);
 }
-
 
 /* -------------------------------
    Custom Classes for easy usage
