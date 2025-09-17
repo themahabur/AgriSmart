@@ -218,7 +218,7 @@ const Consultation = () => {
         <div className="lg:grid lg:grid-cols-3">
           <div className="lg:col-span-1 flex justify-center items-center">
             <Image
-              src="/consultaion (2).png"
+              src="/consultaion.png"
               width={400}
               height={450}
               alt="consultaion_avater"
