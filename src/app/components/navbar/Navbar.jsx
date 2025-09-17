@@ -1,14 +1,29 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 export default function Navbar() {
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const toggleDropdown = (menu) => {
+    setActiveDropdown(activeDropdown === menu ? null : menu);
+  };
+
   const links = [
     { name: "হোম", href: "/" },
-    { name: "সেবাসমূহ", href: "/services" },
+    { name: "সেবাসমূহ", href: "#" },
     { name: "বাজার মূল্য", href: "/market-price" },
     { name: "আবহাওয়া", href: "/weather" },
     { name: "ব্লগ", href: "/blogs" },
     { name: "যোগাযোগ", href: "/contact" },
+  ];
+
+  const services = [
+    { name: "ফসল ব্যবস্থাপনা", href: "/services/crop" },
+    { name: "পশুপালন", href: "/services/livestock" },
+    { name: "জলসম্পদ", href: "/services/water" },
   ];
 
   return (
@@ -27,17 +42,42 @@ export default function Navbar() {
           <div className="font-hind">অ্যাগ্রি স্মার্ট</div>
         </div>
 
-        <div>
-          <ul className="hidden md:flex gap-6 text-gray-700 font-medium font-hind">
-            {links.map((link) => (
+        {/* Main Links */}
+        <ul className="hidden md:flex gap-6 text-gray-700 font-medium font-hind">
+          {links.map((link) =>
+            link.name === "সেবাসমূহ" ? (
+              <li key={link.name} className="relative">
+                <button
+                  onClick={() => toggleDropdown("services")}
+                  className="flex items-center gap-1 hover:text-green-600"
+                >
+                  {link.name} <IoMdArrowDropdown />
+                </button>
+
+                {activeDropdown === "services" && (
+                  <ul className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
+                    {services.map((service) => (
+                      <li key={service.name}>
+                        <Link
+                          href={service.href}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        >
+                          {service.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ) : (
               <li key={link.name}>
                 <Link href={link.href} className="hover:text-green-600">
                   {link.name}
                 </Link>
               </li>
-            ))}
-          </ul>
-        </div>
+            )
+          )}
+        </ul>
       </div>
     </nav>
   );
