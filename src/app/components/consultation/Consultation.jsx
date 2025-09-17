@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 const Consultation = () => {
@@ -206,7 +207,58 @@ const Consultation = () => {
     },
   ];
 
-  return <div>Hello</div>;
+  return (
+    <div className="py-12 bg-green-200">
+      <div className="text-center mb-5 text-primary font-bold text-2xl md:text-3xl">
+        <h1>অভিজ্ঞ বিশেষজ্ঞদের পরামর্শ নিন,</h1>
+        <h1>অধিক শস্য ঘরে তুলুন।</h1>
+      </div>
+      <div className="grid md:grid-cols-3">
+        <div className="col-span-1"></div>
+        <div className="col-span-2 grid md:grid-cols-3 gap-6 p-6 ">
+          {consultations.map((doctor) => (
+            <div
+              key={doctor.id}
+              className="bg-white rounded-2xl shadow-lg p-3 flex flex-col items-center text-center hover:shadow-xl transition mt-4 "
+            >
+              {/* Avatar */}
+              <div className="w-20 h-20 bg-green-100 rounded-full border -mt-12 flex items-center justify-center text-2xl font-bold text-green-700 mb-4">
+                {doctor.name[2]} {/* শুধু নামের একটি অক্ষর দেখাবে */}
+              </div>
+
+              {/* Name */}
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                {doctor.name}
+              </h2>
+
+              {/* Expertise Types */}
+              <p className="text-sm text-gray-600 mb-2">
+                <span className="font-medium">বিশেষজ্ঞতা:</span>{" "}
+                {doctor.expertise.map((e) => e.type).join(", ")}
+              </p>
+
+              {/* Experience */}
+              <p className="text-sm text-gray-600 mb-2">
+                <span className="font-medium">অভিজ্ঞতা:</span>{" "}
+                {doctor.extraInfo.experience}
+              </p>
+
+              {/* Consultation Types */}
+              <p className="text-sm text-gray-600 mb-4">
+                <span className="font-medium">পরামর্শের ধরণ:</span>{" "}
+                {doctor.features.consultationType.join(", ")}
+              </p>
+
+              {/* Button */}
+              <button className="mt-auto px-4 py-2 btn hover:btn-primary rounded-xl hover:bg-green-800 transition">
+                বিস্তারিত দেখুন
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Consultation;

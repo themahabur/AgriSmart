@@ -12,7 +12,7 @@ body {
 }
 
 /* Buttons */
-button {
+.button {
   background-color: var(--primary-color);
   color: #fff;
   font-family: var(--font-primary);
