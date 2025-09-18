@@ -1,4 +1,5 @@
 import React from "react";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 
 const FooterTop = () => {
   return (
@@ -16,7 +17,12 @@ const FooterTop = () => {
           <a href="#">সেমিনার করুন</a>
           <a href="#">যোগাযোগ</a>
         </div>
-        
+        <div className="flex space-x-4 text-green-600 mt-4 md:mt-0">
+          <FaFacebookF className="cursor-pointer hover:text-green-800" />
+          <FaInstagram className="cursor-pointer hover:text-green-800" />
+          <FaYoutube className="cursor-pointer hover:text-green-800" />
+          <FaLinkedinIn className="cursor-pointer hover:text-green-800" />
+        </div>
       </div>
     </div>
   );
