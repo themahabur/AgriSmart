@@ -11,7 +11,7 @@ const FooterTop = () => {
           </div>
           <h2 className="text-xl font-semibold text-green-700">AgriSmart</h2>
         </div>
-        <div className="flex space-x-6 text-gray-700 font-medium mt-4 md:mt-0">
+        <div className="flex space-x-4 text-gray-700  mt-4 md:mt-0">
           <a href="#">ডিরেক্টরি ইন্টেন</a>
           <a href="#">পরিচালক ফেসবুক গ্রুপ</a>
           <a href="#">সেমিনার করুন</a>
