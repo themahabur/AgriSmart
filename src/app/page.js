@@ -6,6 +6,7 @@ import Banner from "./components/Banner/Banner";
 import CallToAction from "./components/CallToAction/CallToAction";
 import FarmerReview from "./components/farmerReview/FarmerReview";
 import Navbar from "./components/navbar/Navbar";
+import Fqa from "./components/FQA/Fqa";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <Feature />
       <Consultation />
       <FarmerReview />
+      <Fqa/>
     </div>
   );
 }
