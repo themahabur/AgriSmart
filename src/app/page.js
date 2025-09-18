@@ -10,12 +10,7 @@ import Navbar from "./components/navbar/Navbar";
 export default function Home() {
   return (
     <div>
-      <Navbar />
-      <h1 className="text-3xl font-bold text-primary">Welcome to Next.js!</h1>
-      <p className="text-lg text-hind">অসাধারণ টিউটোরিয়ালস</p>
-      <h1 className="text-3xl mx-auto font-bold text-primary">
-        Welcome to Next.js!
-      </h1>
+      <Navbar/>
       <Banner></Banner>
       <CallToAction></CallToAction>
       <QuickAccess />
