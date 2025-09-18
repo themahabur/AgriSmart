@@ -109,11 +109,11 @@ const FarmerReview = () => {
         >
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>
-              <div className="bg-white p-4 rounded-2xl shadow flex flex-col items-center justify-between w-full text-center">
+              <div className="bg-white p-4 rounded-2xl shadow flex flex-col items-center justify-between w-full text-center min-h-[300px]">
                 <Image
                   src="/userLogo.jpg"
-                  width={500}
-                  height={500}
+                  width={400}
+                  height={400}
                   alt={review.name}
                   className="w-20 h-20 rounded-full object-cover mb-3"
                 />
