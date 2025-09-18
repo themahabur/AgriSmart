@@ -6,16 +6,12 @@ import Banner from "./components/Banner/Banner";
 import CallToAction from "./components/CallToAction/CallToAction";
 import FarmerReview from "./components/farmerReview/FarmerReview";
 import Navbar from "./components/navbar/Navbar";
+import Fqa from "./components/FQA/Fqa";
 
 export default function Home() {
   return (
     <div>
-      <Navbar />
-      <h1 className="text-3xl font-bold text-primary">Welcome to Next.js!</h1>
-      <p className="text-lg text-hind">অসাধারণ টিউটোরিয়ালস</p>
-      <h1 className="text-3xl mx-auto font-bold text-primary">
-        Welcome to Next.js!
-      </h1>
+      <Navbar/>
       <Banner></Banner>
       <CallToAction></CallToAction>
       <QuickAccess />
@@ -24,6 +20,7 @@ export default function Home() {
       <Feature />
       <Consultation />
       <FarmerReview />
+      <Fqa/>
     </div>
   );
 }
