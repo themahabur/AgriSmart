@@ -253,12 +253,6 @@ const Consultation = () => {
                   {doctor.extraInfo.experience}
                 </p>
 
-                {/* Consultation Types */}
-                {/* <p className="text-sm text-gray-600 mb-4">
-                <span className="font-medium">পরামর্শের ধরণ:</span>{" "}
-                {doctor.features.consultationType.join(", ")}
-              </p> */}
-
                 {/* Button */}
                 <button className="mt-auto px-4 py-2 btn hover:btn-primary rounded-xl hover:bg-green-800 transition">
                   বিস্তারিত দেখুন
