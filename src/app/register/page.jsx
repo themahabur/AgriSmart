@@ -4,20 +4,21 @@ import React from "react";
 const Register = () => {
   return (
     <div className="min-h-screen bg-green-300 flex justify-center items-center">
-      <div className=" grid md:grid-cols-3 bg-white rounded-2xl max-w-6xl mx-auto">
+      <div className=" grid md:grid-cols-5 bg-white rounded-2xl max-w-6xl mx-auto">
         {/* left side */}
-        <div className="relative col-span-2 bg-gradient-to-bl from-green-400 to bg-white">
+        <div className="relative col-span-3 bg-gradient-to-bl from-green-400 to bg-white rounded-l-2xl">
           <Image
             src="/logo.webp"
             width={70}
             height={70}
             alt="AgriSmart Logo"
-            className="absolute top-0 left-0"
+            className="absolute top-0 left-0 rounded-[8px]"
           />
           <Image src="/tree.png" width={600} height={600} alt="registerImage" />
         </div>
         {/* Right side */}
-        <div className="w-[400px] mx-auto  p-10 col-span-1">
+        <div className="w-[400px] mx-auto  p-10 col-span-2">
+            <h1 className="text-2xl md:text-3xl text-primary font-bold">Please Register Here</h1>
           <form>
             {/* name */}
 
@@ -74,6 +75,7 @@ const Register = () => {
                 className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-200"
               />
             </div>
+            <button className=" font-semibold border-[2px] border-green-600 hover:bg-green-500 hover:text-white w-full rounded-full py-2 transition-all duration-500">Register</button>
           </form>
         </div>
       </div>
