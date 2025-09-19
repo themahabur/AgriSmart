@@ -18,14 +18,15 @@ export default function Navbar() {
     setLanguage((prev) => (prev === "EN" ? "BN" : "EN"));
   };
 
-  const links = [
-    { name: "হোম", href: "/" },
-    { name: "সেবাসমূহ", href: "#" },
-    { name: "বাজার মূল্য", href: "/market-price" },
-    { name: "আবহাওয়া", href: "/weather" },
-    { name: "ব্লগ", href: "/blogs" },
-    { name: "যোগাযোগ", href: "/contact" },
-  ];
+const links = [
+  { name: "হোম", href: "/" },
+  { name: "সেবাসমূহ", href: "#" },
+  { name: "বাজার মূল্য", href: "/market-price" },
+  { name: "আবহাওয়া", href: "/weather" },
+  { name: "ব্লগ", href: "/blogs" },
+  { name: "আমাদের সম্পর্কে", href: "/about" }, 
+  { name: "যোগাযোগ", href: "/contact" },
+];
 
   const services = [
     { name: "ফসল ব্যবস্থাপনা", href: "/services/crop" },

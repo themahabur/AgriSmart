@@ -5,13 +5,11 @@ import Consultation from "./components/consultation/Consultation";
 import Banner from "./components/Banner/Banner";
 import CallToAction from "./components/CallToAction/CallToAction";
 import FarmerReview from "./components/farmerReview/FarmerReview";
-import Navbar from "./components/navbar/Navbar";
 import Fqa from "./components/FQA/Fqa";
 
 export default function Home() {
   return (
     <div>
-      <Navbar/>
       <Banner></Banner>
       <CallToAction></CallToAction>
       <QuickAccess />
