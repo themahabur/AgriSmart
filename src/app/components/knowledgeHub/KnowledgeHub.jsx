@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import LayoutBox from "../shared/layoutBox/LayoutBox";
 
 // Sample Data
@@ -57,6 +58,8 @@ const featuredPost = filteredPosts[0];
 const otherPosts = filteredPosts.slice(1, 4); // Show up to 3 other posts
 
 const KnowledgeHub = () => {
+  const [activeCategory, setActiveCategory] = useState("সব");
+
   return (
     <LayoutBox>
       <section id="knowledge-hub">
