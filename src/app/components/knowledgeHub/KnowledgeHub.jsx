@@ -1,6 +1,8 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
+import { FaPlay } from "react-icons/fa";
 import LayoutBox from "../shared/layoutBox/LayoutBox";
+import KnowledgeFilterButtons from "./KnowledgeFilterButtons";
 
 // Sample Data
 const allPosts = [
@@ -46,19 +48,19 @@ const allPosts = [
   },
 ];
 
-// sample categories
+// Categories for filtering
 const categories = ["সব", "রোগবালাই", "নতুন প্রযুক্তি", "পরামর্শ"];
-
-const filteredPosts =
-  activeCategory === "সব"
-    ? allPosts
-    : allPosts.filter((post) => post.category === activeCategory);
-
-const featuredPost = filteredPosts[0];
-const otherPosts = filteredPosts.slice(1, 4); // Show up to 3 other posts
 
 const KnowledgeHub = () => {
   const [activeCategory, setActiveCategory] = useState("সব");
+
+  const filteredPosts =
+    activeCategory === "সব"
+      ? allPosts
+      : allPosts.filter((post) => post.category === activeCategory);
+
+  const featuredPost = filteredPosts[0];
+  const otherPosts = filteredPosts.slice(1, 4); // Show up to 3 other posts
 
   return (
     <LayoutBox>
@@ -78,17 +80,11 @@ const KnowledgeHub = () => {
         {/* Filter Buttons */}
         <div className="flex justify-center flex-wrap gap-3 mb-10">
           {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`btn font-hind text-sm ${
-                activeCategory === category
-                  ? "btn-primary"
-                  : "bg-white text-gray-700 hover:bg-gray-200 border border-gray-300"
-              }`}
-            >
-              {category}
-            </button>
+            <KnowledgeFilterButtons
+              category={category}
+              setActiveCategory={setActiveCategory}
+              activeCategory={activeCategory}
+            />
           ))}
         </div>
 
@@ -155,16 +151,16 @@ const KnowledgeHub = () => {
               </a>
             ))}
           </div>
+        </div>
 
-          {/* View All Button */}
-          <div className="text-center mt-16">
-            <a
-              href="/blogs"
-              className="btn btn-primary text-lg hover:bg-secondary hover:text-black"
-            >
-              সব টিউটোরিয়াল ও ব্লগ দেখুন
-            </a>
-          </div>
+        {/* View All Button */}
+        <div className="text-center mt-16">
+          <a
+            href="/blogs"
+            className="btn btn-primary text-lg hover:bg-secondary hover:text-black"
+          >
+            সব টিউটোরিয়াল ও ব্লগ দেখুন
+          </a>
         </div>
       </section>
     </LayoutBox>
