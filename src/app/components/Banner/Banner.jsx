@@ -22,7 +22,7 @@ const Banner = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center">
+            <button className="bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center">
               <span>শুরু করুন</span>
               <svg
                 className="w-5 h-5 ml-2"
@@ -39,7 +39,7 @@ const Banner = () => {
                 ></path>
               </svg>
             </button>
-            <button className="border-2 border-green-600 text-green-600 hover:bg-green-50 font-semibold py-3 px-8 rounded-lg transition-all duration-300 flex items-center justify-center">
+            <button className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white  font-semibold py-3 px-8 rounded-full transition-all duration-300 flex items-center justify-center">
               <span>আরও জানুন</span>
               <svg
                 className="w-5 h-5 ml-2"
