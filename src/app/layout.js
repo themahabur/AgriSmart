@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import Footer from "./components/footer/Footer";
+import Navbar from "./components/navbar/Navbar";
 
 
 const hindSiliguri = Hind_Siliguri({
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`antialiased ${hindSiliguri.variable}`}
       >
+        <Navbar/>
         {children}
         <Footer/>
       </body>
