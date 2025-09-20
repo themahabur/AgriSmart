@@ -18,14 +18,15 @@ export default function Navbar() {
     setLanguage((prev) => (prev === "EN" ? "BN" : "EN"));
   };
 
-  const links = [
-    { name: "হোম", href: "/" },
-    { name: "সেবাসমূহ", href: "#" },
-    { name: "বাজার মূল্য", href: "/market-price" },
-    { name: "আবহাওয়া", href: "/weather" },
-    { name: "ব্লগ", href: "/blogs" },
-    { name: "যোগাযোগ", href: "/contact" },
-  ];
+const links = [
+  { name: "হোম", href: "/" },
+  { name: "সেবাসমূহ", href: "#" },
+  { name: "বাজার মূল্য", href: "/market-price" },
+  { name: "আবহাওয়া", href: "/weather" },
+  { name: "ব্লগ", href: "/blogs" },
+  { name: "আমাদের সম্পর্কে", href: "/about" }, 
+  { name: "যোগাযোগ", href: "/contact" },
+];
 
   const services = [
     { name: "ফসল ব্যবস্থাপনা", href: "/services/crop" },
@@ -87,13 +88,13 @@ export default function Navbar() {
           <li className="flex items-center gap-3">
             <button
               onClick={toggleLanguage}
-              className="px-4 py-1 rounded-md border border-green-600 text-green-600 hover:bg-[#33ac3d] hover:text-white transition"
+              className="px-4 py-1 rounded-full border border-green-600 text-green-600 hover:bg-green-600  hover:text-white transition"
             >
-              {language === "EN" ? "বাংলা" : "English"}
+              {language === "BN" ? "বাংলা" : "English"}
             </button>
             <Link
               href={"login"}
-              className="px-4 py-1 rounded-md bg-[#33ac3d] text-white hover:bg-[#259e2f] transition font-hind"
+              className="px-4 py-1 rounded-full bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:bg-[#259e2f] transition font-hind"
             >
               লগইন
             </Link>
@@ -151,13 +152,13 @@ export default function Navbar() {
           <div className="flex gap-3 mt-2">
             <button
               onClick={toggleLanguage}
-              className="px-4 py-1 rounded-md border border-green-600 text-green-600 hover:bg-[#33ac3d] hover:text-white transition"
+              className="px-4 py-1 rounded-full border border-green-600 text-green-600 hover:bg-[#33ac3d] hover:text-white transition"
             >
               {language === "EN" ? "বাংলা" : "English"}
             </button>
             <Link
               href={"login"}
-              className="px-4 py-1 rounded-md bg-[#33ac3d] text-white hover:bg-[#259e2f] transition font-hind"
+              className="px-4 py-1 rounded-full bg-[#33ac3d] text-white hover:bg-[#259e2f] transition font-hind"
             >
               লগইন
             </Link>
