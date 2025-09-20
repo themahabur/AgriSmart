@@ -48,6 +48,13 @@ const allPosts = [
 // sample categories
 const categories = ["সব", "রোগবালাই", "নতুন প্রযুক্তি", "পরামর্শ"];
 
+const filteredPosts =
+  activeCategory === "সব"
+    ? allPosts
+    : allPosts.filter((post) => post.category === activeCategory);
+
+const featuredPost = filteredPosts[0];
+
 const KnowledgeHub = () => {
   return (
     <LayoutBox>
@@ -79,6 +86,39 @@ const KnowledgeHub = () => {
               {category}
             </button>
           ))}
+        </div>
+
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          {/* Featured Post (Left) */}
+          {featuredPost && (
+            <div className="group cursor-pointer bg-white border border-gray-200 rounded-2xl  hover:shadow-lg transition-shadow ">
+              <a href={featuredPost.link} className="block">
+                <div className="relative  overflow-hidden rounded-xl shadow-lg">
+                  <img
+                    src={featuredPost.thumbnail}
+                    alt={featuredPost.title}
+                    className="w-full h-auto aspect-video object-cover transform transition-transform duration-500 group-hover:scale-110"
+                  />
+                  {featuredPost.type === "video" && (
+                    <div className="absolute inset-0  bg-opacity-30 flex items-center justify-center">
+                      <div className="bg-primary bg-opacity-80 rounded-full h-16 w-16 flex items-center justify-center">
+                        <FaPlay className="text-white text-2xl" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <span className="inline-block bg-secondary text-black text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                    {featuredPost.category}
+                  </span>
+                  <h3 className="text-2xl font-bold font-hind text-gray-900 group-hover:text-primary transition-colors">
+                    {featuredPost.title}
+                  </h3>
+                </div>
+              </a>
+            </div>
+          )}
         </div>
       </section>
     </LayoutBox>
