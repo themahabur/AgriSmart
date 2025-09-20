@@ -8,7 +8,7 @@ const Register = () => {
       <div className=" md:grid md:grid-cols-2 lg:grid-cols-5 bg-white rounded-2xl md:max-w-6xl mx-auto w-full">
         {/* left side */}
         <div className="relative lg:col-span-3 bg-gradient-to-l from-green-200 to bg-white rounded-l-2xl">
-          <Link href='/' className=" p-5">
+          <Link href="/" className=" p-5">
             <Image
               src="/logo.webp"
               width={70}
@@ -17,25 +17,31 @@ const Register = () => {
               className="absolute top-0 left-0 rounded-[8px] "
             />
           </Link>
-          <Image src="/tree.png" width={600} height={600} alt="registerImage" className="hidden md:block"/>
+          <Image
+            src="/tree.png"
+            width={600}
+            height={600}
+            alt="registerImage"
+            className="hidden md:block"
+          />
         </div>
         {/* Right side */}
         <div className="md:w-full mx-auto  p-8 lg:col-span-2">
           <h1 className="text-2xl md:text-3xl text-primary font-bold">
-            Please Register Here
+            এখানে একটি অ্যাকাউন্ট খুলুন ।
           </h1>
           <form className="w-full">
             {/* name */}
 
             <div className="my-5">
               <div className="flex ">
-                <label>Enter Your Full Name Here -</label>
+                <label>আপনার পুরা নাম লেখুন</label>
                 <div className="border-b-[1.5px] -rounded-br-2xl border-dotted  flex-1"></div>
               </div>
               <input
                 type="text"
                 name="name"
-                placeholder="enter your full name"
+                placeholder="উদাহরণ : রহিম মিয়া"
                 className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300"
               />
             </div>
@@ -43,13 +49,13 @@ const Register = () => {
             {/* photo url */}
             <div className="my-5">
               <div className="flex ">
-                <label>Enter Your Photo URL Here -</label>
+                <label>আপনার প্রোফাইল ছবির লিংক দিন ।</label>
                 <div className="border-b-[1.5px] -rounded-br-2xl border-dotted  flex-1"></div>
               </div>
               <input
                 type="url"
                 name="url"
-                placeholder="ljshZoXh/er80fv/?lopsf..."
+                placeholder=" উদাহরণ : ljshZoXh/er80fv/?lopsf..."
                 className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300"
               />
             </div>
@@ -57,34 +63,39 @@ const Register = () => {
             {/* email */}
             <div className="my-5">
               <div className="flex ">
-                <label>Enter Your Valid Email -</label>
+                <label>আপনার ই-মেইল ঠিকানা লিখুন ।</label>
                 <div className="border-b-[1.5px] -rounded-br-2xl border-dotted  flex-1"></div>
               </div>
               <input
                 type="email"
                 name="email"
-                placeholder="info@gmail.com"
+                placeholder="উদাহরণ : info@gmail.com"
                 className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300"
               />
             </div>
             {/* password */}
             <div className="my-5">
               <div className="flex ">
-                <label>Add your Password -</label>
+                <label>আপনার পাসওর্য়াড সেট করুণ</label>
                 <div className="border-b-[1.5px] -rounded-br-2xl border-dotted  flex-1"></div>
               </div>
               <input
                 type="password"
                 name="password"
-                placeholder="password (e.g. !zdA?34Z..)"
-                className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300"
-              />
+                placeholder="উদাহরণ :  !zdA?34Z.."
+                className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300" />
             </div>
             <button className=" font-semibold border-[2px] border-green-600 hover:bg-green-500 hover:text-white w-full rounded-full py-2 transition-all duration-500">
-              Register
+              অ্যাকাউন্ট খুলুন
             </button>
           </form>
-          <p className="mt-2 text-sm">Already have an account? Please <Link className="text-blue-500 hover:text-green-700" href="#">Login here</Link> .</p>
+          <p className="mt-2 text-sm">
+            ইতিমধ্যে আপনার একটি অ্যাকাউন্ট আছে ? দয়া করে{" "}
+            <Link className="text-blue-500 hover:text-green-700" href="#">
+              এখানে লগইন করুণ
+            </Link>{" "}
+            ।
+          </p>
         </div>
       </div>
     </div>
