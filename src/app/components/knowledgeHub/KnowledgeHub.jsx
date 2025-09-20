@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import LayoutBox from "../shared/layoutBox/LayoutBox";
 import KnowledgeFilterButtons from "./KnowledgeFilterButtons";
 import KnowledgePost from "./KnowledgePost";
-import { FaPlay } from "react-icons/fa";
 import OtherPosts from "./OtherPosts";
 
 // Sample Data
