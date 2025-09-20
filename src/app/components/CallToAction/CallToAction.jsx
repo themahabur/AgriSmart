@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+import React from "react";
+import SecondaryBtn from "../shared/buttons/SecondaryBtn";
 
 const CallToAction = () => {
   return (
@@ -7,7 +9,7 @@ const CallToAction = () => {
         <div className="text-center mb-12">
           {/* Section title */}
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-6">
-            রূপান্তর করুন তোমার <span className="text-green-600">কৃষিকাজ</span>{' '}
+            রূপান্তর করুন তোমার <span className="text-green-600">কৃষিকাজ</span>{" "}
             যাত্রা
           </h2>
 
@@ -38,24 +40,7 @@ const CallToAction = () => {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
-          <button className="group relative bg-gradient-to-r from-green-600 to-emerald-700 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center min-w-[200px]">
-            <span>বিনামূল্যে ট্রায়াল শুরু করুন</span>
-            <svg
-              className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              ></path>
-            </svg>
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-700 to-emerald-800 opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
-          </button>
+          <SecondaryBtn>বিনামূল্যে ট্রায়াল শুরু করুন</SecondaryBtn>
 
           <button className="group border-2 border-green-600 text-green-600 font-bold py-4 px-8 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 flex items-center justify-center min-w-[200px]">
             <span>ডেমো দেখুন</span>
