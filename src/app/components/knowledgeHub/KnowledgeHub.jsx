@@ -63,6 +63,23 @@ const KnowledgeHub = () => {
             জানুন।
           </p>
         </div>
+
+        {/* Filter Buttons */}
+        <div className="flex justify-center flex-wrap gap-3 mb-10">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`btn font-hind text-sm ${
+                activeCategory === category
+                  ? "btn-primary"
+                  : "bg-white text-gray-700 hover:bg-gray-200 border border-gray-300"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
       </section>
     </LayoutBox>
   );
