@@ -152,6 +152,16 @@ const KnowledgeHub = () => {
               </a>
             ))}
           </div>
+
+          {/* View All Button */}
+          <div className="text-center mt-16">
+            <a
+              href="/blogs"
+              className="btn btn-primary text-lg hover:bg-secondary hover:text-black"
+            >
+              সব টিউটোরিয়াল ও ব্লগ দেখুন
+            </a>
+          </div>
         </div>
       </section>
     </LayoutBox>
