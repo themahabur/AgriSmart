@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { FaPlay } from "react-icons/fa";
 import LayoutBox from "../shared/layoutBox/LayoutBox";
 import KnowledgeFilterButtons from "./KnowledgeFilterButtons";
+import KnowledgePost from "./KnowledgePost";
+import { FaPlay } from "react-icons/fa";
+import OtherPosts from "./OtherPosts";
 
 // Sample Data
 const allPosts = [
@@ -59,7 +61,7 @@ const KnowledgeHub = () => {
       ? allPosts
       : allPosts.filter((post) => post.category === activeCategory);
 
-  const featuredPost = filteredPosts[0];
+  const knowledgePost = filteredPosts[0];
   const otherPosts = filteredPosts.slice(1, 4); // Show up to 3 other posts
 
   return (
@@ -81,6 +83,7 @@ const KnowledgeHub = () => {
         <div className="flex justify-center flex-wrap gap-3 mb-10">
           {categories.map((category) => (
             <KnowledgeFilterButtons
+              key={category}
               category={category}
               setActiveCategory={setActiveCategory}
               activeCategory={activeCategory}
@@ -90,65 +93,13 @@ const KnowledgeHub = () => {
 
         {/* Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-          {/* Featured Post (Left) */}
-          {featuredPost && (
-            <div className="group cursor-pointer bg-white border border-gray-200 rounded-2xl  hover:shadow-lg transition-shadow ">
-              <a href={featuredPost.link} className="block">
-                <div className="relative  overflow-hidden rounded-xl shadow-lg">
-                  <img
-                    src={featuredPost.thumbnail}
-                    alt={featuredPost.title}
-                    className="w-full h-auto aspect-video object-cover transform transition-transform duration-500 group-hover:scale-110"
-                  />
-                  {featuredPost.type === "video" && (
-                    <div className="absolute inset-0  bg-opacity-30 flex items-center justify-center">
-                      <div className="bg-primary bg-opacity-80 rounded-full h-16 w-16 flex items-center justify-center">
-                        <FaPlay className="text-white text-2xl" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <span className="inline-block bg-secondary text-black text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                    {featuredPost.category}
-                  </span>
-                  <h3 className="text-2xl font-bold font-hind text-gray-900 group-hover:text-primary transition-colors">
-                    {featuredPost.title}
-                  </h3>
-                </div>
-              </a>
-            </div>
-          )}
+          {/* Knowledge Post (Left) */}
+          {knowledgePost && <KnowledgePost knowledgePost={knowledgePost} />}
 
           {/* Other Posts (Right) */}
           <div className="flex flex-col gap-6">
             {otherPosts.map((post) => (
-              <a
-                key={post.id}
-                href={post.link}
-                className="group flex gap-4 items-center bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-shadow"
-              >
-                <div className="flex-shrink-0 w-28 h-28 relative">
-                  <img
-                    src={post.thumbnail}
-                    alt={post.title}
-                    className="w-full h-full object-cover rounded-lg shadow-md"
-                  />
-                  {post.type === "video" && (
-                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
-                      <FaPlay className="text-white text-lg" />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <span className="inline-block bg-gray-200 text-primary text-xs font-semibold px-2 py-1 rounded-full mb-2">
-                    {post.category}
-                  </span>
-                  <h4 className="font-bold font-hind text-gray-800 leading-tight group-hover:text-primary transition-colors">
-                    {post.title}
-                  </h4>
-                </div>
-              </a>
+              <OtherPosts key={post.id} post={post} />
             ))}
           </div>
         </div>
@@ -159,7 +110,7 @@ const KnowledgeHub = () => {
             href="/blogs"
             className="btn btn-primary text-lg hover:bg-secondary hover:text-black"
           >
-            সব টিউটোরিয়াল ও ব্লগ দেখুন
+            সব টিউটোরিয়াল ও ব্লগ দেখুন &rarr;
           </a>
         </div>
       </section>
