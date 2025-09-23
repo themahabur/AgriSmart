@@ -10,10 +10,12 @@ const Login = () => {
     e.preventDefault();
     // Handle login logic here
     console.log('Logging in with:', { email, password, rememberMe });
+    
   };
 
   return (
-    <div className="min-h-screen font-hind flex flex-col md:flex-row">
+ 
+     <div className="min-h-screen container mx-auto font-hind flex flex-col md:flex-row">
       {/* বাম পাশ - পূর্ণ উচ্চতার ছবি */}
       <div className="md:w-1/2 relative">
         <div className="absolute inset-0 bg-gradient-to-br from-green-900/70 to-amber-900/50 z-10"></div>
@@ -64,7 +66,7 @@ const Login = () => {
       </div>
 
       {/* ডান পাশ - লগইন ফর্ম */}
-      <div className="md:w-1/2 flex items-center justify-center p-8 bg-white">
+      <div className="md:w-1/2 flex items-center justify-center p-8 bg-gradient-to-r from-green-50 to-amber-50">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-800">আপনার একাউন্টে লগইন করুন</h2>
@@ -157,6 +159,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+  
   );
 };
 
