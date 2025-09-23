@@ -1,27 +1,58 @@
+import Image from "next/image";
 import React from "react";
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaYoutube,
+} from "react-icons/fa";
 
 const FooterTop = () => {
   return (
     <div className="border-b border-gray-300 py-6">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-4">
-        <div className="flex items-center space-x-2">
-          <div className="bg-green-600 text-white font-bold p-2 rounded-full">
-            Agri
+      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-4">
+        {/* Logo */}
+        <div className="text-2xl font-bold text-[#127917] relative flex items-center">
+          <div className="absolute -left-16 mb-2">
+            <Image
+              src="/logo.webp"
+              width={70}
+              height={70}
+              alt="AgriSmart Logo"
+            />
           </div>
-          <h2 className="text-xl font-semibold text-green-700">AgriSmart</h2>
+          <div className="font-hind">অ্যাগ্রি স্মার্ট</div>
         </div>
-        <div className="flex space-x-4 text-gray-700  mt-4 md:mt-0">
-          <a href="#">ডিরেক্টরি ইন্টেন</a>
-          <a href="#">পরিচালক ফেসবুক গ্রুপ</a>
-          <a href="#">সেমিনার করুন</a>
-          <a href="#">যোগাযোগ</a>
+        {/* Navigation Links */}
+        <div className="flex flex-wrap justify-center md:justify-start gap-4 text-gray-700 text-sm md:text-base mb-4 md:mb-0">
+          <a href="#" className="hover:text-green-600 transition-colors">
+            ডিরেক্টরি ইন্টেন
+          </a>
+          <a href="#" className="hover:text-green-600 transition-colors">
+            পরিচালক ফেসবুক গ্রুপ
+          </a>
+          <a href="#" className="hover:text-green-600 transition-colors">
+            সেমিনার করুন
+          </a>
+          <a href="#" className="hover:text-green-600 transition-colors">
+            যোগাযোগ
+          </a>
         </div>
-        <div className="flex space-x-4 text-green-600 mt-4 md:mt-0">
-          <FaFacebookF className="cursor-pointer hover:text-green-800" />
-          <FaInstagram className="cursor-pointer hover:text-green-800" />
-          <FaYoutube className="cursor-pointer hover:text-green-800" />
-          <FaLinkedinIn className="cursor-pointer hover:text-green-800" />
+
+        {/* Social Icons */}
+        <div className="flex space-x-4 text-green-600">
+          <a href="#" className="hover:text-green-800 transition-colors">
+            <FaFacebookF />
+          </a>
+          <a href="#" className="hover:text-green-800 transition-colors">
+            <FaInstagram />
+          </a>
+          <a href="#" className="hover:text-green-800 transition-colors">
+            <FaYoutube />
+          </a>
+          <a href="#" className="hover:text-green-800 transition-colors">
+            <FaLinkedinIn />
+          </a>
         </div>
       </div>
     </div>
