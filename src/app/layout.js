@@ -4,6 +4,7 @@ import "./globals.css";
 
 
 
+
 const hindSiliguri = Hind_Siliguri({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -20,8 +21,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`antialiased ${hindSiliguri.variable}`}
       >
-      
-        {children}
+ {children}
        
       </body>
     </html>

@@ -1,91 +1,134 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import SelectArea from "../components/SelectArea";
 
 const Register = () => {
+  const [divisionCode, setDivisionCode] = useState(null);
+  const [distUpaCode, setDistUpaCode] = useState(null);
+  const handleSelectDivision = (e) => {
+    const divisionName = e.target.value;
+    setDivisionCode(divisionName);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const data = Object.fromEntries(form.entries());
+
+    // post to database
+     e.target.reset();
+  };
+  console.log(distUpaCode);
   return (
-    <div className="min-h-screen bg-green-400 flex justify-center items-center">
-      <div className=" md:grid md:grid-cols-2 lg:grid-cols-5 bg-white rounded-2xl md:max-w-6xl mx-auto w-full">
+    <div className="min-h-screen bg-green-100 flex justify-center items-center">
+      <div className=" md:grid md:grid-cols-2  lg:grid-cols-2  rounded-2xl md:max-w-6xl mx-auto w-full">
         {/* left side */}
-        <div className="relative lg:col-span-3 bg-gradient-to-l from-green-200 to bg-white rounded-l-2xl">
+        <div
+          className=" lg:col-span-1 opacity-80 rounded-l-2xl bg-cover bg-no-repeat bg-center"
+          style={{
+            backgroundImage: `url('/tree.png')`,
+          }}
+        >
           <Link href="/" className=" p-5">
             <Image
               src="/logo.webp"
               width={70}
               height={70}
               alt="AgriSmart Logo"
-              className="absolute top-0 left-0 rounded-[8px] "
+              className=" top-0 left-0 rounded-[8px]  "
             />
           </Link>
-          <Image
-            src="/tree.png"
-            width={600}
-            height={600}
-            alt="registerImage"
-            className="hidden md:block"
-          />
         </div>
         {/* Right side */}
-        <div className="md:w-full mx-auto  p-8 lg:col-span-2">
+        <div className="md:w-full mx-auto  p-8 lg:col-span-1">
           <h1 className="text-2xl md:text-3xl text-primary font-bold">
             এখানে একটি অ্যাকাউন্ট খুলুন ।
           </h1>
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleFormSubmit}>
             {/* name */}
-
             <div className="my-5">
-              <div className="flex ">
-                <label>আপনার পুরা নাম লেখুন</label>
-                <div className="border-b-[1.5px] -rounded-br-2xl border-dotted  flex-1"></div>
-              </div>
+              <label>আপনার পুরা নাম লেখুন</label>
               <input
                 type="text"
                 name="name"
                 placeholder="উদাহরণ : রহিম মিয়া"
-                className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300"
+                className="w-full mt-2 py-3 px-5 border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100"
+                required
               />
             </div>
 
-            {/* photo url */}
-            <div className="my-5">
-              <div className="flex ">
-                <label>আপনার প্রোফাইল ছবির লিংক দিন ।</label>
-                <div className="border-b-[1.5px] -rounded-br-2xl border-dotted  flex-1"></div>
+            <div className="flex items-center gap-2">
+              {/* photo url */}
+              <div className=" flex-1">
+                <label>আপনার প্রোফাইল ছবি পছন্দ করুণ ।</label>
+                <input
+                  type="file"
+                  name="profileURL"
+                  className="file:mr-4  file:border-0 file:bg-green-500 file:px-4 file:py-4 file:text-sm file:font-semibold  hover:file:bg-violet-100 dark:file:bg-green-600 dark:file:text-violet-100 dark:hover:file:bg-green-700 w-full mt-2  border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100 "
+               required />
               </div>
-              <input
-                type="url"
-                name="url"
-                placeholder=" উদাহরণ : ljshZoXh/er80fv/?lopsf..."
-                className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300"
+
+              {/* address */}
+              <div className="flex-1">
+                <label
+                  htmlFor="division"
+                  className="block mb-2 text-lg font-medium text-gray-700"
+                >
+                  আপনার এলাকা নির্বাচন করুন
+                </label>
+                <select
+                  onChange={handleSelectDivision}
+                  id="division"
+                  name="division"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  required
+                >
+                  <option className="bg-green-500 " value="">
+                    একটি বিভাগ নির্বাচন করুন
+                  </option>
+                  <option value="1">চট্টগ্রাম</option>
+                  <option value="2">রাজশাহী</option>
+                  <option value="3">খুলনা</option>
+                  <option value="4">বরিশাল</option>
+                  <option value="5">সিলেট</option>
+                  <option value="6">ঢাকা</option>
+                  <option value="7">রংপুর</option>
+                  <option value="8">ময়মনসিংহ</option>
+                </select>
+              </div>
+            </div>
+            <div className="mt-4">
+              <SelectArea
+                divisionCode={divisionCode}
+                setDistUpaCode={setDistUpaCode}
               />
             </div>
-
-            {/* email */}
             <div className="my-5">
-              <div className="flex ">
-                <label>আপনার ই-মেইল ঠিকানা লিখুন ।</label>
-                <div className="border-b-[1.5px] -rounded-br-2xl border-dotted  flex-1"></div>
-              </div>
+              <label>আপনার ই-মেইল ঠিকানা লিখুন ।</label>
               <input
                 type="email"
                 name="email"
                 placeholder="উদাহরণ : info@gmail.com"
-                className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300"
-              />
+                className="w-full mt-2 py-3 px-5 border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100"
+             required />
             </div>
             {/* password */}
             <div className="my-5">
-              <div className="flex ">
-                <label>আপনার পাসওর্য়াড সেট করুণ</label>
-                <div className="border-b-[1.5px] -rounded-br-2xl border-dotted  flex-1"></div>
-              </div>
+              <label>আপনার পাসওর্য়াড সেট করুণ</label>
+
               <input
                 type="password"
                 name="password"
                 placeholder="উদাহরণ :  !zdA?34Z.."
-                className="w-full p-2 hover:rounded-bl-[8px] outline-0 placeholder:text-green-800 placeholder:text-sm border-b border-r hover:border-green-700 hover:bg-green-300" />
+                className="w-full mt-2 py-3 px-5 border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100"
+             required />
             </div>
-            <button className=" font-semibold border-[2px] border-green-600 hover:bg-green-500 hover:text-white w-full rounded-full py-2 transition-all duration-500">
+            <button
+              type="submit"
+              className=" text-gray-100  bg-green-600 hover:bg-green-700 hover:text-white w-full rounded-[10px] py-3 transition-all duration-500"
+            >
               অ্যাকাউন্ট খুলুন
             </button>
           </form>

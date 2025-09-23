@@ -67,7 +67,12 @@ const KnowledgeHub = () => {
     <LayoutBox>
       <section id="knowledge-hub">
         {/* Section Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-3">
+          <img
+            src="/learn-modern farming.png"
+            alt="Farmer Illustration"
+            className="w-28 md:w-36 mx-auto mb-5"
+          />
           <h2 className="text-3xl md:text-4xl font-bold font-hind text-gray-800">
             জ্ঞানই শক্তি:{" "}
             <span className="text-primary">আধুনিক চাষাবাদ শিখুন</span>
@@ -105,11 +110,10 @@ const KnowledgeHub = () => {
 
         {/* View All Button */}
         <div className="text-center mt-16">
-          <a
-            href="/blogs"
-            className="btn btn-primary text-lg hover:bg-secondary hover:text-black"
-          >
-            সব টিউটোরিয়াল ও ব্লগ দেখুন &rarr;
+          <a href="/blogs">
+            <button className="mt-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-bold py-2 lg:py-3 rounded-full hover:shadow-sm transition-all duration-300 transform hover:-translate-y-1 w-full sm:w-auto px-6">
+              সব টিউটোরিয়াল ও ব্লগ দেখুন &rarr;
+            </button>
           </a>
         </div>
       </section>

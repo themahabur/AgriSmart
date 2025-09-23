@@ -9,6 +9,7 @@ import {
   FaTwitter,
   FaGithub,
 } from "react-icons/fa";
+import Image from "next/image";
 
 import { CiUser } from "react-icons/ci";
 
@@ -33,7 +34,7 @@ export default function AboutPage() {
       {/* Mission and Vision */}
       <section className="py-16 px-6 md:px-20">
         <div className="container mx-auto">
-          <div className="flex flex-wrap border-b border-gray-200 mb-8">
+          <div className="flex flex-wrap border-b border-gray-200 mb-8 lg:w-1/3 w-full">
             <button
               className={`px-6 py-3 font-medium text-lg ${
                 activeTab === "mission"
@@ -67,6 +68,7 @@ export default function AboutPage() {
           </div>
 
           <div className="mb-16">
+            {/* Mission */}
             {activeTab === "mission" && (
               <div className="grid md:grid-cols-2 gap-10 items-center">
                 <div>
@@ -95,19 +97,19 @@ export default function AboutPage() {
                     </li>
                   </ul>
                 </div>
-                <div className="bg-green-100 rounded-2xl p-8 h-64 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <FaBolt className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      কৃষিতে ডিজিটাল বিপ্লব
-                    </h3>
-                  </div>
+                <div className="rounded-2xl overflow-hidden shadow-lg h-96">
+                  <Image
+                    src="/mission.jpg"
+                    alt="Mission Image"
+                    width={600}
+                    height={400}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             )}
 
+            {/* Vision */}
             {activeTab === "vision" && (
               <div className="grid md:grid-cols-2 gap-10 items-center">
                 <div>
@@ -125,19 +127,19 @@ export default function AboutPage() {
                     </p>
                   </div>
                 </div>
-                <div className="bg-amber-100 rounded-2xl p-8 h-64 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <FaSun className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      উজ্জ্বল ভবিষ্যৎ
-                    </h3>
-                  </div>
+                <div className="rounded-2xl overflow-hidden shadow-lg h-96">
+                  <Image
+                    src="/vision.jpg"
+                    alt="Vision Image"
+                    width={600}
+                    height={400}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             )}
 
+            {/* Values */}
             {activeTab === "values" && (
               <div className="grid md:grid-cols-2 gap-10 items-center">
                 <div>
@@ -184,15 +186,14 @@ export default function AboutPage() {
                     </div>
                   </div>
                 </div>
-                <div className="bg-blue-100 rounded-2xl p-8 h-64 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <FaHeart className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      মূল্যবোধ
-                    </h3>
-                  </div>
+                <div className="rounded-2xl overflow-hidden shadow-lg h-96">
+                  <Image
+                    src="/values.jpg"
+                    alt="Values Image"
+                    width={600}
+                    height={400}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             )}
@@ -319,12 +320,12 @@ export default function AboutPage() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { name: "Mahabur Rahman", role: "ডেভেলপার" },
-              { name: "Anayet", role: "ডেভেলপার" },
-              { name: "Afrin", role: "ডেভেলপার" },
-              { name: "Md Meherab Hossen", role: "ডেভেলপার" },
-              { name: "Arifuzzaman Rakib", role: "ডেভেলপার" },
-              { name: "Sakib ul Nasib", role: "ডেভেলপার" },
+              { name: "Mahabur Rahman", role: "ডেভেলপার", img: "https://w7.pngwing.com/pngs/654/471/png-transparent-boy-funny-yellow-thumbnail.png"},
+              { name: "Anayet", role: "ডেভেলপার", img: "https://w7.pngwing.com/pngs/654/471/png-transparent-boy-funny-yellow-thumbnail.png" },
+              { name: "Afrin", role: "ডেভেলপার", img: "https://img.freepik.com/free-vector/determined-child-tiedye-shirt_1308-171330.jpg?semt=ais_incoming&w=740&q=80" },
+              { name: "Md Meherab Hossen", role: "ডেভেলপার", img: "https://w7.pngwing.com/pngs/654/471/png-transparent-boy-funny-yellow-thumbnail.png" },
+              { name: "Arifuzzaman Rakib", role: "ডেভেলপার", img: "https://w7.pngwing.com/pngs/654/471/png-transparent-boy-funny-yellow-thumbnail.png" },
+              { name: "Sakib ul Nasib", role: "ডেভেলপার", img: "https://w7.pngwing.com/pngs/654/471/png-transparent-boy-funny-yellow-thumbnail.png" },
             ].map((member, index) => (
               <div
                 key={index}
@@ -332,8 +333,9 @@ export default function AboutPage() {
               >
                 <div className="relative w-32 h-32 mx-auto mb-6">
                   <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-full opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-300"></div>
-                  <div className="w-32 h-32 mx-auto bg-gradient-to-r from-green-100 to-blue-100 rounded-full mb-4 flex items-center justify-center relative overflow-hidden">
-                    <CiUser className="text-4xl text-green-700" />
+                  <div className="w-32 h-32 mx-auto rounded-full mb-4 flex items-center justify-center relative overflow-hidden">
+                    {/* <CiUser className="text-4xl text-green-700" /> */}
+                    <img src={member.img} alt="" className="w-10"/>
                     <div className="absolute bottom-0 w-full h-1/4 bg-gradient-to-t from-green-500/10 to-transparent"></div>
                   </div>
                 </div>

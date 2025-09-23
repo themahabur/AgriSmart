@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { FaChevronDown } from "react-icons/fa";
-
-import { MdOutlineQuestionAnswer } from "react-icons/md";
+import { SlArrowDown } from "react-icons/sl";
 
 const faqs = [
-   {
+  {
     question: "AgriSmart কীভাবে কৃষকদের সাহায্য করে?",
     answer:
       "AgriSmart কৃষকদের রিয়েল-টাইম মার্কেট প্রাইস, আবহাওয়ার আপডেট এবং এক্সপার্ট পরামর্শ দিয়ে স্মার্ট ফার্মিং করতে সাহায্য করে।",
@@ -33,7 +31,8 @@ const faqs = [
   },
   {
     question: "AgriSmart কি বাংলা ভাষায় পাওয়া যাবে?",
-    answer: "হ্যাঁ, আমাদের প্ল্যাটফর্ম ইংরেজি ও বাংলায় উভয় ভাষায় ব্যবহার করা যাবে।",
+    answer:
+      "হ্যাঁ, আমাদের প্ল্যাটফর্ম ইংরেজি ও বাংলায় উভয় ভাষায় ব্যবহার করা যাবে।",
   },
   {
     question: "AgriSmart ব্যবহার করতে কি খরচ আছে?",
@@ -42,30 +41,39 @@ const faqs = [
   },
   {
     question: "আমি কিভাবে AgriSmart-এ যোগ দিতে পারি?",
-    answer:
-      "হোমপেজে 'Join Now' বাটনে ক্লিক করে সহজেই একাউন্ট খুলতে পারবেন।",
+    answer: "হোমপেজে 'Join Now' বাটনে ক্লিক করে সহজেই একাউন্ট খুলতে পারবেন।",
   },
 ];
+
 const Fqa = () => {
-     const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(0); // ডিফল্ট প্রথমটা খোলা থাকবে
 
   const toggleFAQ = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
+    setOpenIndex(index); // সবসময় নতুনটা খোলবে (একটাই খোলা থাকবে)
   };
-    return (
-         <section className="bg-white py-16 font-hind px-5">
-      <div className="container mx-auto grid md:grid-cols-2 gap-10 items-center">
+
+  return (
+    <section className="bg-white py-16 font-hind px-5">
+      <div className="container mx-auto grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
         {/* Left Side */}
         <div className="flex flex-col items-start">
-         <img src="https://i.ibb.co.com/Fq4YyyQ2/v921-audi-wit-018.jpg" alt="প্রশ্নের উত্তর"  className="w-70 mb-5  rounded-3xl" />
+          <img
+            src="/faq.png"
+            alt="প্রশ্নের উত্তর"
+            className="w-24 md:w-28 lg:w-36 mb-4"
+          />
           <h2 className="text-3xl font-bold text-gray-900">
             সচরাচর জানতে চাওয়া{" "}
             <span className="text-green-600">প্রশ্নের উত্তর</span>
           </h2>
           <p className="mt-4 text-gray-600 leading-relaxed">
-            আপনাদের কমন কিছু প্রশ্নের উত্তর আমরা এখানে লিস্ট করে দিয়েছি। 
-            আপনারা প্রশ্ন করার আগে একবার পড়ে নিতে পারেন। 
-            এতে আপনাদের সময় বাঁচবে এবং উত্তর দ্রুত পেয়ে যাবেন।
+            আপনাদের সাধারণ কিছু প্রশ্নের উত্তর আমরা এখানে সাজিয়ে দিয়েছি।
+            প্রশ্ন করার আগে যদি একবার এই তালিকাটি পড়ে নেন, তাহলে হয়তো আপনার
+            প্রয়োজনীয় উত্তর এখানেই পেয়ে যাবেন। এতে আপনার সময় বাঁচবে,
+            অপ্রয়োজনীয় অপেক্ষা করতে হবে না, আর আমাদের টিমও আরও দ্রুত আপনাদের
+            সহায়তা করতে পারবে। তবুও যদি আপনার প্রশ্নের উত্তর এখানে না পান,
+            নির্দ্বিধায় আমাদের সাথে যোগাযোগ করতে পারেন। আমরা সবসময় আপনাদের
+            পাশে আছি।
           </p>
         </div>
 
@@ -81,7 +89,7 @@ const Fqa = () => {
                 <h3 className="text-lg font-medium text-gray-800">
                   {faq.question}
                 </h3>
-                <FaChevronDown
+                <SlArrowDown
                   className={`w-5 h-5 text-gray-500 transition-transform ${
                     openIndex === index ? "rotate-180" : ""
                   }`}
@@ -95,7 +103,7 @@ const Fqa = () => {
         </div>
       </div>
     </section>
-    );
+  );
 };
 
 export default Fqa;
