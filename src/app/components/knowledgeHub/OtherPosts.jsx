@@ -5,7 +5,7 @@ const OtherPosts = ({ post }) => {
   return (
     <a
       href={post.link}
-      className="group flex gap-4 items-center bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-shadow"
+      className="group flex gap-4 items-center rounded-xl bg-white border border-gray-200 p-4 transition-transform hover:scale-[1.02] duration-300"
     >
       <div className="flex-shrink-0 w-28 h-28 relative">
         <img

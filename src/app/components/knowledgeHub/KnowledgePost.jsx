@@ -3,22 +3,25 @@ import { FaPlay } from "react-icons/fa";
 
 const KnowledgePost = ({ knowledgePost }) => {
   return (
-    <div className="group cursor-pointer bg-white border border-gray-200 rounded-2xl  hover:shadow-lg transition-shadow ">
+    <div className="group cursor-pointer bg-white border-gray-200 rounded-2xl transition-shadow h-full border">
       <a href={knowledgePost.link} className="block">
-        <div className="relative  overflow-hidden rounded-xl shadow-lg">
+        {/* Thumbnail */}
+        <div className="relative overflow-hidden rounded-t-xl shadow-lg max-h-96">
           <img
             src={knowledgePost.thumbnail}
             alt={knowledgePost.title}
-            className="w-full h-auto aspect-video object-cover transform transition-transform duration-500 group-hover:scale-110"
+            className="object-cover transition-transform duration-700 group-hover:scale-110 w-full h-full"
           />
           {knowledgePost.type === "video" && (
-            <div className="absolute inset-0  bg-opacity-30 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/15 bg-opacity-30 flex items-center justify-center">
               <div className="bg-primary bg-opacity-80 rounded-full h-16 w-16 flex items-center justify-center">
                 <FaPlay className="text-white text-2xl" />
               </div>
             </div>
           )}
         </div>
+
+        {/* Content */}
         <div className="p-4">
           <span className="inline-block bg-secondary text-black text-xs font-semibold px-3 py-1 rounded-full mb-3">
             {knowledgePost.category}
