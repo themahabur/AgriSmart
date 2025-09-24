@@ -27,8 +27,8 @@ const RegisterRight = () => {
       .then((data) => setDivisions(data));
   }, [setDivisions]);
   return (
-    <div className="md:w-full mx-auto  p-8 lg:col-span-1">
-      <h1 className="text-2xl md:text-3xl text-primary font-bold">
+    <div className="md:w-full mx-auto  p-8 lg:col-span-1 bg-white">
+      <h1 className="text-2xl md:text-3xl text-center text-primary font-bold">
         এখানে একটি অ্যাকাউন্ট খুলুন ।
       </h1>
       <form className="w-full" onSubmit={handleFormSubmit}>
@@ -111,7 +111,7 @@ const RegisterRight = () => {
         {/* submit button */}
         <button
           type="submit"
-          className=" text-gray-100  bg-green-600 hover:bg-green-700 hover:text-white w-full rounded-[10px] py-3 transition-all duration-500"
+          className=" text-gray-100  bg-green-600 hover:bg-green-700 hover:text-white w-full rounded-full py-3 transition-all duration-500"
         >
           অ্যাকাউন্ট খুলুন
         </button>

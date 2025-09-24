@@ -5,7 +5,7 @@ import React from "react";
 const RegisterLeft = () => {
   return (
     <div
-      className=" lg:col-span-1 opacity-80 rounded-l-2xl bg-cover bg-no-repeat bg-center"
+      className=" lg:col-span-1 opacity-80 rounded-l-2xl bg-cover bg-no-repeat bg-center bg-green-200"
       style={{
         backgroundImage: `url('/tree.png')`,
       }}

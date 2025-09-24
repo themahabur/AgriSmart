@@ -15,7 +15,7 @@ const InputField = ({ label, type = "text", name, placeholder, onChange }) => {
         name={name}
         placeholder={placeholder}
         onChange={onChange}
-        className="w-full  mt-1 py-3 px-5 border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100"
+        className="w-full  mt-1 py-3 px-5 border rounded-[10px] outline-0 hover:bg-green-100"
         required
       />
     </div>
