@@ -1,34 +1,42 @@
 [
     {
         "id": "1",
-        "ban_name": "চট্টগ্রাম"
+        "ban_name": "চট্টগ্রাম",
+        "division": "Chattogram"
     },
     {
         "id": "2",
-        "ban_name": "রাজশাহী"
+        "ban_name": "রাজশাহী",
+        "division": "Rajshahi"
     },
     {
         "id": "3",
-        "ban_name": "খুলনা"
+        "ban_name": "খুলনা",
+        "division": "khulna"
     },
     {
         "id": "4",
-        "ban_name": "বরিশাল"
+        "ban_name": "বরিশাল",
+        "division": "Barishal"
     },
     {
         "id": "5",
-        "ban_name": "সিলেট"
+        "ban_name": "সিলেট",
+        "division": "Sylhet"
     },
     {
         "id": "6",
-        "ban_name": "ঢাকা"
+        "ban_name": "ঢাকা",
+        "division": "dhaka"
     },
     {
         "id": "7",
-        "ban_name": "রংপুর"
+        "ban_name": "রংপুর",
+        "division": "Rangpur"
     },
     {
         "id": "8",
-        "ban_name": "ময়মনসিংহ"
+        "ban_name": "ময়মনসিংহ",
+        "division": "Mymensingh"
     }
 ]

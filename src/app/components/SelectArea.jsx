@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-const SelectArea = ({ divisionCode, setDistUpaCode }) => {
+const SelectArea = ({ divisionCode, setDistUpaName }) => {
   const [districts, setDistricts] = useState([]);
   const [upazilas, setUpazilas] = useState([]);
   const [distId, setDistId] = useState("");
-  const [upazilaId, setUpazilaId] = useState("");
+  const [upazilaName, setUpazilaName] = useState("");
+  const [distName, setDistName] = useState("");
 
   // Get district data
   useEffect(() => {
@@ -29,15 +30,23 @@ const SelectArea = ({ divisionCode, setDistUpaCode }) => {
 
   const defineUpazila = upazilas.filter((up) => up.district_id == distId);
 
-  // Update parent state whenever distId or upazilaId changes
+  // Update parent state whenever distId or upazilaName changes
   useEffect(() => {
-    setDistUpaCode({ distId, upazilaId });
-  }, [distId, upazilaId, setDistUpaCode]);
+    setDistUpaName({distName, upazilaName});
+  }, [distId, upazilaName, setDistUpaName]);
 
   // Handlers
-  const getDistrictId = (e) => setDistId(e.target.value);
-  const getUpazilaId = (e) => setUpazilaId(e.target.value);
+  const getDistrictId = (e) => {
+    const selectedId = e.target.value;
+    setDistId(selectedId);
+    const selectedDistrict = districts.find((dist) => dist.id == selectedId);
+    if (selectedDistrict) {
+      setDistName(selectedDistrict.name);
+    }
+  };
 
+  const getUpazilaName = (e) => setUpazilaName(e.target.value);
+  // console.log(distName);
   return (
     <div className="flex items-center gap-2">
       {/* District Select */}
@@ -66,14 +75,14 @@ const SelectArea = ({ divisionCode, setDistUpaCode }) => {
           উপজেলা নির্বাচন করুন
         </label> */}
         <select
-          onChange={getUpazilaId}
-          value={upazilaId}
+          onChange={getUpazilaName}
+          value={upazilaName}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           required
         >
           <option value="">একটি উপজেলা নির্বাচন করুন</option>
           {defineUpazila.map((up) => (
-            <option key={up.id} value={up.id}>
+            <option key={up.id} value={up.name}>
               {up.bn_name}
             </option>
           ))}
