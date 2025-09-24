@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import SelectArea from "../components/SelectArea";
 import Link from "next/link";
+import InputField from "./InputField";
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 const RegisterRight = () => {
   const [divisionCode, setDivisionCode] = useState(null);
   const [distUpaCode, setDistUpaCode] = useState(null);
   const [divisions, setDivisions] = useState([]);
+  const [eye, setEye] = useState(false);
   const handleSelectDivision = (e) => {
     const divisionName = e.target.value;
     setDivisionCode(divisionName);
@@ -30,25 +33,22 @@ const RegisterRight = () => {
       </h1>
       <form className="w-full" onSubmit={handleFormSubmit}>
         {/* name */}
-        <div className="my-5">
-          <label>আপনার পুরা নাম লেখুন</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="উদাহরণ : রহিম মিয়া"
-            className="w-full mt-2 py-3 px-5 border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100"
-            required
-          />
-        </div>
+        <InputField
+          label={"আপনার পুরা নাম লেখুন"}
+          name={"name"}
+          placeholder={"উদাহরণ : রহিম মিয়া"}
+        />
 
         <div className="flex items-center gap-2">
           {/* photo url */}
           <div className=" flex-1">
-            <label>আপনার প্রোফাইল ছবি পছন্দ করুণ ।</label>
+            <label className="block mb-1  text-lg font-medium text-gray-700">
+              আপনার প্রোফাইল ছবি পছন্দ করুণ ।
+            </label>
             <input
               type="file"
               name="profileURL"
-              className="file:mr-4  file:border-0 file:bg-green-500 file:px-4 file:py-4 file:text-sm file:font-semibold  hover:file:bg-violet-100 dark:file:bg-green-600 dark:file:text-violet-100 dark:hover:file:bg-green-700 w-full mt-2  border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100 "
+              className="file:mr-4  file:border-0 file:bg-green-500 file:px-4 file:py-4 file:text-sm file:font-semibold  hover:file:bg-violet-100 dark:file:bg-green-600 dark:file:text-violet-100 dark:hover:file:bg-green-700 w-full mt-1  border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100 "
               required
             />
           </div>
@@ -86,28 +86,29 @@ const RegisterRight = () => {
             setDistUpaCode={setDistUpaCode}
           />
         </div>
-        <div className="my-5">
-          <label>আপনার ই-মেইল ঠিকানা লিখুন ।</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="উদাহরণ : info@gmail.com"
-            className="w-full mt-2 py-3 px-5 border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100"
-            required
-          />
-        </div>
+        <InputField
+          label={"আপনার ই-মেইল ঠিকানা লিখুন"}
+          type={"email"}
+          name={"email"}
+          placeholder={"উদাহরণ : info@gmail.com"}
+        />
         {/* password */}
-        <div className="my-5">
-          <label>আপনার পাসওর্য়াড সেট করুণ</label>
-
-          <input
-            type="password"
-            name="password"
-            placeholder="উদাহরণ :  !zdA?34Z.."
-            className="w-full mt-2 py-3 px-5 border-[1.5px] border-green-200 rounded-[10px] outline-0 hover:bg-green-100"
-            required
+        <div className="relative">
+          <InputField
+            label={"আপনার পাসওর্য়াড সেট করুণ"}
+            type={`${eye ? "text" : "password"}`}
+            name={"password"}
+            placeholder={"উদাহরণ :  !zdA?34Z.."}
           />
+          <div
+            onClick={() => setEye(!eye)}
+            className="absolute bottom-2 right-2 cursor-pointer z-10 p-2"
+          >
+            {eye ? <IoIosEye size={20} /> : <IoIosEyeOff size={20} />}
+          </div>
         </div>
+
+        {/* submit button */}
         <button
           type="submit"
           className=" text-gray-100  bg-green-600 hover:bg-green-700 hover:text-white w-full rounded-[10px] py-3 transition-all duration-500"
