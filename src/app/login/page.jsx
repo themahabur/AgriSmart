@@ -1,19 +1,49 @@
 "use client";
+import SecondaryBtn from '@/app/components/shared/buttons/SecondaryBtn';
 import React, { useState } from 'react';
-
+  
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-
-  const handleSubmit = (e) => {
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+const [rememberMe, setRememberMe] = useState(false);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+const  handleSubmit = async(e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Logging in with:', { email, password, rememberMe });
-  };
+      setError("");
 
+    setLoading(true);
+    // api call here to login
+    try{
+      const res = await axios.post("/api/auth/login", {
+        email,
+        password,
+      });
+
+      const token = res.data?.token;
+      if (!token) {
+        throw new Error("লগইন ব্যর্থ হয়েছে, টোকেন পাওয়া যায়নি।");
+      }
+      else {
+        // session cookie
+        Cookies.set("token", token); 
+      }
+// redirect to home page
+      
+    }
+    catch(err){
+    setError(
+        err.response?.data?.message ||
+          err.message ||
+          "কিছু ভুল হয়েছে। আবার চেষ্টা করুন।"
+      );
+  } finally {
+      setLoading(false);
+    }
+  }
   return (
-    <div className="min-h-screen font-hind flex flex-col md:flex-row">
+ 
+     <div className="min-h-screen container mx-auto font-hind flex flex-col md:flex-row">
       {/* বাম পাশ - পূর্ণ উচ্চতার ছবি */}
       <div className="md:w-1/2 relative">
         <div className="absolute inset-0 bg-gradient-to-br from-green-900/70 to-amber-900/50 z-10"></div>
@@ -64,7 +94,7 @@ const Login = () => {
       </div>
 
       {/* ডান পাশ - লগইন ফর্ম */}
-      <div className="md:w-1/2 flex items-center justify-center p-8 bg-white">
+      <div className="md:w-1/2 flex items-center justify-center p-8 bg-gradient-to-r from-green-50 to-amber-50">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-800">আপনার একাউন্টে লগইন করুন</h2>
@@ -81,7 +111,8 @@ const Login = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition"
+
                 placeholder="আপনার ইমেইল লিখুন"
                 required
               />
@@ -96,7 +127,8 @@ const Login = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition"
+
                 placeholder="আপনার পাসওয়ার্ড লিখুন"
                 required
               />
@@ -123,12 +155,13 @@ const Login = () => {
               </div>
             </div>
 
-            <button
+            {/* <button
               type="submit"
               className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
             >
               সাইন ইন করুন
-            </button>
+            </button> */}
+            <SecondaryBtn className='w-full' children={"সাইন ইন করুন"} />
           </form>
 
           <div className="mt-6 text-center">
@@ -157,6 +190,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+  
   );
 };
 
