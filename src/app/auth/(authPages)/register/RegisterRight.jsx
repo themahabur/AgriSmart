@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SelectArea from "../components/SelectArea";
+import SelectArea from "../../../components/SelectArea";
 import Link from "next/link";
 import InputField from "./InputField";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
@@ -88,7 +88,7 @@ const RegisterRight = () => {
 
   return (
     <div className="md:w-full mx-auto p-8 lg:col-span-1 bg-white">
-      <h1 className="text-2xl md:text-3xl text-center text-primary font-bold">
+      <h1 className="text-2xl md:text-3xl text-center text-primary font-bold container">
         এখানে একটি অ্যাকাউন্ট খুলুন ।
       </h1>
 

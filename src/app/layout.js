@@ -23,9 +23,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`antialiased ${hindSiliguri.variable}`}
       >
-        <Navbar/>
+        {/* <Navbar/> */}
  {children}
-       <Footer/>
+       {/* <Footer/> */}
       </body>
     </html>
   );
