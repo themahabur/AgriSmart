@@ -43,21 +43,16 @@ export const authOptions = {
   },
 
   callbacks: {
-    // Store user data inside the JWT
-    async jwt({ token, user }) {
-      if (user) {
-        token.user = user;
-      }
-      return token;
-    },
-    // Make that token available in session on client
-    async session({ session, token }) {
-      if (token?.user) {
-        session.user = token.user;
-      }
-      return session;
-    },
+  async jwt({ token, user }) {
+    if (user) token.accessToken = user.token;
+    return token;
   },
+  async session({ session, token }) {
+    session.user = token;
+    return session;
+  },
+},
+
 
   secret: process.env.NEXTAUTH_SECRET,
 };

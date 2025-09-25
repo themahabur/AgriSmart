@@ -1,7 +1,8 @@
 "use client";
 import SecondaryBtn from "@/app/components/shared/buttons/SecondaryBtn";
-import axios from "axios";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const Login = () => {
@@ -10,38 +11,25 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const handleSubmit = async (e) => {
+  const router = useRouter()
+    const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     setLoading(true);
-    // api call here to login
-    try {
-      const res = await axios.post("https://agri-smart-server.vercel.app/api/users/login", {
-        email,
-        password,
-      });
 
-      const token = res.data?.token;
-      localStorage.set("token", token);
-       console.log(token)
-      if (!token) {
-        setError("লগইন ব্যর্থ হয়েছে, টোকেন পাওয়া যায়নি।");
-      } else {
-        // session cookie
-        
-      }
-      // redirect to home page
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
 
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          err.message ||
-          "কিছু ভুল হয়েছে। আবার চেষ্টা করুন।"
-      );
-    } finally {
-      setLoading(false);
+    if (result.error) {
+      setError(result.error);
+    } else {
+      router.push("/"); 
     }
+
+    setLoading(false);
   };
   return (
     <div className="min-h-screen container mx-auto font-hind flex flex-col md:flex-row">
