@@ -11,7 +11,7 @@ const RegisterLeft = () => {
         backgroundImage: `url('/seedTree.png')`,
       }}
     >
-      <Link href="/" className=" p-5 flex items-center-safe hover:text-green-700">
+      <Link href="/" className=" p-5 flex  items-center-safe hover:text-green-700">
         <Image
           src="/logo.webp"
           width={70}
