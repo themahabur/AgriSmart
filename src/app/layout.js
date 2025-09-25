@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import Providers from "./nextAuthProvider/Provider";
+import { Toaster } from "react-hot-toast";
 
 
 const hindSiliguri = Hind_Siliguri({
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
       <body className={`antialiased ${hindSiliguri.variable}`}>
         <Providers>
           {children}
+          <Toaster position="top-right" reverseOrder={false} />
         </Providers>
       </body>
     </html>

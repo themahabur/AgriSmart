@@ -4,6 +4,7 @@ import SelectArea from "../components/SelectArea";
 import Link from "next/link";
 import InputField from "./InputField";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import toast from "react-hot-toast";
 
 const RegisterRight = () => {
   const [divisionCode, setDivisionCode] = useState(null);
@@ -24,17 +25,7 @@ const RegisterRight = () => {
   };
 
   // const user = {
-  //   name: "Anayet Rahman",
-  //   email: "anayedfdgfdgs@example.com",
-  //   password: "Secure@123",
-  //   division: "Dhaka",
-  //   district: "Gazipur",
-  //   upazila: "Sreepur",
-  //   phone: "01279345691",
-  //   role: "farmer",
-  // };
-  // console.log(user);
-  // form submit
+  
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
@@ -68,10 +59,12 @@ const RegisterRight = () => {
 
       if (!response.ok) {
         ("Fail to post data");
+        toast("register failed. Please try again!!")
       }
 
       const result = await response.json();
       console.log("Register Success:", result);
+      toast("Register Successfully done 🎈")
     } catch (error) {
       console.error("Register Error:", error);
     }

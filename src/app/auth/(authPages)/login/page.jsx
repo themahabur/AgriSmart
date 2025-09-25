@@ -1,9 +1,11 @@
 "use client";
 import SecondaryBtn from "@/app/components/shared/buttons/SecondaryBtn";
+import SocialLogin from "@/app/components/socialLogin/SocialLogin";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,8 +13,8 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter()
-    const handleSubmit = async (e) => {
+  const router = useRouter();
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -22,11 +24,16 @@ const Login = () => {
       password,
       redirect: false,
     });
-
+    console.log(result);
     if (result.error) {
       setError(result.error);
+    
+      toast("Invalid Email or Password")
+      setEmail("");
+      setPassword("");
     } else {
-      router.push("/"); 
+      toast("Alhamdulillah LogIn done")
+      router.push("/");
     }
 
     setLoading(false);
@@ -214,27 +221,13 @@ const Login = () => {
             </p>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="mt-1 pt-1 border-t border-gray-200">
             <p className="text-center text-sm text-gray-500 mb-4">
               অথবা চালিয়ে যান
             </p>
             <div className="">
-              <button
-                type="button"
-                className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-              >
-                <svg
-                  className="w-5 h-5 mr-2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
-                    fill="#4285F4"
-                  />
-                </svg>
-                গুগল
-              </button>
+              {/* Social Login */}
+              <SocialLogin/>
             </div>
           </div>
         </div>
