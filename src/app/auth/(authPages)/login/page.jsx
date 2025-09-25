@@ -1,5 +1,6 @@
 "use client";
 import SecondaryBtn from "@/app/components/shared/buttons/SecondaryBtn";
+import axios from "axios";
 import Link from "next/link";
 import React, { useState } from "react";
 
@@ -16,19 +17,22 @@ const Login = () => {
     setLoading(true);
     // api call here to login
     try {
-      const res = await axios.post("/api/auth/login", {
+      const res = await axios.post("https://agri-smart-server.vercel.app/api/users/login", {
         email,
         password,
       });
 
       const token = res.data?.token;
+      localStorage.set("token", token);
+       console.log(token)
       if (!token) {
-        throw new Error("লগইন ব্যর্থ হয়েছে, টোকেন পাওয়া যায়নি।");
+        setError("লগইন ব্যর্থ হয়েছে, টোকেন পাওয়া যায়নি।");
       } else {
         // session cookie
-        Cookies.set("token", token);
+        
       }
       // redirect to home page
+
     } catch (err) {
       setError(
         err.response?.data?.message ||
