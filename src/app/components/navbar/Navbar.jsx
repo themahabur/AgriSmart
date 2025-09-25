@@ -4,12 +4,15 @@ import Link from "next/link";
 import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { signOut, useSession } from "next-auth/react";
+// import useUser from "@/app/hooks/useUser";
 
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [language, setLanguage] = useState("EN");
   const [mobileMenu, setMobileMenu] = useState(false);
-
+  const { data: session } = useSession();
+  console.log(session?.user?.email);
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
@@ -18,15 +21,15 @@ export default function Navbar() {
     setLanguage((prev) => (prev === "EN" ? "BN" : "EN"));
   };
 
-const links = [
-  { name: "হোম", href: "/" },
-  { name: "সেবাসমূহ", href: "#" },
-  { name: "বাজার মূল্য", href: "/market-price" },
-  { name: "আবহাওয়া", href: "/weather" },
-  { name: "ব্লগ", href: "/blogs" },
-  { name: "আমাদের সম্পর্কে", href: "/about" }, 
-  { name: "যোগাযোগ", href: "/contact" },
-];
+  const links = [
+    { name: "হোম", href: "/" },
+    { name: "সেবাসমূহ", href: "#" },
+    { name: "বাজার মূল্য", href: "/market-price" },
+    { name: "আবহাওয়া", href: "/weather" },
+    { name: "ব্লগ", href: "/blogs" },
+    { name: "আমাদের সম্পর্কে", href: "/about" },
+    { name: "যোগাযোগ", href: "/contact" },
+  ];
 
   const services = [
     { name: "ফসল ব্যবস্থাপনা", href: "/services/crop" },
@@ -92,12 +95,18 @@ const links = [
             >
               {language === "BN" ? "বাংলা" : "English"}
             </button>
-            <Link
-              href={"auth/login"}
-              className="px-4 py-1 rounded-full bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:bg-[#259e2f] transition font-hind"
-            >
-              লগইন
-            </Link>
+            {session?.user?.email ? (
+              <button onClick={() => signOut()} className="px-4 py-1 rounded-full bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:bg-[#259e2f] transition font-hind">
+                লগআউট
+              </button>
+            ) : (
+              <Link
+                href={"auth/login"}
+                className="px-4 py-1 rounded-full bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:bg-[#259e2f] transition font-hind"
+              >
+                লগইন
+              </Link>
+            )}
           </li>
         </ul>
 
@@ -156,12 +165,21 @@ const links = [
             >
               {language === "EN" ? "বাংলা" : "English"}
             </button>
-            <Link
-              href={"login"}
-              className="px-4 py-1 rounded-full bg-[#33ac3d] text-white hover:bg-[#259e2f] transition font-hind"
-            >
-              লগইন
-            </Link>
+            {session?.user?.email ? (
+              <button
+                onClick={() => signOut()}
+                className="px-4 py-1 rounded-full bg-[#33ac3d] text-white hover:bg-[#259e2f] transition font-hind"
+              >
+                লগআউট
+              </button>
+            ) : (
+              <Link
+                href={"login"}
+                className="px-4 py-1 rounded-full bg-[#33ac3d] text-white hover:bg-[#259e2f] transition font-hind"
+              >
+                লগইন
+              </Link>
+            )}
           </div>
         </div>
       )}

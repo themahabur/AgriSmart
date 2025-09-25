@@ -1,7 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
-// import Providers from "./nextAuthProvider/Provider";
+import Providers from "./nextAuthProvider/Provider";
+
 
 const hindSiliguri = Hind_Siliguri({
   weight: ["400", "700"],
@@ -17,7 +18,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`antialiased ${hindSiliguri.variable}`}>{children}</body>
+      <body className={`antialiased ${hindSiliguri.variable}`}>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }
