@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Comilla",
     "bn_name": "কুমিল্লা",
     "lat": "23.4682747",
@@ -10,7 +10,7 @@
   },
   {
     "id": "2",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Feni",
     "bn_name": "ফেনী",
     "lat": "23.023231",
@@ -19,7 +19,7 @@
   },
   {
     "id": "3",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Brahmanbaria",
     "bn_name": "ব্রাহ্মণবাড়িয়া",
     "lat": "23.9570904",
@@ -28,7 +28,7 @@
   },
   {
     "id": "4",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Rangamati",
     "bn_name": "রাঙ্গামাটি",
     "lat": "22.65561018",
@@ -37,7 +37,7 @@
   },
   {
     "id": "5",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Noakhali",
     "bn_name": "নোয়াখালী",
     "lat": "22.869563",
@@ -46,7 +46,7 @@
   },
   {
     "id": "6",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Chandpur",
     "bn_name": "চাঁদপুর",
     "lat": "23.2332585",
@@ -55,7 +55,7 @@
   },
   {
     "id": "7",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Lakshmipur",
     "bn_name": "লক্ষ্মীপুর",
     "lat": "22.942477",
@@ -64,7 +64,7 @@
   },
   {
     "id": "8",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Chattogram",
     "bn_name": "চট্টগ্রাম",
     "lat": "22.335109",
@@ -73,7 +73,7 @@
   },
   {
     "id": "9",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Coxsbazar",
     "bn_name": "কক্সবাজার",
     "lat": "21.44315751",
@@ -82,7 +82,7 @@
   },
   {
     "id": "10",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Khagrachhari",
     "bn_name": "খাগড়াছড়ি",
     "lat": "23.119285",
@@ -91,7 +91,7 @@
   },
   {
     "id": "11",
-    "division_id": "1",
+    "division_id": "1", "division": "Chattogram",
     "name": "Bandarban",
     "bn_name": "বান্দরবান",
     "lat": "22.1953275",
@@ -100,7 +100,7 @@
   },
   {
     "id": "12",
-    "division_id": "2",
+    "division_id": "2", "division": "Rajshahi",
     "name": "Sirajganj",
     "bn_name": "সিরাজগঞ্জ",
     "lat": "24.4533978",
@@ -109,7 +109,7 @@
   },
   {
     "id": "13",
-    "division_id": "2",
+    "division_id": "2", "division": "Rajshahi",
     "name": "Pabna",
     "bn_name": "পাবনা",
     "lat": "23.998524",
@@ -118,7 +118,7 @@
   },
   {
     "id": "14",
-    "division_id": "2",
+    "division_id": "2", "division": "Rajshahi",
     "name": "Bogura",
     "bn_name": "বগুড়া",
     "lat": "24.8465228",
@@ -127,7 +127,7 @@
   },
   {
     "id": "15",
-    "division_id": "2",
+    "division_id": "2", "division": "Rajshahi",
     "name": "Rajshahi",
     "bn_name": "রাজশাহী",
     "lat": "24.37230298",
@@ -136,7 +136,7 @@
   },
   {
     "id": "16",
-    "division_id": "2",
+    "division_id": "2", "division": "Rajshahi",
     "name": "Natore",
     "bn_name": "নাটোর",
     "lat": "24.420556",
@@ -145,7 +145,7 @@
   },
   {
     "id": "17",
-    "division_id": "2",
+    "division_id": "2", "division": "Rajshahi",
     "name": "Joypurhat",
     "bn_name": "জয়পুরহাট",
     "lat": "25.09636876",
@@ -154,7 +154,7 @@
   },
   {
     "id": "18",
-    "division_id": "2",
+    "division_id": "2", "division": "Rajshahi",
     "name": "Chapainawabganj",
     "bn_name": "চাঁপাইনবাবগঞ্জ",
     "lat": "24.5965034",
@@ -163,7 +163,7 @@
   },
   {
     "id": "19",
-    "division_id": "2",
+    "division_id": "2", "division": "Rajshahi",
     "name": "Naogaon",
     "bn_name": "নওগাঁ",
     "lat": "24.83256191",
@@ -172,7 +172,7 @@
   },
   {
     "id": "20",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Jashore",
     "bn_name": "যশোর",
     "lat": "23.16643",
@@ -181,7 +181,7 @@
   },
   {
     "id": "21",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Satkhira",
     "bn_name": "সাতক্ষীরা",
     "lat": "22.7180905",
@@ -190,7 +190,7 @@
   },
   {
     "id": "22",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Meherpur",
     "bn_name": "মেহেরপুর",
     "lat": "23.762213",
@@ -199,7 +199,7 @@
   },
   {
     "id": "23",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Narail",
     "bn_name": "নড়াইল",
     "lat": "23.172534",
@@ -208,7 +208,7 @@
   },
   {
     "id": "24",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Chuadanga",
     "bn_name": "চুয়াডাঙ্গা",
     "lat": "23.6401961",
@@ -217,7 +217,7 @@
   },
   {
     "id": "25",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Kushtia",
     "bn_name": "কুষ্টিয়া",
     "lat": "23.901258",
@@ -226,7 +226,7 @@
   },
   {
     "id": "26",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Magura",
     "bn_name": "মাগুরা",
     "lat": "23.487337",
@@ -235,7 +235,7 @@
   },
   {
     "id": "27",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Khulna",
     "bn_name": "খুলনা",
     "lat": "22.815774",
@@ -244,7 +244,7 @@
   },
   {
     "id": "28",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Bagerhat",
     "bn_name": "বাগেরহাট",
     "lat": "22.651568",
@@ -253,7 +253,7 @@
   },
   {
     "id": "29",
-    "division_id": "3",
+    "division_id": "3", "division": "khulna",
     "name": "Jhenaidah",
     "bn_name": "ঝিনাইদহ",
     "lat": "23.5448176",
@@ -262,7 +262,7 @@
   },
   {
     "id": "30",
-    "division_id": "4",
+    "division_id": "4", "division": "Barishal",
     "name": "Jhalakathi",
     "bn_name": "ঝালকাঠি",
     "lat": "22.6422689",
@@ -271,7 +271,7 @@
   },
   {
     "id": "31",
-    "division_id": "4",
+    "division_id": "4", "division": "Barishal",
     "name": "Patuakhali",
     "bn_name": "পটুয়াখালী",
     "lat": "22.3596316",
@@ -280,7 +280,7 @@
   },
   {
     "id": "32",
-    "division_id": "4",
+    "division_id": "4", "division": "Barishal",
     "name": "Pirojpur",
     "bn_name": "পিরোজপুর",
     "lat": "22.5781398",
@@ -289,7 +289,7 @@
   },
   {
     "id": "33",
-    "division_id": "4",
+    "division_id": "4", "division": "Barishal",
     "name": "Barisal",
     "bn_name": "বরিশাল",
     "lat": "22.7004179",
@@ -298,7 +298,7 @@
   },
   {
     "id": "34",
-    "division_id": "4",
+    "division_id": "4", "division": "Barishal",
     "name": "Bhola",
     "bn_name": "ভোলা",
     "lat": "22.685923",
@@ -307,7 +307,7 @@
   },
   {
     "id": "35",
-    "division_id": "4",
+    "division_id": "4", "division": "Barishal",
     "name": "Barguna",
     "bn_name": "বরগুনা",
     "lat": "22.159182",
@@ -316,7 +316,7 @@
   },
   {
     "id": "36",
-    "division_id": "5",
+    "division_id": "5", "division": "Sylhet",
     "name": "Sylhet",
     "bn_name": "সিলেট",
     "lat": "24.8897956",
@@ -325,7 +325,7 @@
   },
   {
     "id": "37",
-    "division_id": "5",
+    "division_id": "5", "division": "Sylhet",
     "name": "Moulvibazar",
     "bn_name": "মৌলভীবাজার",
     "lat": "24.482934",
@@ -334,7 +334,7 @@
   },
   {
     "id": "38",
-    "division_id": "5",
+    "division_id": "5", "division": "Sylhet",
     "name": "Habiganj",
     "bn_name": "হবিগঞ্জ",
     "lat": "24.374945",
@@ -343,7 +343,7 @@
   },
   {
     "id": "39",
-    "division_id": "5",
+    "division_id": "5", "division": "Sylhet",
     "name": "Sunamganj",
     "bn_name": "সুনামগঞ্জ",
     "lat": "25.0658042",
@@ -352,7 +352,7 @@
   },
   {
     "id": "40",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Narsingdi",
     "bn_name": "নরসিংদী",
     "lat": "23.932233",
@@ -361,7 +361,7 @@
   },
   {
     "id": "41",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Gazipur",
     "bn_name": "গাজীপুর",
     "lat": "24.0022858",
@@ -370,7 +370,7 @@
   },
   {
     "id": "42",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Shariatpur",
     "bn_name": "শরীয়তপুর",
     "lat": "23.2060195",
@@ -379,7 +379,7 @@
   },
   {
     "id": "43",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Narayanganj",
     "bn_name": "নারায়ণগঞ্জ",
     "lat": "23.63366",
@@ -388,7 +388,7 @@
   },
   {
     "id": "44",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Tangail",
     "bn_name": "টাঙ্গাইল",
     "lat": "24.264145",
@@ -397,7 +397,7 @@
   },
   {
     "id": "45",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Kishoreganj",
     "bn_name": "কিশোরগঞ্জ",
     "lat": "24.444937",
@@ -406,7 +406,7 @@
   },
   {
     "id": "46",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Manikganj",
     "bn_name": "মানিকগঞ্জ",
     "lat": "23.8602262",
@@ -415,7 +415,7 @@
   },
   {
     "id": "47",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Dhaka",
     "bn_name": "ঢাকা",
     "lat": "23.7115253",
@@ -424,7 +424,7 @@
   },
   {
     "id": "48",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Munshiganj",
     "bn_name": "মুন্সিগঞ্জ",
     "lat": "23.5435742",
@@ -433,7 +433,7 @@
   },
   {
     "id": "49",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Rajbari",
     "bn_name": "রাজবাড়ী",
     "lat": "23.7574305",
@@ -442,7 +442,7 @@
   },
   {
     "id": "50",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Madaripur",
     "bn_name": "মাদারীপুর",
     "lat": "23.164102",
@@ -451,7 +451,7 @@
   },
   {
     "id": "51",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Gopalganj",
     "bn_name": "গোপালগঞ্জ",
     "lat": "23.0050857",
@@ -460,7 +460,7 @@
   },
   {
     "id": "52",
-    "division_id": "6",
+    "division_id": "6", "division": "dhaka",
     "name": "Faridpur",
     "bn_name": "ফরিদপুর",
     "lat": "23.6070822",
@@ -469,7 +469,7 @@
   },
   {
     "id": "53",
-    "division_id": "7",
+    "division_id": "7", "division": "Rangpur",
     "name": "Panchagarh",
     "bn_name": "পঞ্চগড়",
     "lat": "26.3411",
@@ -478,7 +478,7 @@
   },
   {
     "id": "54",
-    "division_id": "7",
+    "division_id": "7", "division": "Rangpur",
     "name": "Dinajpur",
     "bn_name": "দিনাজপুর",
     "lat": "25.6217061",
@@ -487,7 +487,7 @@
   },
   {
     "id": "55",
-    "division_id": "7",
+    "division_id": "7", "division": "Rangpur",
     "name": "Lalmonirhat",
     "bn_name": "লালমনিরহাট",
     "lat": "25.9165451",
@@ -496,7 +496,7 @@
   },
   {
     "id": "56",
-    "division_id": "7",
+    "division_id": "7", "division": "Rangpur",
     "name": "Nilphamari",
     "bn_name": "নীলফামারী",
     "lat": "25.931794",
@@ -505,7 +505,7 @@
   },
   {
     "id": "57",
-    "division_id": "7",
+    "division_id": "7", "division": "Rangpur",
     "name": "Gaibandha",
     "bn_name": "গাইবান্ধা",
     "lat": "25.328751",
@@ -514,7 +514,7 @@
   },
   {
     "id": "58",
-    "division_id": "7",
+    "division_id": "7", "division": "Rangpur",
     "name": "Thakurgaon",
     "bn_name": "ঠাকুরগাঁও",
     "lat": "26.0336945",
@@ -523,7 +523,7 @@
   },
   {
     "id": "59",
-    "division_id": "7",
+    "division_id": "7", "division": "Rangpur",
     "name": "Rangpur",
     "bn_name": "রংপুর",
     "lat": "25.7558096",
@@ -532,7 +532,7 @@
   },
   {
     "id": "60",
-    "division_id": "7",
+    "division_id": "7", "division": "Rangpur",
     "name": "Kurigram",
     "bn_name": "কুড়িগ্রাম",
     "lat": "25.805445",
@@ -541,7 +541,7 @@
   },
   {
     "id": "61",
-    "division_id": "8",
+    "division_id": "8", "division": "Mymensingh",
     "name": "Sherpur",
     "bn_name": "শেরপুর",
     "lat": "25.0204933",
@@ -550,7 +550,7 @@
   },
   {
     "id": "62",
-    "division_id": "8",
+    "division_id": "8", "division": "Mymensingh",
     "name": "Mymensingh",
     "bn_name": "ময়মনসিংহ",
     "lat": "24.7465670",
@@ -559,7 +559,7 @@
   },
   {
     "id": "63",
-    "division_id": "8",
+    "division_id": "8", "division": "Mymensingh",
     "name": "Jamalpur",
     "bn_name": "জামালপুর",
     "lat": "24.937533",
@@ -568,7 +568,7 @@
   },
   {
     "id": "64",
-    "division_id": "8",
+    "division_id": "8", "division": "Mymensingh",
     "name": "Netrokona",
     "bn_name": "নেত্রকোণা",
     "lat": "24.870955",
