@@ -51,13 +51,11 @@ const SelectArea = ({ divisionCode, setDistUpaName }) => {
     <div className="flex items-center gap-2">
       {/* District Select */}
       <div className="flex-1">
-        {/* <label className="block mb-2 text-lg font-medium text-gray-700">
-          জেলা নির্বাচন করুন
-        </label> */}
+       
         <select
           onChange={getDistrictId}
           value={distId}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-3 border border-gray-400  rounded-lg shadow-sm focus:outline-none "
           required
         >
           <option value="">একটি জেলা নির্বাচন করুন</option>
@@ -71,13 +69,11 @@ const SelectArea = ({ divisionCode, setDistUpaName }) => {
 
       {/* Upazila Select */}
       <div className="flex-1">
-        {/* <label className="block mb-2 text-lg font-medium text-gray-700">
-          উপজেলা নির্বাচন করুন
-        </label> */}
+        
         <select
           onChange={getUpazilaName}
           value={upazilaName}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-3 border border-gray-400 rounded-lg shadow-sm focus:outline-none "
           required
         >
           <option value="">একটি উপজেলা নির্বাচন করুন</option>

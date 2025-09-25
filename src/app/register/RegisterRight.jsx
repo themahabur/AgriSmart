@@ -110,8 +110,8 @@ const RegisterRight = () => {
             <input
               type="file"
               name="profileURL"
-              className="w-full mt-1 border-[1.5px] border-green-200 rounded-[10px] outline-0 file:mr-4 file:border-0 file:bg-green-500 file:px-4 file:py-4 file:text-sm file:font-semibold hover:file:bg-violet-100"
-              required
+              className="w-full mt-1 border border-gray-400  rounded-[10px] outline-0 file:mr-4 file:border-0 file:bg-green-500 file:px-4 file:py-4 file:text-sm file:font-semibold hover:file:bg-violet-100"
+             
             />
           </div>
 
@@ -127,7 +127,7 @@ const RegisterRight = () => {
               onChange={handleSelectDivision}
               id="division"
               name="division"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-3 border border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             >
               <option value="">একটি বিভাগ নির্বাচন করুন</option>
