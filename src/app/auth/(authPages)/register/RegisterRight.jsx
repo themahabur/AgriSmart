@@ -6,6 +6,7 @@ import InputField from "./InputField";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const RegisterRight = () => {
   const [divisionCode, setDivisionCode] = useState(null);
@@ -60,16 +61,23 @@ const RegisterRight = () => {
         throw new Error("Fail to post data");
       }
 
+      if (response.ok) {
+        toast.success("Registration successful!");
+        await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: true,
+          callbackUrl: "/",
+        });
+
+        router.push("/");
+      }
       const result = await response.json();
-      toast.success("Register successfully done");
-      console.log("Register Success:", result);
     } catch (error) {
       console.error("Register Error:", error);
       toast.error("Registration Failed");
     }
-
     e.target.reset();
-    router.push("/");
   };
 
   // division load
