@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { useState } from "react";
-
+import SecondaryBtn from "../components/shared/buttons/SecondaryBtn";
 
 const Blog = () => {
   const [activeTab, setActiveTab] = useState("tutorials");
@@ -12,21 +12,18 @@ const Blog = () => {
       title: "ধান চাষের সম্পূর্ণ গাইড",
       videoUrl: "https://youtu.be/sNzu7Jc-YgI",
       category: "ধান চাষ",
-      
     },
     {
       id: 2,
       title: "জৈব সারের ব্যবহার পদ্ধতি",
       videoUrl: "https://youtu.be/aluO3sHQVO8",
       category: "সার ব্যবস্থাপনা",
-     
     },
     {
       id: 3,
       title: "আমের রোগ ব্যবস্থাপনা",
       videoUrl: "https://youtu.be/BkVCEd1l5F4",
       category: "ফল চাষ",
-     
     },
   ];
 
@@ -49,8 +46,7 @@ const Blog = () => {
       id: 3,
       title: "কৃষি উপকরণ ভর্তুকি",
       date: "২০২৪-০৩-০৫",
-      content:
-        "কৃষি উপকরণে ৩০% ভর্তুকি প্রদানের নতুন প্রকল্প চালু হয়েছে।",
+      content: "কৃষি উপকরণে ৩০% ভর্তুকি প্রদানের নতুন প্রকল্প চালু হয়েছে।",
     },
   ];
 
@@ -84,7 +80,7 @@ const Blog = () => {
     },
   ];
 
-  // helper function 
+  // helper function
   const getEmbedUrl = (url) =>
     url
       .replace("youtu.be/", "www.youtube.com/embed/")
@@ -93,13 +89,13 @@ const Blog = () => {
   return (
     <div className="w-full min-h-screen bg-gradient-to-r from-amber-50 to-green-50 py-8 px-4">
       <div className="container mx-auto">
-       <div className=" flex justify-center items-center">
-        <img
+        <div className=" flex justify-center items-center">
+          <img
             src="/blogsFarmer.png"
             alt="Farmer Illustration"
             className="w-50 md:w-65 mx-auto lg:mx-0 mb-4"
           />
-       </div>
+        </div>
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-green-800 mb-3">
@@ -111,7 +107,11 @@ const Blog = () => {
         </div>
 
         {/* Tabs */}
-        <div role="tablist" aria-label="সেকশন নির্বাচন" className="flex flex-wrap justify-center gap-3 mb-8">
+        <div
+          role="tablist"
+          aria-label="সেকশন নির্বাচন"
+          className="flex flex-wrap justify-center gap-3 mb-8"
+        >
           <button
             role="tab"
             aria-selected={activeTab === "tutorials"}
@@ -173,12 +173,10 @@ const Blog = () => {
                     <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
                       {tutorial.category}
                     </span>
-                   
                   </div>
                   <h3 className="font-semibold text-lg mb-3 text-gray-900">
                     {tutorial.title}
                   </h3>
-                 
                 </div>
               </div>
             ))}
@@ -205,7 +203,10 @@ const Blog = () => {
                 <p className="text-gray-600 text-sm leading-relaxed">
                   {update.content}
                 </p>
-                <SecondaryBtn children={'বিস্তারিত জানুন'} className="mt-4 w-full flex items-center rounded-2xl justify-center gap-2 bg-blue-600 text-white px-4 py-2.5  hover:bg-blue-700 transition-colors"/>
+                <SecondaryBtn
+                  children={"বিস্তারিত জানুন"}
+                  className="mt-4 w-full flex items-center rounded-2xl justify-center gap-2 bg-blue-600 text-white px-4 py-2.5  hover:bg-blue-700 transition-colors"
+                />
               </div>
             ))}
           </div>
@@ -238,7 +239,10 @@ const Blog = () => {
                 </p>
                 <div className="flex justify-between items-center text-xs text-gray-500">
                   <span>{review.date}</span>
-                  <button aria-label="উত্তর দিন" className="flex items-center gap-1 text-green-700 hover:text-green-900 transition-colors">
+                  <button
+                    aria-label="উত্তর দিন"
+                    className="flex items-center gap-1 text-green-700 hover:text-green-900 transition-colors"
+                  >
                     {/* <MessageSquare size={14} /> উত্তর দিন */}
                   </button>
                 </div>
@@ -249,17 +253,44 @@ const Blog = () => {
 
         {/* Quick Tips */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold text-green-800 mb-4 text-center">✅ দ্রুত টিপস</h2>
+          <h2 className="text-2xl font-bold text-green-800 mb-4 text-center">
+            ✅ দ্রুত টিপস
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { id: 1, title: "বীজ বাছাই", text: "সার্টিফাইড বীজ ব্যবহার করুন। অঙ্কুরোদগম পরীক্ষা করুন।", icon: "🌱" },
-              { id: 2, title: "পানি ব্যবস্থাপনা", text: "জমিতে পানি জমতে দেবেন না, নিকাশী ঠিক রাখুন।", icon: "💧" },
-              { id: 3, title: "পোকা দমন", text: "ফেরোমন ট্র্যাপ ব্যবহার করুন, প্রয়োজনে বিশেষজ্ঞের পরামর্শ নিন।", icon: "🐛" },
-              { id: 4, title: "সারের সময়", text: "ফসলের বয়স ও মাটির পরীক্ষার রিপোর্ট দেখে সার দিন।", icon: "🧪" }
-            ].map(tip => (
-              <div key={tip.id} className="bg-white rounded-2xl shadow p-4 hover:shadow-md transition">
+              {
+                id: 1,
+                title: "বীজ বাছাই",
+                text: "সার্টিফাইড বীজ ব্যবহার করুন। অঙ্কুরোদগম পরীক্ষা করুন।",
+                icon: "🌱",
+              },
+              {
+                id: 2,
+                title: "পানি ব্যবস্থাপনা",
+                text: "জমিতে পানি জমতে দেবেন না, নিকাশী ঠিক রাখুন।",
+                icon: "💧",
+              },
+              {
+                id: 3,
+                title: "পোকা দমন",
+                text: "ফেরোমন ট্র্যাপ ব্যবহার করুন, প্রয়োজনে বিশেষজ্ঞের পরামর্শ নিন।",
+                icon: "🐛",
+              },
+              {
+                id: 4,
+                title: "সারের সময়",
+                text: "ফসলের বয়স ও মাটির পরীক্ষার রিপোর্ট দেখে সার দিন।",
+                icon: "🧪",
+              },
+            ].map((tip) => (
+              <div
+                key={tip.id}
+                className="bg-white rounded-2xl shadow p-4 hover:shadow-md transition"
+              >
                 <div className="text-2xl mb-2">{tip.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-1">{tip.title}</h3>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  {tip.title}
+                </h3>
                 <p className="text-sm text-gray-700">{tip.text}</p>
               </div>
             ))}
@@ -268,10 +299,23 @@ const Blog = () => {
 
         {/* Popular Topics */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold text-green-800 mb-3 text-center">🔥 জনপ্রিয় বিষয়</h2>
+          <h2 className="text-2xl font-bold text-green-800 mb-3 text-center">
+            🔥 জনপ্রিয় বিষয়
+          </h2>
           <div className="flex flex-wrap justify-center gap-2">
-            {["ধান", "সবজি", "জৈব সার", "পানি সেচ", "আম", "রোগ দমন", "বীজ সংরক্ষণ"].map((tag, i) => (
-              <span key={i} className="px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm hover:bg-green-200 cursor-default">
+            {[
+              "ধান",
+              "সবজি",
+              "জৈব সার",
+              "পানি সেচ",
+              "আম",
+              "রোগ দমন",
+              "বীজ সংরক্ষণ",
+            ].map((tag, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm hover:bg-green-200 cursor-default"
+              >
                 #{tag}
               </span>
             ))}
@@ -282,26 +326,48 @@ const Blog = () => {
         <section className="mt-12">
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div>
-              <h3 className="text-lg font-semibold text-blue-900">⛅ আবহাওয়া সতর্কতা (ডেমো)</h3>
-              <p className="text-sm text-blue-800">আজ সন্ধ্যায় বৃষ্টির সম্ভাবনা। কাটিং/স্প্রে আজ এড়িয়ে চলুন।</p>
+              <h3 className="text-lg font-semibold text-blue-900">
+                ⛅ আবহাওয়া সতর্কতা (ডেমো)
+              </h3>
+              <p className="text-sm text-blue-800">
+                আজ সন্ধ্যায় বৃষ্টির সম্ভাবনা। কাটিং/স্প্রে আজ এড়িয়ে চলুন।
+              </p>
             </div>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">আরো জানুন</button>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+              আরো জানুন
+            </button>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold text-green-800 mb-4 text-center">❓ সাধারণ প্রশ্ন</h2>
+          <h2 className="text-2xl font-bold text-green-800 mb-4 text-center">
+            ❓ সাধারণ প্রশ্ন
+          </h2>
           <div className="max-w-3xl mx-auto space-y-3">
             {[
-              { q: "ধানের চারা কখন রোপণ করবো?", a: "বৃষ্টি শুরু হলে ও মাটিতে পর্যাপ্ত আর্দ্রতা থাকলে, ২০–২৫ দিনের চারা রোপণ ভালো।" },
-              { q: "জৈব সার কতদিন পর পর দেবো?", a: "ফসলভেদে ভিন্ন। সাধারণত মাটির পরীক্ষার রিপোর্ট দেখে ৩০–৪৫ দিনে একবার।" },
-              { q: "পোকার আক্রমণ হলে কি করবো?", a: "প্রথমে শনাক্ত করুন, কম ক্ষেতে হাত দিয়ে তুলে ফেলুন, প্রয়োজনে অনুমোদিত বায়ো-পেস্টিসাইড ব্যবহার করুন।" }
+              {
+                q: "ধানের চারা কখন রোপণ করবো?",
+                a: "বৃষ্টি শুরু হলে ও মাটিতে পর্যাপ্ত আর্দ্রতা থাকলে, ২০–২৫ দিনের চারা রোপণ ভালো।",
+              },
+              {
+                q: "জৈব সার কতদিন পর পর দেবো?",
+                a: "ফসলভেদে ভিন্ন। সাধারণত মাটির পরীক্ষার রিপোর্ট দেখে ৩০–৪৫ দিনে একবার।",
+              },
+              {
+                q: "পোকার আক্রমণ হলে কি করবো?",
+                a: "প্রথমে শনাক্ত করুন, কম ক্ষেতে হাত দিয়ে তুলে ফেলুন, প্রয়োজনে অনুমোদিত বায়ো-পেস্টিসাইড ব্যবহার করুন।",
+              },
             ].map((item, idx) => (
-              <details key={idx} className="bg-white rounded-xl shadow group open:shadow-md">
+              <details
+                key={idx}
+                className="bg-white rounded-xl shadow group open:shadow-md"
+              >
                 <summary className="cursor-pointer list-none p-4 font-medium text-gray-900 flex items-center justify-between">
                   <span>{item.q}</span>
-                  <span className="text-gray-500 group-open:rotate-180 transition">⌄</span>
+                  <span className="text-gray-500 group-open:rotate-180 transition">
+                    ⌄
+                  </span>
                 </summary>
                 <div className="px-4 pb-4 text-sm text-gray-700">{item.a}</div>
               </details>
@@ -312,11 +378,25 @@ const Blog = () => {
         {/* Newsletter */}
         <section className="mt-12">
           <div className="bg-white rounded-2xl shadow-lg p-6 max-w-3xl mx-auto text-center">
-            <h3 className="text-2xl font-bold text-green-800 mb-2">📰 কৃষি খবর পেতে ইমেইল দিন</h3>
-            <p className="text-gray-700 mb-4">সাপ্তাহিক টিপস, আবহাওয়া ও নীতিমালা আপডেট</p>
+            <h3 className="text-2xl font-bold text-green-800 mb-2">
+              📰 কৃষি খবর পেতে ইমেইল দিন
+            </h3>
+            <p className="text-gray-700 mb-4">
+              সাপ্তাহিক টিপস, আবহাওয়া ও নীতিমালা আপডেট
+            </p>
             <form className="flex flex-col sm:flex-row gap-3 justify-center">
-              <input type="email" name="email" placeholder="আপনার ইমেইল লিখুন" className="w-full sm:w-72 px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" />
-              <button type="button" className="px-5 py-2.5 rounded-lg bg-green-600 text-white hover:bg-green-700 transition">Subscribe</button>
+              <input
+                type="email"
+                name="email"
+                placeholder="আপনার ইমেইল লিখুন"
+                className="w-full sm:w-72 px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <button
+                type="button"
+                className="px-5 py-2.5 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+              >
+                Subscribe
+              </button>
             </form>
           </div>
         </section>
