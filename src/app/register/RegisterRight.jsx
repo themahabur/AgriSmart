@@ -4,7 +4,7 @@ import SelectArea from "../components/SelectArea";
 import Link from "next/link";
 import InputField from "./InputField";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const RegisterRight = () => {
   const [divisionCode, setDivisionCode] = useState(null);
@@ -192,6 +192,7 @@ const RegisterRight = () => {
         </Link>
         ।
       </p>
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 };
