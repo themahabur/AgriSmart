@@ -4,6 +4,8 @@ import SelectArea from "../../../components/SelectArea";
 import Link from "next/link";
 import InputField from "./InputField";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const RegisterRight = () => {
   const [divisionCode, setDivisionCode] = useState(null);
@@ -11,7 +13,7 @@ const RegisterRight = () => {
   const [divisions, setDivisions] = useState([]);
   const [eye, setEye] = useState(false);
   const [divisionName, setDivisionName] = useState("");
-
+  const router = useRouter();
   // division select
   const handleSelectDivision = (e) => {
     const selectedId = e.target.value;
@@ -23,18 +25,6 @@ const RegisterRight = () => {
     }
   };
 
-  // const user = {
-  //   name: "Anayet Rahman",
-  //   email: "anayedfdgfdgs@example.com",
-  //   password: "Secure@123",
-  //   division: "Dhaka",
-  //   district: "Gazipur",
-  //   upazila: "Sreepur",
-  //   phone: "01279345691",
-  //   role: "farmer",
-  // };
-  // console.log(user);
-  // form submit
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
@@ -51,7 +41,7 @@ const RegisterRight = () => {
       role: "farmer",
       // profileURL: profileFile ? profileFile.name : "",
     };
-    
+
     console.log("Submit Data:", formData);
 
     try {
@@ -71,12 +61,15 @@ const RegisterRight = () => {
       }
 
       const result = await response.json();
+      toast.success("Register successfully done");
       console.log("Register Success:", result);
     } catch (error) {
       console.error("Register Error:", error);
+      toast.error("Registration Failed");
     }
 
     e.target.reset();
+    router.push("/");
   };
 
   // division load
@@ -111,7 +104,6 @@ const RegisterRight = () => {
               type="file"
               name="profileURL"
               className="w-full mt-1 border border-gray-400  rounded-[10px] outline-0 file:mr-4 file:border-0 file:bg-green-500 file:px-4 file:py-4 file:text-sm file:font-semibold hover:file:bg-violet-100"
-             
             />
           </div>
 
@@ -194,7 +186,7 @@ const RegisterRight = () => {
 
       <p className="mt-2 text-sm">
         ইতিমধ্যে আপনার একটি অ্যাকাউন্ট আছে ?{" "}
-        <Link className="text-blue-500 hover:text-green-700" href="#">
+        <Link className="text-blue-500 hover:text-green-700" href="login">
           এখানে লগইন করুণ
         </Link>
         ।

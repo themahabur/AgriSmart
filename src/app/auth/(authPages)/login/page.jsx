@@ -200,12 +200,7 @@ const Login = () => {
               </div>
             </div>
 
-            {/* <button
-              type="submit"
-              className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
-            >
-              সাইন ইন করুন
-            </button> */}
+            
             <SecondaryBtn className="w-full" children={"সাইন ইন করুন"} />
           </form>
 
