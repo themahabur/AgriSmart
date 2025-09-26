@@ -19,7 +19,6 @@ import {
   FaChevronRight,
   FaStore,
   FaWarehouse,
-  FaMapMarkerAlt,
   FaTag,
 } from "react-icons/fa";
 
@@ -33,7 +32,7 @@ export default function MarketPricePage() {
   const [date, setDate] = useState("সব");
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataType, setDataType] = useState("today"); // 'today' or 'pre'
+  const [dataType, setDataType] = useState("today");  
   const itemsPerPage = 6;
 
   useEffect(() => {
@@ -56,14 +55,13 @@ export default function MarketPricePage() {
     fetchData();
   }, []);
 
-  const marketDataaa = data[0]; // first object in the array
+  const marketDataaa = data[0];
   const preMarketData = marketDataaa?.preMarketData || [];
   const todayMarketData = marketDataaa?.todayMarketData || [];
 
   console.log("Pre Market Data:", preMarketData);
   console.log("Today Market Data:", todayMarketData);
 
-  // todayMarketData বা preMarketData access করার সঠিক উপায়
   const marketData = useMemo(() => {
     if (!data || data.length === 0) return [];
     return dataType === "today"
@@ -72,13 +70,8 @@ export default function MarketPricePage() {
   }, [data, dataType]);
 
   console.log("Market Data:", marketData);
-
-  // Filter options - এখন marketData ব্যবহার করুন
-  const districts = useMemo(
-    () => ["সব", ...new Set(marketData.map((d) => d.text_bn).filter(Boolean))],
-    [marketData]
-  );
-
+ 
+  
   const dates = useMemo(
     () => [
       "সব",
@@ -88,7 +81,7 @@ export default function MarketPricePage() {
   );
 
   const categories = useMemo(
-    () => ["সব", ...new Set(marketData.map((d) => d.category).filter(Boolean))],
+    () => ["সব", ...new Set(marketData.map((d) => d.nameBn).filter(Boolean))],
     [marketData]
   );
 
@@ -380,7 +373,7 @@ export default function MarketPricePage() {
                       <p className="text-gray-500 text-sm">{item.text_en}</p>
                     </div>
                     <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                      {item.name}
+                      {item.nameBn || item.nameEn || "অজানা"}
                     </span>
                   </div>
                   <div className="space-y-4">
@@ -462,7 +455,7 @@ export default function MarketPricePage() {
                         </td>
                         <td className="p-4">
                           <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                            {item.name}
+                            {item.nameBn || item.nameEn || "অজানা"}
                           </span>
                         </td>
                         <td className="p-4">
