@@ -31,7 +31,7 @@ export default function ContactPage() {
 
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    console.log(formData);
+    // console.log(formData);
     alert("ধন্যবাদ! আপনার বার্তা পাঠানো হয়েছে।");
     setFormData({ name: "", email: "", subject: "", message: "" });
     setIsSubmitting(false);

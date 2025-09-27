@@ -2,16 +2,25 @@
 import React from "react";
 import SecondaryBtn from "../shared/buttons/SecondaryBtn";
 import CountUp from "react-countup";
+import Image from "next/image";
 
 const CallToAction = () => {
   return (
     <section className="relative bg-gradient-to-br from-green-50 via-white to-amber-50 py-20 px-6 overflow-hidden">
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-12">
-          <img src="/Farming Journey.png" alt="কৃষিকাজ যাত্রা" className="w-28 md:w-36 mx-auto mb-5" />
+          <Image
+            src="/Farming Journey.png"
+            alt="কৃষিকাজ যাত্রা"
+            width={144}
+            height={144}
+            sizes="(max-width: 768px) 112px, 144px"
+            className="w-28 md:w-36 mx-auto mb-5"
+          />
           {/* Section title */}
           <h2 className="text-3xl md:text-4xl font-bold font-hind text-gray-800">
-            রূপান্তর করুন তোমার <span className="text-green-600">কৃষিকাজ যাত্রা</span>{" "}
+            রূপান্তর করুন তোমার{" "}
+            <span className="text-green-600">কৃষিকাজ যাত্রা</span>{" "}
           </h2>
 
           {/* Supporting text */}
@@ -24,26 +33,31 @@ const CallToAction = () => {
         {/* Stats showcase */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white p-6 rounded-2xl shadow-md border border-green-100 text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2"> <CountUp
-                key={"1"} 
+            <div className="text-3xl font-bold text-green-600 mb-2">
+              {" "}
+              <CountUp
+                key={"1"}
                 start={0}
                 end={30}
                 delay={0.8}
                 duration={2}
                 suffix="%"
-              /></div>
+              />
+            </div>
             <div className="text-gray-700">গড় ফলন বৃদ্ধি</div>
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-md border border-amber-100 text-center">
-            <div className="text-3xl font-bold text-amber-500 mb-2"><CountUp
-                key={"1"} 
+            <div className="text-3xl font-bold text-amber-500 mb-2">
+              <CountUp
+                key={"1"}
                 start={0}
                 end={50}
                 delay={0.8}
                 duration={2}
                 suffix="K+"
-              /> </div>
+              />{" "}
+            </div>
             <div className="text-gray-700">সক্রিয় কৃষক</div>
           </div>
 

@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import LayoutBox from "../shared/layoutBox/LayoutBox";
 
 const Consultation = () => {
   const consultations = [
@@ -216,10 +215,10 @@ const Consultation = () => {
           <div className="lg:col-span-1 flex flex-col items-center lg:items-start text-center lg:text-left justify-center">
             <Image
               src="/consultaion.png"
-              width={400}
-              height={450}
+              width={224}
+              height={252}
               alt="consultation_avatar"
-              className="w-32 md:w-48 lg:w-56 mb-4"
+              sizes="(max-width: 768px) 128px, (max-width: 1024px) 192px, 224px"
             />
             <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 mx-auto lg:mx-0">
               অভিজ্ঞ বিশেষজ্ঞদের
@@ -243,8 +242,9 @@ const Consultation = () => {
                     src="/farmer_user_logo.jpg"
                     width={80}
                     height={80}
-                    className="rounded-full h-auto "
-                    alt="farmer_logo"
+                    className="rounded-full h-auto"
+                    alt="doctor_avatar"
+                    sizes="80px"
                   />
                 </div>
 

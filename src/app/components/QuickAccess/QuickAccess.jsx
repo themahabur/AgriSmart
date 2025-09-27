@@ -2,6 +2,7 @@ import { IoStatsChart } from "react-icons/io5";
 import { FaCalculator, FaSeedling } from "react-icons/fa";
 import { MdOutlineQuestionAnswer, MdOutlineSchool } from "react-icons/md";
 import { WiDayCloudyWindy } from "react-icons/wi";
+import Image from "next/image";
 
 function QuickAccess() {
   const tools = [
@@ -42,19 +43,22 @@ function QuickAccess() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-0 grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Left Section */}
         <div className="flex flex-col justify-center items-start text-center lg:text-left">
-          <img
+          <Image
             src="/smartFarmer.png"
             alt="Farmer Illustration"
             className="w-24 md:w-32 mx-auto lg:mx-0 mb-4"
+            width={128}
+            height={128}
+            sizes="(max-width: 768px) 96px, 128px"
           />
           <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 mx-auto lg:mx-0 lg:pl-3">
             অসাধারণ <span className="text-primary ">কৃষি টুলস</span>
           </h2>
           <p className="leading-relaxed text-gray-700 text-sm sm:text-base lg:pl-3 lg:w-sm mx-auto lg:mx-0">
             আধুনিক কৃষিকে আরও কার্যকর করতে আমরা এনেছি স্মার্ট টুলস — যেগুলো সহজ,
-            কার্যকরী, আর বাংলায় সহজ ভাষায় উপস্থাপিত। এখানে প্রতিদিনের বাজার দর,
-            আবহাওয়ার খবর, পোকামাকড় নিয়ন্ত্রণ, এবং আরও অনেক কৃষি সম্পর্কিত তথ্য
-            একসাথে পাবেন।
+            কার্যকরী, আর বাংলায় সহজ ভাষায় উপস্থাপিত। এখানে প্রতিদিনের বাজার
+            দর, আবহাওয়ার খবর, পোকামাকড় নিয়ন্ত্রণ, এবং আরও অনেক কৃষি সম্পর্কিত
+            তথ্য একসাথে পাবেন।
           </p>
         </div>
 

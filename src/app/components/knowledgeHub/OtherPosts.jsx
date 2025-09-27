@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import { FaPlay } from "react-icons/fa";
 
@@ -8,9 +9,12 @@ const OtherPosts = ({ post }) => {
       className="group flex gap-4 items-center rounded-xl bg-white border border-gray-200 p-4 transition-transform hover:scale-[1.02] duration-300"
     >
       <div className="flex-shrink-0 w-28 h-28 relative">
-        <img
+        <Image
           src={post.thumbnail}
           alt={post.title}
+          width={112}
+          height={112}
+          sizes="112px"
           className="w-full h-full object-cover rounded-lg shadow-md"
         />
         {post.type === "video" && (

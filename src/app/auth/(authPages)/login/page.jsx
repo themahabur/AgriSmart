@@ -24,15 +24,15 @@ const Login = () => {
       password,
       redirect: false,
     });
-    console.log(result);
+    // console.log(result);
     if (result.error) {
       setError(result.error);
-    
-      toast("Invalid Email or Password")
+
+      toast("Invalid Email or Password");
       setEmail("");
       setPassword("");
     } else {
-      toast("Alhamdulillah LogIn done")
+      toast("Alhamdulillah LogIn done");
       router.push("/");
     }
 
@@ -200,7 +200,6 @@ const Login = () => {
               </div>
             </div>
 
-            
             <SecondaryBtn className="w-full" children={"সাইন ইন করুন"} />
           </form>
 
@@ -222,7 +221,7 @@ const Login = () => {
             </p>
             <div className="">
               {/* Social Login */}
-              <SocialLogin/>
+              <SocialLogin />
             </div>
           </div>
         </div>

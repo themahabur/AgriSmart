@@ -4,6 +4,7 @@ import LayoutBox from "../shared/layoutBox/LayoutBox";
 import KnowledgeFilterButtons from "./KnowledgeFilterButtons";
 import KnowledgePost from "./KnowledgePost";
 import OtherPosts from "./OtherPosts";
+import Image from "next/image";
 
 // Sample Data
 const allPosts = [
@@ -68,10 +69,13 @@ const KnowledgeHub = () => {
       <section id="knowledge-hub">
         {/* Section Header */}
         <div className="text-center mb-3">
-          <img
+          <Image
             src="/learn-modern farming.png"
             alt="Farmer Illustration"
             className="w-28 md:w-36 mx-auto mb-5"
+            width={144}
+            height={144}
+            sizes="(max-width: 768px) 112px, 144px"
           />
           <h2 className="text-3xl md:text-4xl font-bold font-hind text-gray-800">
             জ্ঞানই শক্তি:{" "}

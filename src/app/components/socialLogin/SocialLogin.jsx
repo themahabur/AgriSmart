@@ -5,8 +5,8 @@ import { FcGoogle } from "react-icons/fc";
 
 export default function SocialLogin() {
   const handleGoogleLogin = async (payload) => {
-    const result = await signIn(payload, { callbackUrl: "/" ,redirect:false});
-    console.log(result);
+    const result = await signIn(payload, { callbackUrl: "/", redirect: false });
+    // console.log(result);
   };
 
   return (

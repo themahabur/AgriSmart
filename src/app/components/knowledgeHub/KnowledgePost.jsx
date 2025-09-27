@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import { FaPlay } from "react-icons/fa";
 
@@ -7,9 +8,12 @@ const KnowledgePost = ({ knowledgePost }) => {
       <a href={knowledgePost.link} className="block">
         {/* Thumbnail */}
         <div className="relative overflow-hidden rounded-t-xl shadow-lg max-h-96">
-          <img
+          <Image
             src={knowledgePost.thumbnail}
             alt={knowledgePost.title}
+            width={400}
+            height={300}
+            sizes="(max-width: 768px) 100vw, 600px"
             className="object-cover transition-transform duration-700 group-hover:scale-110 w-full h-full"
           />
           {knowledgePost.type === "video" && (

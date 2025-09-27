@@ -7,14 +7,11 @@ import Fqa from "../components/FQA/Fqa";
 import KnowledgeHub from "../components/knowledgeHub/KnowledgeHub";
 import QuickAccess from "../components/QuickAccess/QuickAccess";
 
-
-
 export default function Home() {
   return (
     <div>
-     
-      <Banner></Banner>
-      <CallToAction></CallToAction>
+      <Banner />
+      <CallToAction />
       <QuickAccess />
       {/* feature section */}
       <Feature />
@@ -22,7 +19,6 @@ export default function Home() {
       <KnowledgeHub />
       <FarmerReview />
       <Fqa />
-     
     </div>
   );
 }

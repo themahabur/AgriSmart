@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 
@@ -57,10 +58,13 @@ const Fqa = () => {
       <div className="container mx-auto grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
         {/* Left Side */}
         <div className="flex flex-col items-start">
-          <img
+          <Image
             src="/faq.png"
             alt="প্রশ্নের উত্তর"
+            width={144}
+            height={144}
             className="w-24 md:w-28 lg:w-36 mb-4"
+            sizes="(max-width: 768px) 96px, (max-width: 1024px) 112px, 144px"
           />
           <h2 className="text-3xl font-bold text-gray-900">
             সচরাচর জানতে চাওয়া{" "}
