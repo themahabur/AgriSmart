@@ -98,6 +98,7 @@ const Banner = () => {
                 className="w-full h-auto object-cover"
               />
             </div>
+
             {/* Decorative elements around image */}
             <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-green-500 rounded-full opacity-20"></div>
             <div className="absolute -top-4 -right-4 w-12 h-12 bg-amber-400 rounded-full opacity-20"></div>

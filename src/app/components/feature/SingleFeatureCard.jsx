@@ -1,15 +1,18 @@
+import Link from "next/link";
 import React from "react";
 
 const SingleFeatureCard = ({ service }) => {
   return (
     <div
-      className="bg-[#f7fff842] p-8 rounded-xl w-full max-w-sm
+      className="bg-[#f7fff842] p-8 rounded-xl w-full
                          border-1 border-[#daffde] hover:border-x-0 hover:border-t-2 hover:border-t-green-600
                          flex flex-col text-center
                          transition-all duration-300 ease-in-out
                          hover:-translate-y-2 group"
     >
-      <div className="mb-5 mx-auto bg-green-50 p-6 rounded-full">{service.icon}</div>
+      <div className="mb-5 mx-auto bg-green-50 p-6 rounded-full">
+        {service.icon}
+      </div>
       <h3 className="text-xl font-bold font-hind text-gray-900 mb-3">
         {service.title}
       </h3>
@@ -17,13 +20,13 @@ const SingleFeatureCard = ({ service }) => {
         {service.description}
       </p>
       {/* Action Link  */}
-      <a
+      <Link
         href={service.link}
         className="mt-1 font-semibold font-hind text-primary transition-colors duration-300
                            group-hover:text-secondary"
       >
         আরও জানুন &rarr;
-      </a>
+      </Link>
     </div>
   );
 };

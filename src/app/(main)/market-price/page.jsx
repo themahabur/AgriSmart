@@ -32,7 +32,7 @@ export default function MarketPricePage() {
   const [date, setDate] = useState("সব");
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataType, setDataType] = useState("today");  
+  const [dataType, setDataType] = useState("today");
   const itemsPerPage = 6;
 
   useEffect(() => {
@@ -59,8 +59,8 @@ export default function MarketPricePage() {
   const preMarketData = marketDataaa?.preMarketData || [];
   const todayMarketData = marketDataaa?.todayMarketData || [];
 
-  console.log("Pre Market Data:", preMarketData);
-  console.log("Today Market Data:", todayMarketData);
+  // console.log("Pre Market Data:", preMarketData);
+  // console.log("Today Market Data:", todayMarketData);
 
   const marketData = useMemo(() => {
     if (!data || data.length === 0) return [];
@@ -70,8 +70,7 @@ export default function MarketPricePage() {
   }, [data, dataType]);
 
   console.log("Market Data:", marketData);
- 
-  
+
   const dates = useMemo(
     () => [
       "সব",
@@ -133,14 +132,14 @@ export default function MarketPricePage() {
   }, [filteredData]);
 
   // Chart data - Fixed to handle invalid numbers
- const chartData = useMemo(() => {
-  return filteredData.map((d) => ({
-    name: d.nameBn || d.nameEn || "অজানা",
-    retail: parseFloat(d.a_r_howestPrice) || 0,
-    wholesale: parseFloat(d.a_w_howestPrice) || 0,
-    category: d.name || "অজানা",
-  }));
-}, [filteredData]);
+  const chartData = useMemo(() => {
+    return filteredData.map((d) => ({
+      name: d.nameBn || d.nameEn || "অজানা",
+      retail: parseFloat(d.a_r_howestPrice) || 0,
+      wholesale: parseFloat(d.a_w_howestPrice) || 0,
+      category: d.name || "অজানা",
+    }));
+  }, [filteredData]);
 
   // Pagination handlers
   const nextPage = () =>

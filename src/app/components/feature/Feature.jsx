@@ -1,13 +1,10 @@
 import React from "react";
-import {
-  FaCalculator,
-  FaUsers,
-  FaStethoscope,
-} from "react-icons/fa";
+import { FaCalculator, FaUsers, FaStethoscope } from "react-icons/fa";
 import { GiLongAntennaeBug } from "react-icons/gi";
 import { HiMiniBookOpen } from "react-icons/hi2";
 import LayoutBox from "../shared/layoutBox/LayoutBox";
 import SingleFeatureCard from "./SingleFeatureCard";
+import Image from "next/image";
 
 // Service data
 const services = [
@@ -54,11 +51,15 @@ const Feature = () => {
       <div id="services">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <img
-            src="/smartFarmer2.png"
-            alt="Farmer Illustration"
-            className="w-28 md:w-44 mx-auto mb-6"
-          />
+          <div className="w-28 md:w-44 mx-auto mb-6">
+            <Image
+              src="/smartFarmer2.png"
+              alt="Farmer Illustration"
+              width={176}
+              height={176}
+            />
+          </div>
+
           <h2 className="text-3xl md:text-4xl font-bold font-hind text-gray-800">
             আপনার খামারের <span className="text-primary">আধুনিক সমাধান</span>
           </h2>

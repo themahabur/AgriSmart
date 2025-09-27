@@ -11,7 +11,7 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("Credentials:", credentials);
+        // console.log("Credentials:", credentials);
 
         const res = await fetch(
           "https://agri-smart-server.vercel.app/api/users/login",
@@ -26,26 +26,25 @@ export const authOptions = {
         );
 
         const data = await res.json();
-        console.log("API Response:", data);
+        // console.log("API Response:", data);
 
         if (!res.ok || !data.token) {
-          console.log("Login failed");
+          // console.log("Login failed");
           return null;
         }
 
-        
         return {
-          id: "user-id", 
+          id: "user-id",
           name: credentials.email,
           email: credentials.email,
           token: data.token,
         };
       },
     }),
-     GoogleProvider({
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET
-  })
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
   pages: {
     signIn: "/auth/login",

@@ -43,7 +43,7 @@ const RegisterRight = () => {
       // profileURL: profileFile ? profileFile.name : "",
     };
 
-    console.log("Submit Data:", formData);
+    // console.log("Submit Data:", formData);
 
     try {
       const response = await fetch(

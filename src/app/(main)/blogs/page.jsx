@@ -1,6 +1,6 @@
 "use client";
+import SecondaryBtn from "@/app/components/shared/buttons/SecondaryBtn";
 import { useState } from "react";
-import SecondaryBtn from "../components/shared/buttons/SecondaryBtn";
 
 const Blog = () => {
   const [activeTab, setActiveTab] = useState("tutorials");
