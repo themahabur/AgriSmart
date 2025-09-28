@@ -42,7 +42,7 @@ const Login = () => {
   };
   
   return (
-    <div className=" bg-gradient-to-br min-h-screen from-green-50 to-cyan-50 flex justify-center items-center p-4">
+    <div className=" bg-gradient-to-br max-w-7xl mx-auto min-h-screen from-green-50 to-cyan-50 flex justify-center items-center p-4">
       <div className="w-full  bg-white rounded-3xl shadow-md overflow-hidden border border-green-100">
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Left Side - Image Section (Same as Register) */}
