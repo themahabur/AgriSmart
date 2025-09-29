@@ -71,8 +71,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       >
         <div className="flex h-full flex-col">
           {/* Logo and Header */}
-          <div className="p-3 border-b border-gray-200 flex items-center justify-between mb-2">
-            <Logo w={60} h={60} />
+          <div className="p-4 border-b border-gray-200 flex items-center justify-between mb-2">
+            <Logo w={45} h={45} />
 
             <button
               onClick={() => setIsOpen(false)}
@@ -83,7 +83,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-grow px-4 overflow-auto relative">
+          <nav className="flex-grow px-4 overflow-auto  relative [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             <ul className="space-y-2">
               {navItems.map((item) => (
                 <SidebarNavLinks key={item.href} item={item} />

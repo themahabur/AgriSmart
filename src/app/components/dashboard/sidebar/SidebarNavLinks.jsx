@@ -13,8 +13,8 @@ const SidebarNavLinks = ({ item }) => {
         href={item.href}
         className={`flex items-center gap-4 py-3 px-4 rounded-lg font-semibold transition-colors duration-200 ${
           isActive
-            ? "bg-light-green text-primary border-l-4 border-primary"
-            : "text-gray-600 hover:bg-gray-100"
+            ? "bg-green-50 text-primary border-l-4 border-primary"
+            : "text-gray-600 hover:bg-green-50"
         }`}
       >
         <item.icon
