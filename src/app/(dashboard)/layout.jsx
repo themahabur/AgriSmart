@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { FiMenu } from "react-icons/fi";
+import Sidebar from "../components/dashboard/sidebar/Sidebar";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -9,7 +10,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="flex h-screen bg-gray-50 font-hind">
       {/* Sidebar Component */}
-
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar with hamburger menu for mobile */}
