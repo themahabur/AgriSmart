@@ -79,16 +79,16 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <div className="p-3 border-b border-gray-200 flex items-center justify-between mb-2">
             <Logo w={60} h={60} />
 
-            {/* <button
-                onClick={() => setIsOpen(false)}
-                className="text-gray-500 hover:text-gray-800 lg:hidden"
-              >
-                <FiX size={24} />
-              </button> */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-gray-500 hover:text-gray-800 lg:hidden"
+            >
+              <FiX size={24} />
+            </button>
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-grow px-4">
+          <nav className="flex-grow px-4 overflow-auto max-h-(100vh-500px) relative">
             <ul className="space-y-2">
               {navItems.map((item) => {
                 const isActive = pathname === item.href;
@@ -116,7 +116,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           </nav>
 
           {/* User Profile Section */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-gray-200 sticky bottom-0 w-full z-10 bg-white">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-light-green text-primary font-bold text-lg">
                 র
