@@ -54,7 +54,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Menu */}
-        <ul className="hidden lg:flex gap-6 text-gray-700 font-medium font-hind items-center">
+        <ul className="hidden lg:flex gap-6 text-gray-700 font-medium font-hind items-center ">
           {links.map((link) =>
             link.name === "সেবাসমূহ" ? (
               <li key={link.name} className="relative">
@@ -96,7 +96,10 @@ export default function Navbar() {
               {language === "BN" ? "বাংলা" : "English"}
             </button>
             {session?.user?.email ? (
-              <button onClick={() => signOut()} className="px-4 py-1 rounded-full bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:bg-[#259e2f] transition font-hind">
+              <button
+                onClick={() => signOut()}
+                className="px-4 py-1 rounded-full bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:bg-[#259e2f] transition font-hind"
+              >
                 লগআউট
               </button>
             ) : (
