@@ -42,8 +42,8 @@ const Login = () => {
   };
   
   return (
-    <div className="  max-w-7xl mx-auto min-h-screen  flex justify-center items-center p-4">
-      <div className="w-full  bg-white rounded-3xl shadow-md overflow-hidden border border-green-100">
+    <div className="  max-w-[1600px] mx-auto min-h-screen  flex justify-center items-center">
+      <div className="w-full   bg-white overflow-hidden border border-green-100">
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Left Side - Image Section (Same as Register) */}
           <div className="relative h-full  bg-gradient-to-br from-green-600 70%  to-cyan-700 hidden md:block">
@@ -147,8 +147,8 @@ const Login = () => {
               </div>
 
               {/* Decorative Elements */}
-              <div className="flex justify-center ">
-                <div className="w-32 h-1 bg-green-300 rounded-full"></div>
+              <div >
+                
               </div>
             </div>
           </div>

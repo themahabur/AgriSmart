@@ -104,7 +104,7 @@ const RegisterRight = () => {
       <form className="space-y-2" onSubmit={handleFormSubmit}>
         {/* Name Field */}
         <div className="relative">
-          <div className="absolute left-2 top-[50px] transform -translate-y-1/2 text-gray-400">
+          <div className="absolute left-2 top-[52px] transform -translate-y-1/2 text-gray-400">
             <IoIosPerson size={20} />
           </div>
           <InputField
@@ -117,7 +117,7 @@ const RegisterRight = () => {
         </div>
 
         {/* Photo and Division Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
           {/* Photo Upload */}
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -142,7 +142,7 @@ const RegisterRight = () => {
                 onChange={handleSelectDivision}
                 id="division"
                 name="division"
-                className="w-full py-3 px-4 border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border-green-500 hover:border-gray-300 bg-white"
+                className="w-full py-3 px-4 border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
                 required
               >
                 <option value="">বিভাগ নির্বাচন করুন</option>
@@ -158,7 +158,7 @@ const RegisterRight = () => {
         </div>
 
         {/* District/Upazila Select */}
-        <div className=" p-2 rounded-xl ">
+        <div className=" py-2 rounded-xl ">
           <label className="block mb-3 text-sm font-medium text-gray-700">
             এলাকা নির্বাচন করুন
           </label>
@@ -171,7 +171,7 @@ const RegisterRight = () => {
        <div className="md:flex gap-2">
          {/* Email Field */}
         <div className="relative flex-1">
-          <div className="absolute left-4 top-[50px] transform -translate-y-1/2 text-gray-400">
+          <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
             <IoIosMail size={20} />
           </div>
           <InputField
@@ -180,13 +180,13 @@ const RegisterRight = () => {
             name="email"
             placeholder="উদাহরণ : info@gmail.com"
             required
-            className="pl-12"
+            className="w-full py-3 px-4 border-2 pl-10 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
           />
         </div>
 
         {/* Phone Field */}
         <div className="relative flex-1">
-          <div className="absolute left-4 top-[51px] transform -translate-y-1/2 text-gray-400">
+          <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
             <IoIosCall size={20} />
           </div>
           <InputField
@@ -195,14 +195,14 @@ const RegisterRight = () => {
             name="phone"
             placeholder="017xxxxxxxx"
             required
-            className="pl-12"
+            className="w-full py-3 px-4 border-2 pl-10 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
           />
         </div>
        </div>
 
         {/* Password Field */}
         <div className="relative">
-          <div className="absolute left-4 top-12 transform -translate-y-1/2 text-gray-400">
+          <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
             <IoIosLock size={20} />
           </div>
           <InputField
@@ -211,7 +211,7 @@ const RegisterRight = () => {
             name="password"
             placeholder="উদাহরণ : !zdA?34Z.."
             required
-            className="pl-12 pr-12"
+            className="w-full py-3 px-4 pl-10 border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
           />
           <button
             type="button"
@@ -226,7 +226,7 @@ const RegisterRight = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-4 rounded-xl text-white bg-gradient-to-r from-green-600 to-cyan-600 hover:from-green-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg"
+          className="w-full py-3 rounded-full text-white bg-gradient-to-r from-green-600 to-cyan-600 hover:from-green-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg"
         >
           {isLoading ? "রেজিস্ট্রেশন হচ্ছে..." : "অ্যাকাউন্ট খুলুন"}
         </button>

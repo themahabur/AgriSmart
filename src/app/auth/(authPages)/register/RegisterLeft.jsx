@@ -43,9 +43,7 @@ const RegisterLeft = () => {
         </div>
 
         {/* Decorative Elements */}
-        <div className="flex justify-center">
-          <div className="w-32 h-1 bg-green-300 rounded-full mb-4"></div>
-        </div>
+        <div></div>
       </div>
     </div>
   );
