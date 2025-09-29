@@ -42,7 +42,7 @@ const Login = () => {
   };
   
   return (
-    <div className=" bg-gradient-to-br max-w-7xl mx-auto min-h-screen from-green-50 to-cyan-50 flex justify-center items-center p-4">
+    <div className="  max-w-7xl mx-auto min-h-screen  flex justify-center items-center p-4">
       <div className="w-full  bg-white rounded-3xl shadow-md overflow-hidden border border-green-100">
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Left Side - Image Section (Same as Register) */}
@@ -63,7 +63,7 @@ const Login = () => {
                     width={60}
                     height={60}
                     alt="AgriSmart Logo"
-                    className="rounded-lg shadow-lg border-2 border-white"
+                    className="rounded-lg "
                   />
                   <span className="flex items-center gap-1 group-hover:gap-2 transition-all duration-300">
                     <IoIosArrowBack size={18} />

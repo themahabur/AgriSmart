@@ -22,7 +22,7 @@ const RegisterLeft = () => {
               width={60}
               height={60}
               alt="AgriSmart Logo"
-              className="rounded-lg shadow-lg border-2 border-white"
+              className="rounded-lg "
             />
             <span className="flex items-center gap-1 group-hover:gap-2 transition-all duration-300">
               <IoIosArrowBack size={18} />
