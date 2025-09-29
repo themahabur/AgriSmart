@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import SelectArea from "../../../components/SelectArea";
 import Link from "next/link";
 import InputField from "./InputField";
-import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import { IoIosEye, IoIosEyeOff, IoIosPerson, IoIosMail, IoIosCall, IoIosLock } from "react-icons/io";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -14,7 +14,9 @@ const RegisterRight = () => {
   const [divisions, setDivisions] = useState([]);
   const [eye, setEye] = useState(false);
   const [divisionName, setDivisionName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
   // division select
   const handleSelectDivision = (e) => {
     const selectedId = e.target.value;
@@ -28,6 +30,8 @@ const RegisterRight = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     const form = new FormData(e.target);
 
     const profileFile = form.get("profileURL");
@@ -40,10 +44,7 @@ const RegisterRight = () => {
       upazila: distUpaName?.upazilaName || "",
       phone: form.get("phone"),
       role: "farmer",
-      // profileURL: profileFile ? profileFile.name : "",
     };
-
-    // console.log("Submit Data:", formData);
 
     try {
       const response = await fetch(
@@ -62,20 +63,21 @@ const RegisterRight = () => {
       }
 
       if (response.ok) {
-        toast.success("Registration successful!");
+        toast.success("রেজিস্ট্রেশন সফল!");
         await signIn("credentials", {
           email: formData.email,
           password: formData.password,
           redirect: true,
           callbackUrl: "/",
         });
-
         router.push("/");
       }
       const result = await response.json();
     } catch (error) {
       console.error("Register Error:", error);
-      toast.error("Registration Failed");
+      toast.error("রেজিস্ট্রেশন ব্যর্থ হয়েছে");
+    } finally {
+      setIsLoading(false);
     }
     e.target.reset();
   };
@@ -88,117 +90,160 @@ const RegisterRight = () => {
   }, []);
 
   return (
-    <div className="md:w-full mx-auto p-8 lg:col-span-1 bg-white">
-      <h1 className="text-2xl md:text-3xl text-center text-primary font-bold container">
-        এখানে একটি অ্যাকাউন্ট খুলুন ।
-      </h1>
+    <div className="w-full h-full p-6 lg:p-8 bg-white">
+      <Toaster position="top-right" />
+      
+      {/* Header */}
+      <div className="text-center mb-4">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
+          এখানে একটি অ্যাকাউন্ট খুলুন
+        </h1>
+        <p className="text-gray-600">কৃষি সম্প্রদায়ের সাথে যুক্ত হোন</p>
+      </div>
 
-      <form className="w-full" onSubmit={handleFormSubmit}>
-        {/* name */}
-        <InputField
-          label="আপনার পুরা নাম লেখুন"
-          name="name"
-          placeholder="উদাহরণ : রহিম মিয়া"
-          required
-        />
+      <form className="space-y-2" onSubmit={handleFormSubmit}>
+        {/* Name Field */}
+        <div className="relative">
+          <div className="absolute left-2 top-[52px] transform -translate-y-1/2 text-gray-400">
+            <IoIosPerson size={20} />
+          </div>
+          <InputField
+            label="আপনার পুরা নাম লেখুন"
+            name="name"
+            placeholder="উদাহরণ : রহিম মিয়া"
+            required
+            className="pl-8"
+          />
+        </div>
 
-        <div className="flex items-center gap-2">
-          {/* photo url */}
-          <div className="flex-1">
-            <label className="block mb-1 text-lg font-medium text-gray-700">
-              আপনার প্রোফাইল ছবি পছন্দ করুণ
+        {/* Photo and Division Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+          {/* Photo Upload */}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              প্রোফাইল ছবি
             </label>
-            <input
-              type="file"
-              name="profileURL"
-              className="w-full mt-1 border border-gray-400  rounded-[10px] outline-0 file:mr-4 file:border-0 file:bg-green-500 file:px-4 file:py-4 file:text-sm file:font-semibold hover:file:bg-violet-100"
-            />
+            <div className="relative">
+              <input
+                type="file"
+                name="profileURL"
+                className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-xl outline-none transition-all duration-300 hover:border-green-500 focus:border-green-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              />
+            </div>
           </div>
 
-          {/* address */}
-          <div className="flex-1">
-            <label
-              htmlFor="division"
-              className="block mb-2 text-lg font-medium text-gray-700"
-            >
-              আপনার এলাকা নির্বাচন করুন
+          {/* Division Select */}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              বিভাগ নির্বাচন করুন
             </label>
-            <select
-              onChange={handleSelectDivision}
-              id="division"
-              name="division"
-              className="w-full px-4 py-3 border border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            >
-              <option value="">একটি বিভাগ নির্বাচন করুন</option>
-              {divisions.map((division) => (
-                <option key={division.id} value={division.id}>
-                  {division.ban_name}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                onChange={handleSelectDivision}
+                id="division"
+                name="division"
+                className="w-full py-3 px-4 border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
+                required
+              >
+                <option value="">বিভাগ নির্বাচন করুন</option>
+                {divisions.map((division) => (
+                  <option key={division.id} value={division.id}>
+                    {division.ban_name}
+                  </option>
+                ))}
+              </select>
+              
+            </div>
           </div>
         </div>
 
-        {/* district / upazila */}
-        <div className="mt-4">
+        {/* District/Upazila Select */}
+        <div className=" py-2 rounded-xl ">
+          <label className="block mb-3 text-sm font-medium text-gray-700">
+            এলাকা নির্বাচন করুন
+          </label>
           <SelectArea
             divisionCode={divisionCode}
             setDistUpaName={setDistUpaName}
           />
         </div>
 
-        {/* email */}
-        <InputField
-          label="আপনার ই-মেইল ঠিকানা লিখুন"
-          type="email"
-          name="email"
-          placeholder="উদাহরণ : info@gmail.com"
-          required
-        />
-
-        {/* phone */}
-        <InputField
-          label="মোবাইল নাম্বার"
-          type="text"
-          name="phone"
-          placeholder="017xxxxxxxx"
-          required
-        />
-
-        {/* password */}
-        <div className="relative">
+       <div className="md:flex gap-2">
+         {/* Email Field */}
+        <div className="relative flex-1">
+          <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
+            <IoIosMail size={20} />
+          </div>
           <InputField
-            label="আপনার পাসওর্য়াড সেট করুণ"
+            label="ই-মেইল ঠিকানা"
+            type="email"
+            name="email"
+            placeholder="উদাহরণ : info@gmail.com"
+            required
+            className="w-full py-3 px-4 border-2 pl-10 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
+          />
+        </div>
+
+        {/* Phone Field */}
+        <div className="relative flex-1">
+          <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
+            <IoIosCall size={20} />
+          </div>
+          <InputField
+            label="মোবাইল নাম্বার"
+            type="text"
+            name="phone"
+            placeholder="017xxxxxxxx"
+            required
+            className="w-full py-3 px-4 border-2 pl-10 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
+          />
+        </div>
+       </div>
+
+        {/* Password Field */}
+        <div className="relative">
+          <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
+            <IoIosLock size={20} />
+          </div>
+          <InputField
+            label="পাসওয়ার্ড সেট করুণ"
             type={eye ? "text" : "password"}
             name="password"
             placeholder="উদাহরণ : !zdA?34Z.."
             required
+            className="w-full py-3 px-4 pl-10 border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
           />
-          <div
+          <button
+            type="button"
             onClick={() => setEye(!eye)}
-            className="absolute bottom-2 right-2 cursor-pointer z-10 p-2"
+            className="absolute right-4 top-12 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-300 p-1"
           >
-            {eye ? <IoIosEye size={20} /> : <IoIosEyeOff size={20} />}
-          </div>
+            {eye ? <IoIosEye size={22} /> : <IoIosEyeOff size={22} />}
+          </button>
         </div>
 
-        {/* submit */}
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 rounded-full text-gray-100 bg-green-600 hover:bg-green-700 transition-all duration-500"
+          disabled={isLoading}
+          className="w-full py-3 rounded-full text-white bg-gradient-to-r from-green-600 to-cyan-600 hover:from-green-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg"
         >
-          অ্যাকাউন্ট খুলুন
+          {isLoading ? "রেজিস্ট্রেশন হচ্ছে..." : "অ্যাকাউন্ট খুলুন"}
         </button>
       </form>
 
-      <p className="mt-2 text-sm">
-        ইতিমধ্যে আপনার একটি অ্যাকাউন্ট আছে ?{" "}
-        <Link className="text-blue-500 hover:text-green-700" href="login">
-          এখানে লগইন করুণ
-        </Link>
-        ।
-      </p>
+      {/* Login Link */}
+      <div className="text-center mt-6 pt-6 border-t border-gray-200">
+        <p className="text-gray-600">
+          ইতিমধ্যে অ্যাকাউন্ট আছে?{" "}
+          <Link 
+            href="/auth/login" 
+            className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-300"
+          >
+            লগইন করুণ
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };
