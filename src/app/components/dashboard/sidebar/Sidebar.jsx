@@ -19,6 +19,8 @@ import {
   FaHome,
 } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
+import Image from "next/image";
+import Logo from "../../shared/logo/Logo";
 
 const navItems = [
   { href: "/dashboard", icon: FaHome, text: "হোম ড্যাশবোর্ড" },
@@ -74,19 +76,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       >
         <div className="flex h-full flex-col">
           {/* Logo and Header */}
-          <div className="p-6 flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-bold text-primary">AgriSmart</h1>
-              <p className="text-sm text-gray-500 mt-1">
-                স্মার্ট কৃষি প্ল্যাটফর্ম
-              </p>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-gray-500 hover:text-gray-800 lg:hidden"
-            >
-              <FiX size={24} />
-            </button>
+          <div className="p-3 border-b border-gray-200 flex items-center justify-between mb-2">
+            <Logo w={60} h={60} />
+
+            {/* <button
+                onClick={() => setIsOpen(false)}
+                className="text-gray-500 hover:text-gray-800 lg:hidden"
+              >
+                <FiX size={24} />
+              </button> */}
           </div>
 
           {/* Navigation Links */}
