@@ -1,7 +1,3 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   FaTractor,
   FaSeedling,
@@ -19,8 +15,9 @@ import {
   FaHome,
 } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
-import Image from "next/image";
 import Logo from "../../shared/logo/Logo";
+import UserProfile from "./UserProfile";
+import SidebarNavLinks from "./SidebarNavLinks";
 
 const navItems = [
   { href: "/dashboard", icon: FaHome, text: "হোম ড্যাশবোর্ড" },
@@ -56,8 +53,6 @@ const navItems = [
 ];
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
-  const pathname = usePathname();
-
   return (
     <>
       {/* Overlay for mobile */}
@@ -88,46 +83,17 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-grow px-4 overflow-auto max-h-(100vh-500px) relative">
+          <nav className="flex-grow px-4 overflow-auto relative">
             <ul className="space-y-2">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`flex items-center gap-4 py-3 px-4 rounded-lg font-semibold transition-colors duration-200 ${
-                        isActive
-                          ? "bg-light-green text-primary border-l-4 border-primary"
-                          : "text-gray-600 hover:bg-gray-100"
-                      }`}
-                    >
-                      <item.icon
-                        className={`w-5 h-5 ${
-                          isActive ? "text-primary" : "text-gray-500"
-                        }`}
-                      />
-                      <span>{item.text}</span>
-                    </Link>
-                  </li>
-                );
-              })}
+              {navItems.map((item) => (
+                <SidebarNavLinks key={item.href} item={item} />
+              ))}
             </ul>
           </nav>
 
           {/* User Profile Section */}
           <div className="p-4 border-t border-gray-200 sticky bottom-0 w-full z-10 bg-white">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-light-green text-primary font-bold text-lg">
-                র
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800">রহিম মিয়া</p>
-                <a href="#" className="text-xs text-gray-500 hover:underline">
-                  প্রোফাইল দেখুন
-                </a>
-              </div>
-            </div>
+            <UserProfile />
           </div>
         </div>
       </aside>
