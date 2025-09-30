@@ -379,6 +379,114 @@ const WeatherPage = () => {
       },
     ]
   }
+  // Fetch weather data
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error("আবহাওয়া তথ্য লোড করতে ব্যর্থ");
+        }
+        const data = await response.json();
+        // Filter for daily data at 12:00 PM
+        const dailyData = data.list.filter((reading) => reading.dt_txt.includes("12:00:00"));
+        setWeatherData(dailyData);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+    fetchWeather();
+  }, [apiUrl]);
+
+  // current time
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Toggle task expansion
+  const toggleTaskExpansion = (index) => {
+    setExpandedTasks(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  // Filter schedule based on selected crop and search term
+  const displayedSchedule = selectedCrop === 'all'
+    ? [
+        ...workSchedule.rice, 
+        ...workSchedule.vegetables, 
+        ...workSchedule.fruits,
+        ...workSchedule.potato,
+        ...workSchedule.jute,
+        ...workSchedule.mustard
+      ]
+    : workSchedule[selectedCrop];
+
+  const filteredSchedule = displayedSchedule.filter(item => 
+    item.task.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Get weather advice based on conditions
+  const getWeatherAdvice = (forecast) => {
+    const temp = forecast.main.temp;
+    const humidity = forecast.main.humidity;
+    const windSpeed = forecast.wind.speed;
+    const weatherMain = forecast.weather[0].main;
+
+    if (weatherMain === "Rain") {
+      return "বৃষ্টির সম্ভাবনা আছে, সেচ কমিয়ে দিন।";
+    } else if (temp > 35) {
+      return "অতিরিক্ত গরম, সকাল ও সন্ধ্যায় সেচ দিন।";
+    } else if (temp < 15) {
+      return "ঠান্ডা আবহাওয়া, ফসল সুরক্ষার ব্যবস্থা নিন।";
+    } else if (humidity > 80) {
+      return "উচ্চ আর্দ্রতা, ফসলের রোগের ঝুঁকি বেশি।";
+    } else if (windSpeed > 5) {
+      return "তীব্র বাতাস, গাছের সুরক্ষা নিশ্চিত করুন।";
+    } else {
+      return "নিয়মিত সেচ ও পরিচর্যা বজায় রাখুন।";
+    }
+  };
+
+  // Get  color
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'উচ্চ':
+        return 'bg-red-50 border-red-500 text-red-800';
+      case 'মাধ্যমিক':
+        return 'bg-yellow-50 border-yellow-500 text-yellow-800';
+      default:
+        return 'bg-green-50 border-green-500 text-green-800';
+    }
+  };
+
+  // Get crop icon
+  const getCropIcon = (cropType) => {
+    switch (cropType) {
+      case 'rice':
+        return <FaSeedling className="text-green-600" />;
+      case 'vegetables':
+        return <FaCarrot className="text-orange-500" />;
+      case 'fruits':
+        return <FaTree className="text-red-500" />;
+      case 'potato':
+        return <FaLeaf className="text-purple-500" />;
+      case 'jute':
+        return <FaLeaf className="text-yellow-600" />;
+      case 'mustard':
+        return <FaLeaf className="text-yellow-400" />;
+      default:
+        return <FaSeedling className="text-green-600" />;
+    }
+  };
+
     return (
         <div>
             
