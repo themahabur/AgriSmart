@@ -9,8 +9,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import {
-  FaSearch,
-  FaCalendarAlt,
   FaArrowUp,
   FaArrowDown,
   FaChartLine,
@@ -19,15 +17,18 @@ import {
   FaChevronRight,
   FaStore,
   FaWarehouse,
-  FaTag,
 } from "react-icons/fa";
+import { HiOutlineSelector } from "react-icons/hi";
+import { GoSearch } from "react-icons/go";
+import { IoIosCalendar } from "react-icons/io";
+import { AiOutlineTag } from "react-icons/ai";
+import Loading from "@/app/components/loading/Loading";
 
 export default function MarketPricePage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeView, setActiveView] = useState("table");
-  const [district, setDistrict] = useState("সব");
   const [category, setCategory] = useState("সব");
   const [date, setDate] = useState("সব");
   const [query, setQuery] = useState("");
@@ -35,6 +36,7 @@ export default function MarketPricePage() {
   const [dataType, setDataType] = useState("today");
   const itemsPerPage = 6;
 
+  // Fetch Data
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -55,13 +57,6 @@ export default function MarketPricePage() {
     fetchData();
   }, []);
 
-  const marketDataaa = data[0];
-  const preMarketData = marketDataaa?.preMarketData || [];
-  const todayMarketData = marketDataaa?.todayMarketData || [];
-
-  // console.log("Pre Market Data:", preMarketData);
-  // console.log("Today Market Data:", todayMarketData);
-
   const marketData = useMemo(() => {
     if (!data || data.length === 0) return [];
     return dataType === "today"
@@ -69,8 +64,7 @@ export default function MarketPricePage() {
       : data[0]?.preMarketData || [];
   }, [data, dataType]);
 
-  console.log("Market Data:", marketData);
-
+  // Dates & Categories
   const dates = useMemo(
     () => [
       "সব",
@@ -84,23 +78,24 @@ export default function MarketPricePage() {
     [marketData]
   );
 
-  // Filtered data - marketData ব্যবহার করুন
+  // Filtered data
   const filteredData = useMemo(() => {
     return marketData.filter((item) => {
       if (!item) return false;
-      if (district !== "সব" && item.text_bn !== district) return false;
       if (date !== "সব" && item.price_date !== date) return false;
-      if (category !== "সব" && item.category !== category) return false;
+      if (category !== "সব" && item.nameBn !== category) return false;
       if (
         query &&
-        !`${item.text_bn || ""} ${item.text_en || ""} ${item.category || ""}`
+        !`${item.text_bn || ""} ${item.text_en || ""} ${item.nameBn || ""} ${
+          item.nameEn || ""
+        }`
           .toLowerCase()
           .includes(query.toLowerCase())
       )
         return false;
       return true;
     });
-  }, [marketData, district, date, category, query]);
+  }, [marketData, date, category, query]);
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -109,13 +104,13 @@ export default function MarketPricePage() {
     return filteredData.slice(start, start + itemsPerPage);
   }, [filteredData, currentPage]);
 
-  // Summary - Fixed to handle empty data properly
+  // Summary
   const summary = useMemo(() => {
     if (!filteredData.length)
       return { highest: "-", lowest: "-", average: "-", total: 0 };
 
     const retailPrices = filteredData
-      .map((d) => parseFloat(d.a_r_howestPrice))
+      .map((d) => parseFloat(d.a_r_lowestPrice))
       .filter((price) => !isNaN(price));
 
     if (retailPrices.length === 0)
@@ -131,12 +126,12 @@ export default function MarketPricePage() {
     };
   }, [filteredData]);
 
-  // Chart data - Fixed to handle invalid numbers
+  // Chart data
   const chartData = useMemo(() => {
     return filteredData.map((d) => ({
       name: d.nameBn || d.nameEn || "অজানা",
-      retail: parseFloat(d.a_r_howestPrice) || 0,
-      wholesale: parseFloat(d.a_w_howestPrice) || 0,
+      retail: parseFloat(d.a_r_lowestPrice) || 0,
+      wholesale: parseFloat(d.a_w_lowestPrice) || 0,
       category: d.name || "অজানা",
     }));
   }, [filteredData]);
@@ -148,77 +143,54 @@ export default function MarketPricePage() {
   const goToPage = (page) =>
     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
 
-  // Fixed pagination page numbers calculation
   const getPaginationPages = () => {
     const pages = [];
     const maxVisiblePages = 5;
 
     if (totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       let start = Math.max(1, currentPage - 2);
       let end = Math.min(totalPages, start + maxVisiblePages - 1);
-
-      if (end - start + 1 < maxVisiblePages) {
+      if (end - start + 1 < maxVisiblePages)
         start = Math.max(1, end - maxVisiblePages + 1);
-      }
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
+      for (let i = start; i <= end; i++) pages.push(i);
     }
 
     return pages;
   };
 
+  if (loading) {
+    return Loading();
+  }
+
+  const selectClasses =
+    "appearance-none w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-1 focus:ring-green-200 outline-none transition-colors duration-200 bg-white pr-8";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 py-8 px-4 font-sans">
-      <div className="container mx-auto">
+      <div className="container mx-auto md:px-10">
+        {/* Error */}
+        {error && <div className="text-red-600 text-center mb-4">{error}</div>}
+
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="mb-5 lg:mb-10">
           <h1 className="text-2xl sm:text-3xl font-extrabold mb-3 mx-auto lg:mx-0 lg:pl-3">
-            বাজার <span className="text-green-600">দর</span> মনিটর
+            <span className="text-green-600">বাজার দর</span> মনিটর
           </h1>
           <p className="leading-relaxed text-gray-700 text-sm sm:text-base lg:pl-3">
             সর্বশেষ বাজার মূল্যের তথ্য পান এবং আপনার প্রয়োজনীয় পণ্যের দর তুলনা
             করুন।
           </p>
-          <div className="mt-4 flex flex-col sm:flex-row gap-2 justify-center items-center">
-            <div className="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
-              আপডেট: ২৫ সেপ্টেম্বর, ২০২৫
-            </div>
-            {/* Data Type Toggle */}
-            <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
-              {["today", "pre"].map((type) => (
-                <button
-                  key={type}
-                  onClick={() => {
-                    setDataType(type);
-                    setCurrentPage(1);
-                  }}
-                  className={`px-4 py-1.5 rounded-lg font-medium transition-colors duration-200 text-sm ${
-                    dataType === type
-                      ? "bg-green-600 text-white"
-                      : "text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  {type === "today" ? "আজকের দর" : "পূর্বের দর"}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           {[
             {
               title: "মোট এন্ট্রি",
               value: summary.total,
               icon: FaChartLine,
-              textColor: "text-green-600",
             },
             {
               title: "সর্বোচ্চ দর",
@@ -230,24 +202,22 @@ export default function MarketPricePage() {
               title: "সর্বনিম্ন দর",
               value: summary.lowest === "-" ? "-" : `${summary.lowest} ৳`,
               icon: FaArrowDown,
-              textColor: "text-green-600",
             },
             {
               title: "গড় দর",
               value: summary.average === "-" ? "-" : `${summary.average} ৳`,
               icon: FaFilter,
-              textColor: "text-purple-600",
             },
           ].map((card, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-lg p-6 border border-gray-200 hover:bg-gray-50 transition-colors duration-200"
+              className="bg-white rounded-lg p-6 border border-green-200 hover:bg-gray-50 transition-colors duration-200"
             >
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-gray-600 font-medium">{card.title}</h3>
-                <card.icon className={`${card.textColor} text-lg`} />
+                <card.icon className={`text-green-600 text-lg`} />
               </div>
-              <p className={`text-2xl font-bold ${card.textColor}`}>
+              <p className={`text-2xl font-bold text-green-600`}>
                 {card.value}
               </p>
             </div>
@@ -255,18 +225,17 @@ export default function MarketPricePage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg p-4 mb-8 border border-gray-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Search */}
-            <div className="lg:col-span-2">
-              <label className="block text-gray-700 font-medium mb-1 flex items-center gap-1">
-                <FaSearch className="text-green-600" />
+        <div className="bg-white rounded-lg p-4 mb-8 border border-green-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-10 gap-4">
+            <div className="md:col-span-2 lg:col-span-4">
+              <label className="block text-gray-700 font-medium mb-3 flex items-center gap-1">
+                <GoSearch className="text-green-600" />
                 খুঁজুন
               </label>
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="পণ্য বা অঞ্চল..."
+                  placeholder="পণ্যের নাম লিখুন..."
                   value={query}
                   onChange={(e) => {
                     setQuery(e.target.value);
@@ -274,69 +243,90 @@ export default function MarketPricePage() {
                   }}
                   className="w-full pl-8 pr-3 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-1 focus:ring-green-200 outline-none transition-colors duration-200"
                 />
-                <FaSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+                <GoSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
               </div>
             </div>
 
-            {/* Date Filter */}
-            <div className="lg:col-span-1">
-              <label className="text-gray-700 font-medium mb-1 flex items-center gap-1">
-                <FaCalendarAlt className="text-green-600" />
+            <div className="md:col-span-1 lg:col-span-2">
+              <label className="text-gray-700 font-medium mb-3 flex items-center gap-1">
+                <IoIosCalendar className="text-green-600" />
                 তারিখ
               </label>
-              <select
-                value={date}
-                onChange={(e) => {
-                  setDate(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-1 focus:ring-green-200 outline-none transition-colors duration-200"
-              >
-                {dates.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={date}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className={selectClasses}
+                >
+                  {dates.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+                <HiOutlineSelector className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
+              </div>
             </div>
 
-            {/* Category Filter */}
-            <div className="lg:col-span-1">
-              <label className="text-gray-700 font-medium mb-1 flex items-center gap-1">
-                <FaTag className="text-green-600" />
+            <div className="md:col-span-1 lg:col-span-2">
+              <label className="text-gray-700 font-medium mb-3 flex items-center gap-1">
+                <AiOutlineTag className="text-green-600" />
                 পণ্য
               </label>
-              <select
-                value={category}
-                onChange={(e) => {
-                  setCategory(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-1 focus:ring-green-200 outline-none transition-colors duration-200"
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
+              <div className="relative">
+                <select
+                  value={category}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className={selectClasses}
+                >
+                  {categories.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                <HiOutlineSelector className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
+              </div>
+            </div>
+
+            <div className="hidden lg:flex lg:col-span-2 mt-4 md:mt-0 justify-end items-end w-full">
+              <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-full">
+                {["table", "chart"].map((view) => (
+                  <button
+                    key={view}
+                    onClick={() => setActiveView(view)}
+                    className={`px-3 py-1.5 md:py-2 rounded-lg font-medium transition-colors duration-200 text-xs md:text-sm flex-1 text-center ${
+                      activeView === view
+                        ? "bg-green-600 text-white"
+                        : "text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {view === "table" ? "টেবিল" : "চার্ট"}
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
           </div>
 
-          {/* Desktop view toggle (table & chart) */}
-          <div className="hidden md:flex justify-center mt-4">
-            <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+          <div className="hidden md:flex lg:hidden justify-center mt-4">
+            <div className="flex gap-2 w-full max-w-xs">
               {["table", "chart"].map((view) => (
                 <button
                   key={view}
                   onClick={() => setActiveView(view)}
-                  className={`px-4 py-1.5 rounded-lg font-medium transition-colors duration-200 text-sm ${
+                  className={`flex-1 py-2.5 rounded-lg font-medium transition-colors duration-200 text-sm ${
                     activeView === view
-                      ? "bg-green-600 text-white"
+                      ? "bg-green-600 text-white shadow-sm"
                       : "text-gray-600 hover:bg-gray-200"
                   }`}
                 >
-                  {view === "table" ? "টেবিল" : "চার্ট"}
+                  {view === "table" ? "টেবিল ভিউ" : "চার্ট ভিউ"}
                 </button>
               ))}
             </div>
@@ -344,7 +334,7 @@ export default function MarketPricePage() {
         </div>
 
         {/* Mobile View */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 md:hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-30 md:hidden">
           {loading
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div
@@ -415,7 +405,7 @@ export default function MarketPricePage() {
 
         {/* Desktop Table View */}
         {activeView === "table" && (
-          <div className="bg-white rounded-lg border border-gray-200 mb-10 overflow-hidden hidden md:block">
+          <div className="bg-white rounded-lg border border-gray-200 mb-30 overflow-hidden hidden md:block">
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
@@ -524,7 +514,7 @@ export default function MarketPricePage() {
 
         {/* Chart View */}
         {activeView === "chart" && (
-          <div className="bg-white rounded-lg p-6 mb-10 border border-gray-200 hidden md:block">
+          <div className="bg-white rounded-lg p-6 mb-30 border border-gray-200 hidden md:block">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">
                 দর তুলনা চার্ট
