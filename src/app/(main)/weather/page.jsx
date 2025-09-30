@@ -733,6 +733,110 @@ const WeatherPage = () => {
             </div>
           )}
         </section>
+         {/* Weather Forecast Section */}
+        <section className="bg-white rounded-lg shadow-lg p-6">
+          <h2 className="text-2xl font-semibold text-green-700 mb-4 flex items-center">
+            <FaCloudSun className="mr-2" />
+            আবহাওয়ার পূর্বাভাস (ঢাকা)
+          </h2>
+          {loading && (
+            <div className="flex justify-center items-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+              <p className="ml-4 text-gray-600">তথ্য লোড হচ্ছে...</p>
+            </div>
+          )}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              <p>{error}</p>
+              <button 
+                className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors flex items-center"
+                onClick={() => window.location.reload()}
+              >
+                আবার চেষ্টা করুন
+              </button>
+            </div>
+          )}
+          {!loading && !error && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {weatherData.map((forecast, index) => (
+                <div
+                  key={index}
+                  className="bg-gradient-to-br from-green-100 to-blue-100 rounded-lg p-4 text-center shadow hover:shadow-md transition-shadow"
+                >
+                  <p className="font-medium text-lg">
+                    {new Date(forecast.dt * 1000).toLocaleDateString("bn-BD", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                    })}
+                  </p>
+                  <div className="my-3">
+                    <img 
+                      src={`http://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`} 
+                      alt={forecast.weather[0].description}
+                      className="mx-auto"
+                    />
+                    <p className="text-lg capitalize">{forecast.weather[0].description}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="bg-white bg-opacity-70 p-2 rounded flex flex-col items-center">
+                      <FaTemperatureHigh className="text-red-500 mb-1" />
+                      <p className="font-semibold">তাপমাত্রা</p>
+                      <p>{Math.round(forecast.main.temp)}°C</p>
+                    </div>
+                    <div className="bg-white bg-opacity-70 p-2 rounded flex flex-col items-center">
+                      <FaTint className="text-blue-500 mb-1" />
+                      <p className="font-semibold">আর্দ্রতা</p>
+                      <p>{forecast.main.humidity}%</p>
+                    </div>
+                    <div className="bg-white bg-opacity-70 p-2 rounded flex flex-col items-center">
+                      <FaWind className="text-gray-500 mb-1" />
+                      <p className="font-semibold">বাতাস</p>
+                      <p>{forecast.wind.speed} মি/সে</p>
+                    </div>
+                    <div className="bg-white bg-opacity-70 p-2 rounded flex flex-col items-center">
+                      <FaTachometerAlt className="text-purple-500 mb-1" />
+                      <p className="font-semibold">চাপ</p>
+                      <p>{forecast.main.pressure} hPa</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 p-2 bg-white bg-opacity-80 rounded">
+                    <p className="text-sm font-semibold text-green-700 flex items-center justify-center">
+                      <FaInfoCircle className="mr-1" />
+                      কৃষি পরামর্শ:
+                    </p>
+                    <p className="text-sm mt-1">{getWeatherAdvice(forecast)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Additional Resources Section */}
+        <section className="bg-white rounded-lg shadow-lg p-6 mt-6">
+          <h2 className="text-2xl font-semibold text-green-700 mb-4">কৃষি সম্পদ</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <h3 className="font-semibold text-green-700 mb-2">কৃষি পরামর্শ</h3>
+              <p className="text-sm text-gray-600 mb-3">বাংলাদেশ কৃষি গবেষণা ইনস্টিটিউট থেকে সর্বশেষ কৃষি প্রযুক্তি সম্পর্কে জানুন।</p>
+              <button className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors">
+                আরও জানুন
+              </button>
+            </div>
+            <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+              <h3 className="font-semibold text-amber-700 mb-2">বাজার দর</h3>
+              <p className="text-sm text-gray-600 mb-3">সর্বশেষ ফসলের বাজার মূল্য এবং বাজার সংবাদ সম্পর্কে আপডেট থাকুন।</p>
+              <button className="bg-amber-500 text-white px-3 py-1 rounded text-sm hover:bg-amber-600 transition-colors">
+                দেখুন
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      
+    </div>
     );
 };
 
