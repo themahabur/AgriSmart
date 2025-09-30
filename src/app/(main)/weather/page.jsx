@@ -488,9 +488,251 @@ const WeatherPage = () => {
   };
 
     return (
-        <div>
-            
+         <div className="bg-gradient-to-br from-green-50 via-amber-50 to-blue-50 min-h-screen flex flex-col items-center p-4 font-['Noto_Sans_Bengali']">
+      <header className="text-center mb-8 w-full ">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+          <div className="flex items-center">
+            <FaSeedling className="text-4xl text-green-600 mr-3" />
+            <div>
+              <h1 className="text-4xl font-bold text-green-800">কৃষকের সহায়ক</h1>
+              <p className="text-lg text-gray-700">বিভিন্ন ফসলের জন্য কাজের সময়সূচী এবং আবহাওয়া তথ্য</p>
+            </div>
+          </div>
+          <div className="bg-white p-3 rounded-lg shadow mt-4 md:mt-0">
+            <div className="flex items-center text-sm text-gray-600 mb-1">
+              <FaCalendarAlt className="mr-2" />
+              <span>
+                {currentDateTime.toLocaleDateString("bn-BD", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
+            </div>
+            <p className="text-lg font-semibold text-green-700">
+              {currentDateTime.toLocaleTimeString("bn-BD")}
+            </p>
+          </div>
         </div>
+        
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
+          <div className="bg-white p-4 rounded-lg shadow text-center">
+            <div className="flex justify-center mb-2">
+              <FaSeedling className="text-2xl text-green-600" />
+            </div>
+            <p className="text-2xl font-bold text-green-600">{workSchedule.rice.length}</p>
+            <p className="text-sm text-gray-600">ধান</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow text-center">
+            <div className="flex justify-center mb-2">
+              <FaCarrot className="text-2xl text-orange-500" />
+            </div>
+            <p className="text-2xl font-bold text-green-600">{workSchedule.vegetables.length}</p>
+            <p className="text-sm text-gray-600">সবজি</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow text-center">
+            <div className="flex justify-center mb-2">
+              <FaTree className="text-2xl text-red-500" />
+            </div>
+            <p className="text-2xl font-bold text-green-600">{workSchedule.fruits.length}</p>
+            <p className="text-sm text-gray-600">ফল</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow text-center">
+            <div className="flex justify-center mb-2">
+              <FaLeaf className="text-2xl text-purple-500" />
+            </div>
+            <p className="text-2xl font-bold text-green-600">{workSchedule.potato.length}</p>
+            <p className="text-sm text-gray-600">আলু</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow text-center">
+            <div className="flex justify-center mb-2">
+              <FaLeaf className="text-2xl text-yellow-600" />
+            </div>
+            <p className="text-2xl font-bold text-green-600">{workSchedule.jute.length}</p>
+            <p className="text-sm text-gray-600">পাট</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow text-center">
+            <div className="flex justify-center mb-2">
+              <FaLeaf className="text-2xl text-yellow-400" />
+            </div>
+            <p className="text-2xl font-bold text-green-600">{workSchedule.mustard.length}</p>
+            <p className="text-sm text-gray-600">সরিষা</p>
+          </div>
+        </div>
+      </header>
+
+      <main className="w-full ">
+        {/* Crop Filter and Search */}
+        <section className="mb-6 bg-white rounded-lg shadow-lg p-4">
+          <div className="flex flex-col md:flex-row justify-between gap-4">
+            <div className="w-full md:w-auto">
+              <h2 className="text-xl font-semibold text-green-700 mb-2 flex items-center">
+                <FaSeedling className="mr-2" />
+                ফসল নির্বাচন করুন
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className={`px-4 py-2 rounded-lg transition-all flex items-center ${selectedCrop === 'all' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  onClick={() => setSelectedCrop('all')}
+                >
+                  <FaSeedling className="mr-2" />
+                  সব ফসল
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-lg transition-all flex items-center ${selectedCrop === 'rice' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  onClick={() => setSelectedCrop('rice')}
+                >
+                  <FaSeedling className="mr-2" />
+                  ধান
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-lg transition-all flex items-center ${selectedCrop === 'vegetables' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  onClick={() => setSelectedCrop('vegetables')}
+                >
+                  <FaCarrot className="mr-2" />
+                  সবজি
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-lg transition-all flex items-center ${selectedCrop === 'fruits' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  onClick={() => setSelectedCrop('fruits')}
+                >
+                  <FaTree className="mr-2" />
+                  ফল
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-lg transition-all flex items-center ${selectedCrop === 'potato' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  onClick={() => setSelectedCrop('potato')}
+                >
+                  <FaLeaf className="mr-2" />
+                  আলু
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-lg transition-all flex items-center ${selectedCrop === 'jute' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  onClick={() => setSelectedCrop('jute')}
+                >
+                  <FaLeaf className="mr-2" />
+                  পাট
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-lg transition-all flex items-center ${selectedCrop === 'mustard' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  onClick={() => setSelectedCrop('mustard')}
+                >
+                  <FaLeaf className="mr-2" />
+                  সরিষা
+                </button>
+              </div>
+            </div>
+            
+            <div className="w-full md:w-64">
+              <h2 className="text-xl font-semibold text-green-700 mb-2 flex items-center">
+                <FaSearch className="mr-2" />
+                কাজ খুঁজুন
+              </h2>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="কাজের নাম বা বর্ণনা লিখুন..."
+                  className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <FaSearch className="absolute left-3 top-3 text-gray-400" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Work Schedule Section */}
+        <section className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold text-green-700 flex items-center">
+              <FaCalendarAlt className="mr-2" />
+              কৃষি কাজের সময়সূচী
+            </h2>
+            <div className="text-sm text-gray-600 flex items-center">
+              <FaInfoCircle className="mr-1" />
+              মোট কাজ: {filteredSchedule.length}টি
+            </div>
+          </div>
+          
+          {filteredSchedule.length === 0 ? (
+            <div className="text-center py-8">
+              <FaSearch className="text-4xl text-gray-400 mx-auto mb-2" />
+              <p className="text-gray-500">কোন কাজ পাওয়া যায়নি। অনুসন্ধান পরিবর্তন করুন।</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredSchedule.map((item, index) => (
+                <div 
+                  key={index} 
+                  className={`border-l-4 p-4 rounded-r-lg transition-all hover:shadow-md ${getPriorityColor(item.priority)}`}
+                >
+                  <div className="flex flex-col md:flex-row justify-between">
+                    <div className="mb-2 md:mb-0 flex-1">
+                      <div className="flex items-center mb-2">
+                        <h3 className="text-lg font-medium">{item.task}</h3>
+                        <span className={`ml-2 px-2 py-1 rounded text-xs ${
+                          item.priority === 'উচ্চ' ? 'bg-red-500 text-white' : 
+                          item.priority === 'মাধ্যমিক' ? 'bg-yellow-500 text-white' : 
+                          'bg-green-500 text-white'
+                        }`}>
+                          {item.priority}
+                        </span>
+                      </div>
+                      <p className="text-gray-700">{item.description}</p>
+                      <p className="text-sm text-gray-600 mt-2">
+                        <strong>পরবর্তী কাজ:</strong> {item.nextStep}
+                      </p>
+                      
+                      {/* Expandable Steps Section */}
+                      {item.steps && (
+                        <div className="mt-3">
+                          <button
+                            onClick={() => toggleTaskExpansion(index)}
+                            className="flex items-center text-green-600 hover:text-green-800 text-sm font-medium"
+                          >
+                            <span>ধাপে ধাপে পদ্ধতি {expandedTasks[index] ? 'লুকান' : 'দেখুন'}</span>
+                            <svg 
+                              className={`ml-1 w-4 h-4 transition-transform ${expandedTasks[index] ? 'rotate-180' : ''}`} 
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                          
+                          {expandedTasks[index] && (
+                            <div className="mt-2 bg-white p-3 rounded-lg border border-green-200">
+                              <h4 className="font-medium text-green-700 mb-2">বিস্তারিত পদ্ধতি:</h4>
+                              <ol className="list-decimal list-inside space-y-1 text-sm text-gray-700">
+                                {item.steps.map((step, stepIndex) => (
+                                  <li key={stepIndex} className="pl-2">{step}</li>
+                                ))}
+                              </ol>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col text-sm space-y-2">
+                      <div className="flex items-center bg-white px-2 py-1 rounded">
+                        <FaCalendarAlt className="mr-1 text-green-600" />
+                        <span><strong>মাস:</strong> {item.month}</span>
+                      </div>
+                      <div className="flex items-center bg-white px-2 py-1 rounded">
+                        <FaTachometerAlt className="mr-1 text-blue-600" />
+                        <span><strong>সময়:</strong> {item.duration}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
     );
 };
 
