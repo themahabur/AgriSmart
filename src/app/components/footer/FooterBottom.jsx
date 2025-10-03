@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const FooterBottom = () => {
@@ -14,9 +15,9 @@ const FooterBottom = () => {
           <a href="#" className="hover:text-green-700">
             সাপোর্টেড ব্রাউজার
           </a>
-          <a href="#" className="hover:text-green-700">
+          <Link href="/privacyPolicy" className="hover:text-green-700">
             শর্তাবলী
-          </a>
+          </Link>
           <a href="#" className="hover:text-green-700">
             বিক্রয় নীতি
           </a>

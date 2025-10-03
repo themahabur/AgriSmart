@@ -1,12 +1,15 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 
 export default function SocialLogin() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const handleGoogleLogin = async (payload) => {
-    const result = await signIn(payload, { callbackUrl: "/", redirect: false });
-    // console.log(result);
+    const result = await signIn(payload, { redirect: true, callbackUrl });
+    
   };
 
   return (

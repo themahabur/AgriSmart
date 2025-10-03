@@ -1,11 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiMenu } from "react-icons/fi";
 import Sidebar from "../components/dashboard/sidebar/Sidebar";
+import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const pathname = usePathname()
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push(`/auth/login?callbackUrl=${pathname}`) 
+    }
+  }, [status, router, pathname]);
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 font-hind">

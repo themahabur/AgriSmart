@@ -3,10 +3,17 @@ import React, { useEffect, useState } from "react";
 import SelectArea from "../../../components/SelectArea";
 import Link from "next/link";
 import InputField from "./InputField";
-import { IoIosEye, IoIosEyeOff, IoIosPerson, IoIosMail, IoIosCall, IoIosLock } from "react-icons/io";
+import {
+  IoIosEye,
+  IoIosEyeOff,
+  IoIosPerson,
+  IoIosMail,
+  IoIosCall,
+  IoIosLock,
+} from "react-icons/io";
 import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 const RegisterRight = () => {
   const [divisionCode, setDivisionCode] = useState(null);
@@ -16,7 +23,8 @@ const RegisterRight = () => {
   const [divisionName, setDivisionName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   // division select
   const handleSelectDivision = (e) => {
     const selectedId = e.target.value;
@@ -31,7 +39,7 @@ const RegisterRight = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     const form = new FormData(e.target);
 
     const profileFile = form.get("profileURL");
@@ -68,7 +76,7 @@ const RegisterRight = () => {
           email: formData.email,
           password: formData.password,
           redirect: true,
-          callbackUrl: "/",
+          callbackUrl,
         });
         router.push("/");
       }
@@ -92,7 +100,7 @@ const RegisterRight = () => {
   return (
     <div className="w-full h-full p-6 lg:p-8 bg-white">
       <Toaster position="top-right" />
-      
+
       {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
@@ -152,7 +160,6 @@ const RegisterRight = () => {
                   </option>
                 ))}
               </select>
-              
             </div>
           </div>
         </div>
@@ -168,37 +175,37 @@ const RegisterRight = () => {
           />
         </div>
 
-       <div className="md:flex gap-2">
-         {/* Email Field */}
-        <div className="relative flex-1">
-          <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
-            <IoIosMail size={20} />
+        <div className="md:flex gap-2">
+          {/* Email Field */}
+          <div className="relative flex-1">
+            <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
+              <IoIosMail size={20} />
+            </div>
+            <InputField
+              label="ই-মেইল ঠিকানা"
+              type="email"
+              name="email"
+              placeholder="উদাহরণ : info@gmail.com"
+              required
+              className="w-full py-3 px-4 border-2 pl-10 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
+            />
           </div>
-          <InputField
-            label="ই-মেইল ঠিকানা"
-            type="email"
-            name="email"
-            placeholder="উদাহরণ : info@gmail.com"
-            required
-            className="w-full py-3 px-4 border-2 pl-10 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
-          />
-        </div>
 
-        {/* Phone Field */}
-        <div className="relative flex-1">
-          <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
-            <IoIosCall size={20} />
+          {/* Phone Field */}
+          <div className="relative flex-1">
+            <div className="absolute left-4 top-[52px] transform -translate-y-1/2 text-gray-400">
+              <IoIosCall size={20} />
+            </div>
+            <InputField
+              label="মোবাইল নাম্বার"
+              type="text"
+              name="phone"
+              placeholder="017xxxxxxxx"
+              required
+              className="w-full py-3 px-4 border-2 pl-10 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
+            />
           </div>
-          <InputField
-            label="মোবাইল নাম্বার"
-            type="text"
-            name="phone"
-            placeholder="017xxxxxxxx"
-            required
-            className="w-full py-3 px-4 border-2 pl-10 border-gray-200 rounded-xl outline-none transition-all duration-300 focus:border hover:border-gray-300 bg-white"
-          />
         </div>
-       </div>
 
         {/* Password Field */}
         <div className="relative">
@@ -236,8 +243,8 @@ const RegisterRight = () => {
       <div className="text-center mt-6 pt-6 border-t border-gray-200">
         <p className="text-gray-600">
           ইতিমধ্যে অ্যাকাউন্ট আছে?{" "}
-          <Link 
-            href="/auth/login" 
+          <Link
+            href="/auth/login"
             className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-300"
           >
             লগইন করুণ
