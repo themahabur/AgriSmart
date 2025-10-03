@@ -24,11 +24,11 @@ export default function Navbar() {
   const links = [
     { name: "হোম", href: "/" },
     { name: "সেবাসমূহ", href: "#" },
-    { name: "বাজার মূল্য", href: "/market-price" },
-    { name: "আবহাওয়া", href: "/weather" },
+    
     { name: "ব্লগ", href: "/blogs" },
     { name: "আমাদের সম্পর্কে", href: "/about" },
     { name: "যোগাযোগ", href: "/contact" },
+    { name: "ড্যাশবোর্ড", href: "/dashboard" },
   ];
 
   const services = [

@@ -1,9 +1,9 @@
 "use client";
 import SecondaryBtn from "@/app/components/shared/buttons/SecondaryBtn";
 import SocialLogin from "@/app/components/socialLogin/SocialLogin";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {  useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { IoIosArrowBack } from "react-icons/io";
@@ -16,7 +16,9 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -25,9 +27,10 @@ const Login = () => {
     const result = await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      redirect: true,
+      callbackUrl,
     });
-    
+
     if (result.error) {
       setError(result.error);
       toast("Invalid Email or Password");
@@ -40,21 +43,21 @@ const Login = () => {
 
     setLoading(false);
   };
-  
+
   return (
     <div className="  max-w-[1600px] mx-auto min-h-screen  flex justify-center items-center">
       <div className="w-full   bg-white overflow-hidden border border-green-100">
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Left Side - Image Section (Same as Register) */}
-          <div className="relative h-full  bg-gradient-to-br from-green-600 70%  to-cyan-700 hidden md:block">
+          <div className="relative min-h-screen  bg-gradient-to-br from-green-600 70%  to-cyan-700 hidden md:block">
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1100&q=80')] bg-cover bg-center mix-blend-overlay opacity-20"></div>
-            
+
             {/* Content */}
             <div className="relative z-10 h-full flex flex-col justify-between mt-5 px-8">
               {/* Logo and Back Button */}
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="inline-flex items-center gap-2 text-white hover:text-green-200 transition-colors duration-300 group"
               >
                 <div className="flex items-center gap-3">
@@ -78,8 +81,9 @@ const Login = () => {
                   AgriSmart কমিউনিটিতে ফিরে আসার জন্য স্বাগতম
                 </h2>
                 <p className="text-lg opacity-90 leading-relaxed">
-                  আপনার অ্যাকাউন্টে লগইন করুন এবং কৃষি সম্প্রদায়ের সাথে আবার যুক্ত হোন। 
-                  বাজার দর, আবহাওয়া সংক্রান্ত তথ্য এবং আধুনিক কৃষি পদ্ধতি সম্পর্কে জানতে থাকুন।
+                  আপনার অ্যাকাউন্টে লগইন করুন এবং কৃষি সম্প্রদায়ের সাথে আবার
+                  যুক্ত হোন। বাজার দর, আবহাওয়া সংক্রান্ত তথ্য এবং আধুনিক কৃষি
+                  পদ্ধতি সম্পর্কে জানতে থাকুন।
                 </p>
               </div>
 
@@ -122,7 +126,9 @@ const Login = () => {
                       />
                     </svg>
                   </div>
-                  <span className="text-white">আবহাওয়ার সতর্কতা ও পূর্বাভাস</span>
+                  <span className="text-white">
+                    আবহাওয়ার সতর্কতা ও পূর্বাভাস
+                  </span>
                 </div>
 
                 <div className="flex items-center">
@@ -147,20 +153,20 @@ const Login = () => {
               </div>
 
               {/* Decorative Elements */}
-              <div >
-                
-              </div>
+              <div></div>
             </div>
           </div>
 
           {/* Right Side - Login Form */}
-          <div className="w-full h-full p-6 lg:p-8 bg-white">
+          <div className="w-full min-h-screen p-6 lg:p-8 bg-white flex flex-col justify-center">
             {/* Header */}
             <div className="text-center mb-4">
               <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
                 আপনার অ্যাকাউন্টে লগইন করুন
               </h1>
-              <p className="text-gray-600">ফিরে আসার জন্য স্বাগতম! অনুগ্রহ করে আপনার তথ্য দিন।</p>
+              <p className="text-gray-600">
+                ফিরে আসার জন্য স্বাগতম! অনুগ্রহ করে আপনার তথ্য দিন।
+              </p>
             </div>
 
             <form className="space-y-3" onSubmit={handleSubmit}>
@@ -180,8 +186,19 @@ const Login = () => {
                     required
                   />
                   <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -203,8 +220,19 @@ const Login = () => {
                     required
                   />
                   <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
                     </svg>
                   </div>
                 </div>
