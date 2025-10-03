@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   FaTractor,
   FaSeedling,
@@ -53,6 +55,20 @@ const navItems = [
 ];
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
+  // Close sidebar on escape key press
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [setIsOpen]);
+
   return (
     <>
       {/* Overlay for mobile */}
@@ -77,6 +93,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             <button
               onClick={() => setIsOpen(false)}
               className="text-gray-500 hover:text-gray-800 lg:hidden"
+              aria-label="Close sidebar"
             >
               <FiX size={24} />
             </button>
@@ -99,6 +116,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       </aside>
     </>
   );
+};
+
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

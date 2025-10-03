@@ -12,7 +12,6 @@ export default function Navbar() {
   const [language, setLanguage] = useState("EN");
   const [mobileMenu, setMobileMenu] = useState(false);
   const { data: session } = useSession();
-  console.log(session?.user?.email);
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
@@ -24,11 +23,11 @@ export default function Navbar() {
   const links = [
     { name: "হোম", href: "/" },
     { name: "সেবাসমূহ", href: "#" },
-    { name: "বাজার মূল্য", href: "/market-price" },
-    { name: "আবহাওয়া", href: "/weather" },
+
     { name: "ব্লগ", href: "/blogs" },
     { name: "আমাদের সম্পর্কে", href: "/about" },
     { name: "যোগাযোগ", href: "/contact" },
+    { name: "ড্যাশবোর্ড", href: "/dashboard" },
   ];
 
   const services = [
