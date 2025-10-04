@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import defaultSlugify from "@sindresorhus/slugify"; // <-- MODERN slugify
+import defaultSlugify from "@sindresorhus/slugify";
 import { FiSave, FiSend } from "react-icons/fi";
 
 // Import our new modern components
