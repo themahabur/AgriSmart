@@ -35,7 +35,7 @@ const ChatInput = ({
   };
 
   return (
-    <footer className="px-4 md:px-8 py-4 bg-white/90 backdrop-blur-md border-t border-gray-200">
+    <footer className="px-4 md:px-8 py-4 bg-white/90 backdrop-blur-md border-t border-gray-200 sticky bottom-0 z-10">
       {imageFile && (
         <div className="relative w-fit mb-3 p-2 border border-gray-200 rounded-lg bg-gray-50">
           <img
