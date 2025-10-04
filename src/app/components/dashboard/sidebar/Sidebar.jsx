@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   FaTractor,
   FaSeedling,
@@ -53,6 +55,20 @@ const navItems = [
 ];
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
+  // Close sidebar on escape key press
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [setIsOpen]);
+
   return (
     <>
       {/* Overlay for mobile */}
@@ -71,19 +87,20 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       >
         <div className="flex h-full flex-col">
           {/* Logo and Header */}
-          <div className="p-3 border-b border-gray-200 flex items-center justify-between mb-2">
-            <Logo w={60} h={60} />
+          <div className="p-4 border-b border-gray-200 flex items-center justify-between mb-2">
+            <Logo w={45} h={45} />
 
             <button
               onClick={() => setIsOpen(false)}
               className="text-gray-500 hover:text-gray-800 lg:hidden"
+              aria-label="Close sidebar"
             >
               <FiX size={24} />
             </button>
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-grow px-4 overflow-auto relative">
+          <nav className="flex-grow px-4 overflow-auto  relative [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             <ul className="space-y-2">
               {navItems.map((item) => (
                 <SidebarNavLinks key={item.href} item={item} />
@@ -99,6 +116,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       </aside>
     </>
   );
+};
+
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

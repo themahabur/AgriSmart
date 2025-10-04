@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import SelectArea from "../../../components/SelectArea";
 import Link from "next/link";
 import InputField from "./InputField";
@@ -15,7 +15,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 
-const RegisterRight = () => {
+// Component that uses useSearchParams
+const RegisterRightForm = () => {
   const [divisionCode, setDivisionCode] = useState(null);
   const [distUpaName, setDistUpaName] = useState(null);
   const [divisions, setDivisions] = useState([]);
@@ -252,6 +253,21 @@ const RegisterRight = () => {
         </p>
       </div>
     </div>
+  );
+};
+
+// Main RegisterRight component wrapped with Suspense
+const RegisterRight = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-lg">লোড হচ্ছে...</div>
+        </div>
+      }
+    >
+      <RegisterRightForm />
+    </Suspense>
   );
 };
 

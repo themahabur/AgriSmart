@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FiMenu } from "react-icons/fi";
 import Sidebar from "../components/dashboard/sidebar/Sidebar";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import DashboardNavbar from "../components/dashboard/navbar/DashboardNavbar";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push(`/auth/login?callbackUrl=${pathname}`) 
+      router.push(`/auth/login?callbackUrl=${pathname}`);
     }
   }, [status, router, pathname]);
 
@@ -26,30 +26,16 @@ export default function DashboardLayout({ children }) {
     <div className="flex h-screen bg-gray-50 font-hind">
       {/* Sidebar Component */}
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
+
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top bar with hamburger menu for mobile */}
-        <header className="flex justify-between items-center p-4 bg-white border-b">
-          <div className="flex items-center gap-2">
-            <img
-              src="/logo.webp"
-              alt="AgriSmart Logo"
-              className="h-8 w-8 text-primary"
-            />
-            <h1 className="text-xl font-bold text-primary">
-              AgriSmart hello world
-            </h1>
-          </div>
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="text-gray-600 focus:outline-none *:lg:hidden"
-          >
-            <FiMenu size={24} />
-          </button>
+        {/* Top bar  */}
+        <header className="">
+          <DashboardNavbar onMenuClick={() => setSidebarOpen(true)} />
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 px-6">
           {children}
         </main>
       </div>
