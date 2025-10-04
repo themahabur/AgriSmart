@@ -4,12 +4,10 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import defaultSlugify from "@sindresorhus/slugify";
 import { FiSave, FiSend } from "react-icons/fi";
-
-// Import our new modern components
-import RichTextEditor from "./forms/RichTextEditor"; // <-- MODERN Editor
-import FormInput from "./forms/FormInput";
-import ImageUploader from "./forms/ImageUploader";
-import TagInput from "./forms/TagInput";
+import FormInput from "./FormInput";
+import RichTextEditor from "./RichTextEditor";
+import TagInput from "./TagInput";
+import ImageUploader from "./ImageUploader";
 
 const AddBlogForm = ({ user }) => {
   const router = useRouter();
