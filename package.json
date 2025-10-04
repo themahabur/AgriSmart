@@ -9,6 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@sindresorhus/slugify": "^3.0.0",
+    "@tiptap/pm": "^3.6.5",
+    "@tiptap/react": "^3.6.5",
+    "@tiptap/starter-kit": "^3.6.5",
     "axios": "^1.12.2",
     "next": "15.5.3",
     "next-auth": "^4.24.11",
