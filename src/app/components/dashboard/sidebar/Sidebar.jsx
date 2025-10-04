@@ -15,6 +15,7 @@ import {
   FaUsers,
   FaCog,
   FaHome,
+  FaRobot,
 } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 import Logo from "../../shared/logo/Logo";
@@ -27,6 +28,8 @@ const navItems = [
   { href: "/dashboard/crop-advice", icon: FaSeedling, text: "ফসল উপদেশ" },
   { href: "/dashboard/weather", icon: FaCloudSun, text: "আবহাওয়া" },
   { href: "/dashboard/market-price", icon: FaChartLine, text: "বাজার দাম" },
+  { href: "/dashboard/ai-chatbot", icon: FaRobot, text: "এআই চ্যাটবট" },
+
   { href: "/dashboard/news-alerts", icon: FaNewspaper, text: "খবর ও সতর্কতা" },
   {
     href: "/dashboard/agri-calendar",
