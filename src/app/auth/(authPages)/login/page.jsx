@@ -8,7 +8,8 @@ import toast from "react-hot-toast";
 import { IoIosArrowBack } from "react-icons/io";
 import Image from "next/image";
 
-const Login = () => {
+// Component that uses useSearchParams
+const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -301,6 +302,21 @@ const Login = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Main Login component wrapped with Suspense
+const Login = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-lg">লোড হচ্ছে...</div>
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 };
 

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/dashboard/sidebar/Sidebar";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import DashboardNavbar from "../components/dashboard/sidebar/DashboardNavbar";
+import DashboardNavbar from "../components/dashboard/navbar/DashboardNavbar";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
