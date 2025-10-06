@@ -5,6 +5,7 @@ import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { signOut, useSession } from "next-auth/react";
+import Logo from "../Logo/Logo";
 // import useUser from "@/app/hooks/useUser";
 
 export default function Navbar() {
@@ -38,19 +39,9 @@ export default function Navbar() {
 
   return (
     <nav className="w-full px-6 py-4 sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
-      <div className="container flex justify-between items-center mx-auto  pl-7">
+      <div className="container flex justify-between items-center mx-auto">
         {/* Logo */}
-        <div className="text-2xl font-bold text-[#127917] relative flex items-center">
-          <div className="absolute -left-16 mb-2">
-            <Image
-              src="/logo.webp"
-              width={70}
-              height={70}
-              alt="AgriSmart Logo"
-            />
-          </div>
-          <div className="font-hind">অ্যাগ্রি স্মার্ট</div>
-        </div>
+        <Logo />
 
         {/* Desktop Menu */}
         <ul className="hidden lg:flex gap-6 text-gray-700 font-medium font-hind items-center ">

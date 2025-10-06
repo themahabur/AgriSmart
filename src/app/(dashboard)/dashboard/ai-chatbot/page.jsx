@@ -21,7 +21,7 @@ const AiChat = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async(e) => {
     e.preventDefault();
     if ((!input.trim() && !imageFile) || isLoading) return;
 
@@ -37,18 +37,33 @@ const AiChat = () => {
     setImageFile(null);
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = {
-        id: Date.now() + 1,
-        sender: "ai",
-        text: imageFile
-          ? "আপনার ছবিটি পেয়েছি। এটি বিশ্লেষণ করে দেখা যাচ্ছে... (এটি একটি ডেমো প্রতিক্রিয়া)"
-          : "আপনার বার্তা পেয়েছি। তথ্য বিশ্লেষণ করা হচ্ছে... (এটি একটি ডেমো প্রতিক্রিয়া)",
-      };
-      setMessages((prev) => [...prev, aiResponse]);
-      setIsLoading(false);
-    }, 2000);
+    // Real AI response
+try {
+  const res = await fetch("/api/ask-ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question: input }),
+  });
+  const data = await res.json();
+
+  const aiResponse = {
+    id: Date.now() + 1,
+    sender: "ai",
+    text: data.answer || "দুঃখিত, আমি এখন উত্তর দিতে পারছি না। পরে আবার চেষ্টা করুন।",
+  };
+  setMessages((prev) => [...prev, aiResponse]);
+} catch (error) {
+  console.error("AI error:", error);
+  const aiResponse = {
+    id: Date.now() + 1,
+    sender: "ai",
+    text: "AI response failed. Please try again later.",
+  };
+  setMessages((prev) => [...prev, aiResponse]);
+} finally {
+  setIsLoading(false);
+}
+
   };
 
   return (
