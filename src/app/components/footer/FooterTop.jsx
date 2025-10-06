@@ -6,23 +6,14 @@ import {
   FaLinkedinIn,
   FaYoutube,
 } from "react-icons/fa";
+import Logo from "../Logo/Logo";
 
 const FooterTop = () => {
   return (
     <div className="border-b border-gray-300 py-6">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-4">
         {/* Logo */}
-        <div className="text-2xl font-bold text-[#127917] relative flex items-center">
-          <div className="absolute -left-16 mb-2">
-            <Image
-              src="/logo.webp"
-              width={70}
-              height={70}
-              alt="AgriSmart Logo"
-            />
-          </div>
-          <div className="font-hind">অ্যাগ্রি স্মার্ট</div>
-        </div>
+        <Logo />
         {/* Navigation Links */}
         <div className="flex flex-wrap justify-center md:justify-start gap-4 text-gray-700 text-sm md:text-base mb-4 md:mb-0">
           <a href="#" className="hover:text-green-600 transition-colors">

@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useMemo } from "react";
 import defaultSlugify from "@sindresorhus/slugify";
 import { FiSave, FiSend, FiLoader } from "react-icons/fi";
@@ -16,7 +15,9 @@ const AddBlogForm = ({ user }) => {
     summary: "",
     type: "blog",
     category: "Technology",
+    readTime: "",
   });
+
   const [media, setMedia] = useState({ file: null, url: "" });
   const [body, setBody] = useState("");
   const [tags, setTags] = useState([]);
@@ -25,17 +26,16 @@ const AddBlogForm = ({ user }) => {
 
   const slug = useMemo(() => defaultSlugify(postData.title), [postData.title]);
 
-  // A single, robust handler for all text inputs and select fields.
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPostData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // --- THIS CORE SUBMISSION LOGIC  ---
   const handleSubmit = async (publishStatus) => {
     setError("");
     setIsSubmitting(true);
     let mediaUrl = "";
+
     try {
       if (postData.type === "blog" && media.file) {
         const formData = new FormData();
@@ -56,20 +56,45 @@ const AddBlogForm = ({ user }) => {
         }
         mediaUrl = media.url;
       }
+
       const finalPostData = {
-        ...postData,
+        title: postData.title,
+        subtitle: postData.subtitle,
+        summary: postData.summary,
+        type: postData.type === "blog" ? "article" : "video",
+        category: postData.category,
         slug,
         body,
+        readTime: postData.readTime || "02:00 min",
         media: mediaUrl,
         tags,
         status: publishStatus,
-        author: { name: user.name, email: user.email },
+        author: {
+          name: user.name,
+          email: user.email,
+        },
       };
-      console.log(
-        "Submitting final data:",
-        JSON.stringify(finalPostData, null, 2)
+
+      console.log("📤 Submitting final data:", finalPostData);
+
+      const response = await fetch(
+        "https://agri-smart-server.vercel.app/api/knowledge-hub",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(finalPostData),
+        }
       );
-      alert(`Post submitted as ${publishStatus}! Check console for data.`);
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("✅ Server Response:", data);
+      alert("✅ Blog submitted successfully!");
     } catch (err) {
       console.error(err);
       setError(err.message || "An unexpected error occurred.");
@@ -81,9 +106,7 @@ const AddBlogForm = ({ user }) => {
   return (
     <div className="container mx-auto px-4 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        {/* Main Content Column */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Card 1: Core Content */}
           <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
             <h3 className="text-xl font-bold font-hind text-gray-900 mb-6 border-b pb-4">
               Core Content
@@ -103,6 +126,13 @@ const AddBlogForm = ({ user }) => {
               onChange={handleChange}
             />
             <FormInput
+              label="সংক্ষিপ্ত বিবরণ (Summary)"
+              id="summary"
+              name="summary"
+              value={postData.summary}
+              onChange={handleChange}
+            />
+            <FormInput
               label="স্লাগ (URL)"
               id="slug"
               name="slug"
@@ -112,12 +142,10 @@ const AddBlogForm = ({ user }) => {
             />
           </div>
 
-          {/* Card 2: Post Media */}
           <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
             <h3 className="text-xl font-bold font-hind text-gray-900 mb-6">
               Post Media
             </h3>
-            {/* Segmented Control for Post Type */}
             <div className="p-1 bg-green-50 rounded-full flex mb-6">
               {["blog", "video"].map((type) => (
                 <label
@@ -140,7 +168,6 @@ const AddBlogForm = ({ user }) => {
                 </label>
               ))}
             </div>
-            {/* Conditional Media Input */}
             {postData.type === "blog" ? (
               <ImageUploader
                 onFileSelect={(file) => setMedia({ file, url: "" })}
@@ -153,7 +180,6 @@ const AddBlogForm = ({ user }) => {
             )}
           </div>
 
-          {/* Card 3: Post Body */}
           <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
             <h3 className="text-xl font-bold font-hind text-gray-900 mb-6">
               Post Body
@@ -162,7 +188,6 @@ const AddBlogForm = ({ user }) => {
           </div>
         </div>
 
-        {/* Sidebar Column */}
         <div className="lg:col-span-1 space-y-8 sticky top-24">
           <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
             <h3 className="text-xl font-bold font-hind text-gray-900 mb-4">
@@ -183,7 +208,7 @@ const AddBlogForm = ({ user }) => {
                   <FiLoader className="animate-spin" />
                 ) : (
                   <FiSend />
-                )}{" "}
+                )}
                 প্রকাশ করুন (Publish)
               </button>
               <button
@@ -195,11 +220,13 @@ const AddBlogForm = ({ user }) => {
                   <FiLoader className="animate-spin" />
                 ) : (
                   <FiSave />
-                )}{" "}
+                )}
                 ড্রাফট সংরক্ষণ (Save Draft)
               </button>
             </div>
           </div>
+
+          {/* Post Details */}
           <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
             <h3 className="text-xl font-bold font-hind text-gray-900 mb-4">
               Post Details
@@ -224,6 +251,17 @@ const AddBlogForm = ({ user }) => {
                   <option value="Soil Health">Soil Health</option>
                 </select>
               </div>
+
+              <div>
+                <FormInput
+                  label="পড়ার সময় (Read Time)"
+                  id="readTime"
+                  name="readTime"
+                  value={postData.readTime}
+                  onChange={handleChange}
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   ট্যাগ (Tags)

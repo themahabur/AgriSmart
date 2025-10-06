@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 px-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto">
           {children}
         </main>
       </div>
