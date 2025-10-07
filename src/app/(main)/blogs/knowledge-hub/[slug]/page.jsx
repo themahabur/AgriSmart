@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 export default function BlogDetails() {
   const { slug } = useParams();
@@ -201,9 +202,11 @@ export default function BlogDetails() {
                   <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
                     পরবর্তী ব্লগ →
                   </button>
+                 <Link href="/blogs">
                   <button className="w-full text-left p-3 bg-gray-900 text-white rounded-lg border border-gray-900 hover:bg-gray-800 transition-colors">
                     সব ব্লগ দেখুন
                   </button>
+                 </Link>
                 </div>
               </div>
             </div>
