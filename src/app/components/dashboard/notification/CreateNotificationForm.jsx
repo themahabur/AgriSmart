@@ -15,7 +15,7 @@ export default function CreateNotificationForm({
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       {/* Form Header */}
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-green-900">নোটিফিকেশন বিবরণ</h2>
+        <h2 className="text-2xl font-semibold text-green-700">ব্যবহারকারীদের জন্য নতুন নোটিফিকেশন তৈরি করুন</h2>
         <p className="text-green-700 text-sm mt-1">সমস্ত প্রয়োজনীয় তথ্য পূরণ করুন</p>
       </div>
 
