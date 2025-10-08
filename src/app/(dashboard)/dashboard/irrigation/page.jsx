@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react";
+
 const Irrigation = () => {
     // সিমুলেটেড ডেটা - বাস্তবে API থেকে আসবে
     const [weatherData, setWeatherData] = useState({
@@ -66,7 +67,9 @@ const Irrigation = () => {
     };
 
     const irrigationAdvice = calculateIrrigation();
-     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 p-4">
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 p-4">
             <div className="max-w-6xl mx-auto">
                 
                 {/* হেডার */}
@@ -277,3 +280,31 @@ const Irrigation = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* সেচ শিডিউল */}
+                <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
+                    <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                        🗓️ সাপ্তাহিক সেচ শিডিউল
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
+                        {['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহস্পতি', 'শুক্র', 'শনি'].map((day, index) => (
+                            <div key={day} className={`text-center p-3 rounded-lg ${
+                                index === 0 || index === 4 ? 'bg-green-100 border border-green-300' : 'bg-gray-100'
+                            }`}>
+                                <div className="font-semibold">{day}</div>
+                                <div className="text-sm mt-1">
+                                    {index === 0 || index === 4 ? 'সেচ দিন' : 'বিশ্রাম'}
+                                </div>
+                                {index === 0 || index === 4 && (
+                                    <div className="text-xs text-blue-600 mt-1">৬-৮ AM</div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Irrigation;
