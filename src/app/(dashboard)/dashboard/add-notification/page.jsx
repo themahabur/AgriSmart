@@ -70,8 +70,8 @@ export default function CreateNotificationPage() {
           </div>
 
           {/* Sidebar Section */}
-          <aside className="flex-shrink-0 relative">
-            <div className="h-5/6 overflow-y-auto fixed top-24 mr-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <aside className="lg:flex-shrink-0 lg:relative">
+            <div className="lg:h-5/6 overflow-y-auto lg:fixed lg:top-24 mr-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               <div className="space-y-6">
                 <NotificationPreview formData={formData} />
                 <GuidanceCard />

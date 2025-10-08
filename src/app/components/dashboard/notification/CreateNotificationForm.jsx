@@ -15,7 +15,7 @@ export default function CreateNotificationForm({
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       {/* Form Header */}
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-gray-200">
-        <h2 className="text-2xl font-semibold text-green-700">ব্যবহারকারীদের জন্য নতুন নোটিফিকেশন তৈরি করুন</h2>
+        <h2 className="text-xl md:text-2xl font-semibold text-green-700">ব্যবহারকারীদের জন্য নতুন নোটিফিকেশন তৈরি করুন</h2>
         <p className="text-green-700 text-sm mt-1">সমস্ত প্রয়োজনীয় তথ্য পূরণ করুন</p>
       </div>
 
@@ -109,7 +109,7 @@ function FormField({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={rows}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 resize-none"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-transparent transition-all duration-200 resize-none"
             placeholder={placeholder}
             required={required}
           />
@@ -120,7 +120,7 @@ function FormField({
           <select
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-300 focus:border-transparent transition-all duration-200"
           >
             {options.map(option => (
               <option key={option.value} value={option.value}>
@@ -136,7 +136,7 @@ function FormField({
             type={type}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-transparent transition-all duration-200"
             placeholder={placeholder}
             required={required}
           />
