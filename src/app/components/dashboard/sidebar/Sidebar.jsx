@@ -22,6 +22,7 @@ import { FiX } from "react-icons/fi";
 import Logo from "../../shared/logo/Logo";
 import UserProfile from "./UserProfile";
 import SidebarNavLinks from "./SidebarNavLinks";
+import { MdNotificationAdd } from "react-icons/md";
 
 const navItems = [
   { href: "/dashboard", icon: FaHome, text: "হোম ড্যাশবোর্ড" },
@@ -55,6 +56,7 @@ const navItems = [
     text: "বিশেষজ্ঞের পরামর্শ",
   },
   { href: "/dashboard/community", icon: FaUsers, text: "কৃষক কমিউনিটি" },
+  { href: "/dashboard/add-notification", icon: MdNotificationAdd , text: "নোটিফিকেশন যুক্ত করুণ" },
   { href: "/dashboard/settings", icon: FaCog, text: "সেটিংস" },
 ];
 
