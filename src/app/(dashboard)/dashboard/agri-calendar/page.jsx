@@ -149,9 +149,364 @@ const KrishiCalendar = () => {
     পাট: '২,৫০০-৩,০০০ টাকা/মণ'
   };
     return (
-        <div>
-            
+         <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Header with Emergency Alert */}
+        <div className="text-center mb-8">
+          <div className="bg-amber-100 border border-amber-400 rounded-lg p-4 mb-6">
+            <p className="text-amber-800 font-bold font-bangla">
+              🚨 জরুরি: বর্তমান আবহাওয়া পরিস্থিতি - সময়মতো বৃষ্টির সম্ভাবনা, ফসল রক্ষার প্রস্তুতি নিন
+            </p>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-green-800 mb-4 font-bangla">
+            কৃষি ক্যালেন্ডার
+          </h1>
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto font-bangla">
+            স্মার্ট কৃষকের জন্য সম্পূর্ণ নির্দেশিকা - ফসল, সেচ, সার এবং বাজার দাম
+          </p>
         </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-xl p-4 shadow-md border border-green-200">
+            <p className="text-sm text-gray-600 font-bangla">বর্তমান মৌসুম</p>
+            <p className="font-bold text-green-700 text-lg font-bangla">রবি মৌসুম</p>
+          </div>
+          <div className="bg-white rounded-xl p-4 shadow-md border border-amber-200">
+            <p className="text-sm text-gray-600 font-bangla">বাজারে চাহিদা</p>
+            <p className="font-bold text-amber-700 text-lg font-bangla">আলু, টমেটো</p>
+          </div>
+          <div className="bg-white rounded-xl p-4 shadow-md border border-blue-200">
+            <p className="text-sm text-gray-600 font-bangla">আবহাওয়া</p>
+            <p className="font-bold text-blue-700 text-lg font-bangla">শীতকাল</p>
+          </div>
+          <div className="bg-white rounded-xl p-4 shadow-md border border-red-200">
+            <p className="text-sm text-gray-600 font-bangla">সতর্কতা</p>
+            <p className="font-bold text-red-700 text-lg font-bangla">কুয়াশা</p>
+          </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="flex flex-wrap gap-2 mb-8 justify-center">
+          {[
+            { id: 'crops', label: 'ফসল নির্দেশিকা' },
+            { id: 'calendar', label: 'মাসিক কার্যক্রম' },
+            { id: 'market', label: 'বাজার দাম' },
+            { id: 'tools', label: 'কৃষি সরঞ্জাম' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 font-bangla ${
+                activeTab === tab.id
+                  ? 'bg-green-600 text-white shadow-lg transform scale-105'
+                  : 'bg-white text-green-700 hover:bg-green-50 border border-green-200'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Crops Tab */}
+        {activeTab === 'crops' && (
+          <div className="space-y-8">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+              <h2 className="text-2xl font-bold text-green-800 mb-6 text-center font-bangla">
+                ফসল নির্বাচন করুন
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {Object.keys(cropData).map((crop) => (
+                  <button
+                    key={crop}
+                    onClick={() => setSelectedCrop(crop)}
+                    className={`p-4 rounded-xl border-2 transition-all duration-300 font-bangla ${
+                      selectedCrop === crop
+                        ? 'border-green-500 bg-green-50 text-green-700 shadow-md transform scale-105'
+                        : 'border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50'
+                    }`}
+                  >
+                    <div className="text-2xl mb-2">
+                      {crop === 'ধান' && '🌾'}
+                      {crop === 'গম' && '🌾'}
+                      {crop === 'পাট' && '🌿'}
+                      {crop === 'আলু' && '🥔'}
+                      {crop === 'টমেটো' && '🍅'}
+                    </div>
+                    {crop}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {selectedCrop && (
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="text-3xl">
+                    {selectedCrop === 'ধান' && '🌾'}
+                    {selectedCrop === 'গম' && '🌾'}
+                    {selectedCrop === 'পাট' && '🌿'}
+                    {selectedCrop === 'আলু' && '🥔'}
+                    {selectedCrop === 'টমেটো' && '🍅'}
+                  </div>
+                  <h3 className="text-2xl font-bold text-green-800 font-bangla">
+                    {selectedCrop} চাষের সম্পূর্ণ নির্দেশিকা
+                  </h3>
+                </div>
+
+                {selectedCrop === 'ধান' ? (
+                  <div className="grid lg:grid-cols-2 gap-6">
+                    {Object.keys(cropData[selectedCrop]).map((variety) => (
+                      <div key={variety} className="bg-gradient-to-br from-green-50 to-amber-50 rounded-xl p-6 border border-green-200">
+                        <h4 className="text-xl font-bold text-green-700 mb-4 font-bangla">
+                          {variety} ধান
+                        </h4>
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                              <p className="text-sm text-gray-600 font-bangla">বপন সময়</p>
+                              <p className="font-semibold text-green-800 font-bangla">{cropData[selectedCrop][variety].planting}</p>
+                            </div>
+                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                              <p className="text-sm text-gray-600 font-bangla">সংগ্রহ সময়</p>
+                              <p className="font-semibold text-green-800 font-bangla">{cropData[selectedCrop][variety].harvesting}</p>
+                            </div>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 shadow-sm">
+                            <p className="text-sm text-gray-600 mb-2 font-bangla">💰 আনুমানিক লাভ</p>
+                            <p className="text-green-800 font-bangla">{cropData[selectedCrop][variety].profit}</p>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 shadow-sm">
+                            <p className="text-sm text-gray-600 mb-2 font-bangla">💧 সেচ পদ্ধতি</p>
+                            <p className="text-green-800 font-bangla">{cropData[selectedCrop][variety].irrigation}</p>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 shadow-sm">
+                            <p className="text-sm text-gray-600 mb-2 font-bangla">🧪 সার ব্যবস্থাপনা</p>
+                            <p className="text-green-800 text-sm font-bangla">{cropData[selectedCrop][variety].fertilizer}</p>
+                          </div>
+
+                          <div className="bg-white rounded-lg p-4 shadow-sm">
+                            <p className="text-sm text-gray-600 mb-2 font-bangla">🐛 রোগবালাই নিয়ন্ত্রণ</p>
+                            <p className="text-green-800 text-sm font-bangla">{cropData[selectedCrop][variety].pestControl}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid lg:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-green-50 rounded-lg p-4 shadow-sm">
+                          <p className="text-sm text-gray-600 font-bangla">বপন সময়</p>
+                          <p className="font-semibold text-lg text-green-800 font-bangla">{cropData[selectedCrop].planting}</p>
+                        </div>
+                        <div className="bg-green-50 rounded-lg p-4 shadow-sm">
+                          <p className="text-sm text-gray-600 font-bangla">সংগ্রহ সময়</p>
+                          <p className="font-semibold text-lg text-green-800 font-bangla">{cropData[selectedCrop].harvesting}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-amber-50 rounded-lg p-4 shadow-sm">
+                        <p className="text-sm text-gray-600 mb-2 font-bangla">💰 আনুমানিক লাভ</p>
+                        <p className="text-green-800 text-lg font-bangla">{cropData[selectedCrop].profit}</p>
+                      </div>
+
+                      <div className="bg-blue-50 rounded-lg p-4 shadow-sm">
+                        <p className="text-sm text-gray-600 mb-2 font-bangla">💧 সেচ পদ্ধতি</p>
+                        <p className="text-green-800 text-lg font-bangla">{cropData[selectedCrop].irrigation}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="bg-white rounded-xl p-5 border border-green-200">
+                        <h5 className="font-bold text-green-700 mb-3 font-bangla">🧪 সার ব্যবস্থাপনা</h5>
+                        <p className="text-green-800 text-sm font-bangla">{cropData[selectedCrop].fertilizer}</p>
+                      </div>
+
+                      <div className="bg-white rounded-xl p-5 border border-amber-200">
+                        <h5 className="font-bold text-amber-700 mb-3 font-bangla">🐛 রোগবালাই নিয়ন্ত্রণ</h5>
+                        <p className="text-amber-800 text-sm font-bangla">{cropData[selectedCrop].pestControl}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Calendar Tab */}
+        {activeTab === 'calendar' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+              <h2 className="text-2xl font-bold text-green-800 mb-6 text-center font-bangla">
+                মাসভিত্তিক কৃষি কার্যক্রম - {selectedMonth || 'মাস নির্বাচন করুন'}
+              </h2>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+                {Object.keys(monthlyActivities).map((month) => (
+                  <button
+                    key={month}
+                    onClick={() => setSelectedMonth(month)}
+                    className={`p-3 rounded-lg border-2 transition-all font-bangla ${
+                      selectedMonth === month
+                        ? 'border-green-500 bg-green-100 text-green-800 font-bold'
+                        : 'border-gray-200 bg-white text-gray-700 hover:border-green-300'
+                    }`}
+                  >
+                    {month}
+                  </button>
+                ))}
+              </div>
+
+              {selectedMonth && (
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="bg-green-50 rounded-xl p-5">
+                    <h4 className="font-bold text-green-700 mb-3 font-bangla">📝 এই মাসের কাজ</h4>
+                    <ul className="space-y-2">
+                      {monthlyActivities[selectedMonth].activities.map((activity, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-green-500 mr-2 mt-1">•</span>
+                          <span className="text-green-800 font-bangla">{activity}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-amber-50 rounded-xl p-5">
+                    <h4 className="font-bold text-amber-700 mb-3 font-bangla">💡 বিশেষ পরামর্শ</h4>
+                    <ul className="space-y-2">
+                      {monthlyActivities[selectedMonth].tips.map((tip, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-amber-500 mr-2 mt-1">•</span>
+                          <span className="text-amber-800 font-bangla">{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-blue-50 rounded-xl p-5">
+                    <h4 className="font-bold text-blue-700 mb-3 font-bangla">🌾 চাষযোগ্য ফসল</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {monthlyActivities[selectedMonth].crops.map((crop, index) => (
+                        <span key={index} className="bg-white px-3 py-1 rounded-full text-blue-800 text-sm font-bangla border border-blue-200">
+                          {crop}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Market Prices Tab */}
+        {activeTab === 'market' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+              <h2 className="text-2xl font-bold text-green-800 mb-6 text-center font-bangla">
+                সর্বশেষ বাজার দাম
+              </h2>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Object.entries(marketPrices).map(([crop, price]) => (
+                  <div key={crop} className="bg-gradient-to-br from-green-50 to-amber-50 rounded-xl p-5 border border-green-200">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-bold text-green-800 text-lg font-bangla">{crop}</h4>
+                      <span className="text-2xl">
+                        {crop === 'ধান' && '🌾'}
+                        {crop === 'গম' && '🌾'}
+                        {crop === 'আলু' && '🥔'}
+                        {crop === 'টমেটো' && '🍅'}
+                        {crop === 'পাট' && '🌿'}
+                      </span>
+                    </div>
+                    <p className="text-amber-700 font-bold text-xl mt-2 font-bangla">{price}</p>
+                    <p className="text-green-600 text-sm mt-1 font-bangla">বর্তমান বাজার মূল্য</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 bg-amber-50 rounded-xl p-5 border border-amber-200">
+                <h4 className="font-bold text-amber-800 mb-3 font-bangla">💡 বাজার সংক্রান্ত পরামর্শ</h4>
+                <ul className="space-y-2 text-amber-800 font-bangla">
+                  <li>• বর্তমানে আলু ও টমেটোর বাজার দাম ভালো</li>
+                  <li>• ধানের দাম স্থিতিশীল, বিক্রির ভালো সময়</li>
+                  <li>• পাটের চাহিদা বাড়ছে, দাম বৃদ্ধির সম্ভাবনা</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tools Tab */}
+        {activeTab === 'tools' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+              <h2 className="text-2xl font-bold text-green-800 mb-6 text-center font-bangla">
+                কৃষি সরঞ্জাম ও ক্যালকুলেটর
+              </h2>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-green-50 rounded-xl p-5">
+                  <h4 className="font-bold text-green-700 mb-3 font-bangla">🧮 সার ক্যালকুলেটর</h4>
+                  <p className="text-green-800 mb-4 font-bangla">আপনার জমির পরিমাণ অনুযায়ী সারের পরিমাণ নির্ণয় করুন</p>
+                  <button className="bg-green-600 text-white px-4 py-2 rounded-lg font-bangla hover:bg-green-700">
+                    ক্যালকুলেটর ব্যবহার করুন
+                  </button>
+                </div>
+
+                <div className="bg-blue-50 rounded-xl p-5">
+                  <h4 className="font-bold text-blue-700 mb-3 font-bangla">💧 সেচ ক্যালকুলেটর</h4>
+                  <p className="text-blue-800 mb-4 font-bangla">ফসল ও জমি অনুযায়ী সেচের পরিমাণ নির্ণয় করুন</p>
+                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bangla hover:bg-blue-700">
+                    ক্যালকুলেটর ব্যবহার করুন
+                  </button>
+                </div>
+
+                <div className="bg-amber-50 rounded-xl p-5">
+                  <h4 className="font-bold text-amber-700 mb-3 font-bangla">💰 লাভ ক্যালকুলেটর</h4>
+                  <p className="text-amber-800 mb-4 font-bangla">ফসল বিক্রি করে কত লাভ হবে তা নির্ণয় করুন</p>
+                  <button className="bg-amber-600 text-white px-4 py-2 rounded-lg font-bangla hover:bg-amber-700">
+                    ক্যালকুলেটর ব্যবহার করুন
+                  </button>
+                </div>
+
+                <div className="bg-purple-50 rounded-xl p-5">
+                  <h4 className="font-bold text-purple-700 mb-3 font-bangla">🌦️ আবহাওয়া পূর্বাভাস</h4>
+                  <p className="text-purple-800 mb-4 font-bangla">আপনার এলাকার ৭ দিনের আবহাওয়া পূর্বাভাস</p>
+                  <button className="bg-purple-600 text-white px-4 py-2 rounded-lg font-bangla hover:bg-purple-700">
+                    পূর্বাভাস দেখুন
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Emergency Contact */}
+        <div className="mt-8 bg-red-50 border border-red-200 rounded-xl p-5">
+          <h4 className="font-bold text-red-700 mb-3 font-bangla">🚨 জরুরি যোগাযোগ</h4>
+          <div className="grid md:grid-cols-2 gap-4 text-red-800 font-bangla">
+            <div>
+              <p className="font-semibold">কৃষি পরামর্শ কেন্দ্র: ১৬১২৩</p>
+              <p className="text-sm">২৪ ঘন্টা কৃষি পরামর্শ সেবা</p>
+            </div>
+            <div>
+              <p className="font-semibold">কৃষি বিপর্যয় সহায়তা: ১০৯০</p>
+              <p className="text-sm">বন্যা, খরা বা প্রাকৃতিক দুর্যোগে সাহায্য</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
     );
 };
 
