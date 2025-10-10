@@ -40,5 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/src/app/components/dashboard/myfarm/QuickActions.jsx
 /src/app/components/dashboard/myfarm/WeatherSoilCards.jsx
