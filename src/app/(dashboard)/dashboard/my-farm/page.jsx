@@ -1,557 +1,23 @@
 "use client";
+"use client";
 import React, { useState } from "react";
 import {
   FaTractor,
-  FaSeedling,
-  FaCalendarAlt,
-  FaChartLine,
   FaPlus,
+  FaMapMarkerAlt,
+  FaRulerCombined,
+  FaSeedling,
   FaEdit,
   FaTrash,
-  FaMapMarkerAlt,
-  FaCloudSun,
-  FaTint,
-  FaLeaf,
-  FaTasks,
-  FaHistory,
-  FaFlask,
-  FaRulerCombined,
-  FaArrowRight,
-  FaInfoCircle,
 } from "react-icons/fa";
+import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
+import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
+import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
+import WeatherSoilCards from "../../../components/dashboard/myfarm/WeatherSoilCards";
+import QuickActions from "../../../components/dashboard/myfarm/QuickActions";
 
-const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 4;
-
-  const initialNewFarmState = {
-    name: "",
-    location: "",
-    size: "",
-    cropType: "",
-    cropVariety: "",
-    plantingDate: "",
-    soilType: "",
-    soilPH: "",
-    irrigationSource: "",
-    tubeWellDepth: "",
-    organicPractices: false,
-  };
-
-  const [newFarm, setNewFarm] = useState(initialNewFarmState);
-
-  const steps = [
-    { number: 1, title: "সাধারণ তথ্য", icon: "📋" },
-    { number: 2, title: "ফসল বিবরণ", icon: "🌱" },
-    { number: 3, title: "মাটি ও সেচ", icon: "🌊" },
-    { number: 4, title: "পর্যালোচনা", icon: "👁️" },
-  ];
-
-  // Handle input changes for new farm
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewFarm({
-      ...newFarm,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
-
-  const ProgressBar = () => (
-    <div className="mb-8">
-      <div className="flex justify-between items-center">
-        {steps.map((step, index) => (
-          <div key={step.number} className="flex flex-col items-center flex-1">
-            <div className="flex items-center w-full">
-              {/* Connecting Line */}
-              {index > 0 && (
-                <div
-                  className={`flex-1 h-1 ${
-                    currentStep > step.number ? "bg-green-500" : "bg-gray-300"
-                  }`}
-                />
-              )}
-
-              {/* Step Circle */}
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
-                  currentStep >= step.number
-                    ? "bg-green-500 border-green-500 text-white"
-                    : "bg-white border-gray-300 text-gray-500"
-                }`}
-              >
-                {currentStep > step.number ? (
-                  <span className="text-white">✓</span>
-                ) : (
-                  <span>{step.icon}</span>
-                )}
-              </div>
-
-              {/* Connecting Line */}
-              {index < steps.length - 1 && (
-                <div
-                  className={`flex-1 h-1 ${
-                    currentStep > step.number ? "bg-green-500" : "bg-gray-300"
-                  }`}
-                />
-              )}
-            </div>
-            <span
-              className={`text-xs mt-2 text-center ${
-                currentStep >= step.number
-                  ? "text-green-600 font-semibold"
-                  : "text-gray-500"
-              }`}
-            >
-              {step.title}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  // Step 1: Basic Information
-  const Step1 = () => (
-    <div className="space-y-4">
-      <div className="text-center mb-6">
-        <FaTractor className="text-4xl text-green-500 mx-auto mb-2" />
-        <h3 className="text-lg font-semibold text-gray-800">
-          ফার্মের সাধারণ তথ্য
-        </h3>
-        <p className="text-gray-600">আপনার ফার্মের মৌলিক তথ্য প্রদান করুন</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <FaTractor className="inline mr-2 text-green-500" />
-            ফার্মের নাম *
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={newFarm.name}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-            placeholder="যেমন: প্রধান ধানের জমি, সবজি বাগান"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <FaMapMarkerAlt className="inline mr-2 text-red-500" />
-            অবস্থান *
-          </label>
-          <input
-            type="text"
-            name="location"
-            value={newFarm.location}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="গ্রাম/উপজেলা/জেলা"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <FaRulerCombined className="inline mr-2 text-blue-500" />
-            ফার্মের আকার *
-          </label>
-          <div className="relative">
-            <input
-              type="number"
-              name="size"
-              value={newFarm.size}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent pr-16"
-              placeholder="2.5"
-              min="0.1"
-              step="0.1"
-              required
-            />
-            <span className="absolute right-0 top-0 mt-3 mr-4 text-gray-500 font-medium">
-              একর
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Step 2: Crop Details
-  const Step2 = () => (
-    <div className="space-y-4">
-      <div className="text-center mb-6">
-        <FaSeedling className="text-4xl text-green-500 mx-auto mb-2" />
-        <h3 className="text-lg font-semibold text-gray-800">ফসলের বিবরণ</h3>
-        <p className="text-gray-600">আপনার ফসল সম্পর্কিত তথ্য প্রদান করুন</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            ফসলের প্রকার *
-          </label>
-          <select
-            name="cropType"
-            value={newFarm.cropType}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          >
-            <option value="">ফসল নির্বাচন করুন</option>
-            <option value="ধান">ধান</option>
-            <option value="গম">গম</option>
-            <option value="ভুট্টা">ভুট্টা</option>
-            <option value="সবজি">সবজি</option>
-            <option value="ফল">ফল</option>
-            <option value="ডাল">ডাল</option>
-            <option value="অন্যান্য">অন্যান্য</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            জাত (Variety)
-          </label>
-          <input
-            type="text"
-            name="cropVariety"
-            value={newFarm.cropVariety}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="যেমন: BRRI Dhan-29"
-          />
-        </div>
-
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <FaCalendarAlt className="inline mr-2 text-purple-500" />
-            রোপণের তারিখ
-          </label>
-          <input
-            type="date"
-            name="plantingDate"
-            value={newFarm.plantingDate}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  // Step 3: Soil & Irrigation
-  const Step3 = () => (
-    <div className="space-y-4">
-      <div className="text-center mb-6">
-        <FaFlask className="text-4xl text-green-500 mx-auto mb-2" />
-        <h3 className="text-lg font-semibold text-gray-800">
-          মাটি ও সেচ ব্যবস্থা
-        </h3>
-        <p className="text-gray-600">মাটির গুণাগুণ ও সেচের তথ্য প্রদান করুন</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            মাটির প্রকার
-          </label>
-          <select
-            name="soilType"
-            value={newFarm.soilType}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          >
-            <option value="">মাটির ধরন</option>
-            <option value="দোআঁশ মাটি">দোআঁশ মাটি</option>
-            <option value="এঁটেল মাটি">এঁটেল মাটি</option>
-            <option value="বেলে মাটি">বেলে মাটি</option>
-            <option value="পডল মাটি">পডল মাটি</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            মাটির pH মান
-          </label>
-          <input
-            type="number"
-            name="soilPH"
-            value={newFarm.soilPH}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="6.5"
-            min="1"
-            max="14"
-            step="0.1"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            সেচের উৎস
-          </label>
-          <select
-            name="irrigationSource"
-            value={newFarm.irrigationSource}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          >
-            <option value="">সেচের উৎস</option>
-            <option value="নলকূপ">নলকূপ</option>
-            <option value="বৃষ্টি">বৃষ্টি</option>
-            <option value="খাল">খাল</option>
-            <option value="নদী">নদী</option>
-            <option value="পুকুর">পুকুর</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            নলকূপের গভীরতা
-          </label>
-          <div className="relative">
-            <input
-              type="number"
-              name="tubeWellDepth"
-              value={newFarm.tubeWellDepth}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent pr-16"
-              placeholder="120"
-              min="0"
-            />
-            <span className="absolute right-0 top-0 mt-3 mr-4 text-gray-500 font-medium">
-              ফুট
-            </span>
-          </div>
-        </div>
-
-        <div className="md:col-span-2">
-          <label className="flex items-center text-sm font-medium text-gray-700 cursor-pointer p-3 bg-green-50 rounded-lg border border-green-200">
-            <input
-              type="checkbox"
-              name="organicPractices"
-              checked={newFarm.organicPractices}
-              onChange={handleInputChange}
-              className="form-checkbox h-5 w-5 text-green-600 rounded focus:ring-green-500"
-            />
-            <span className="ml-3">
-              <FaLeaf className="inline mr-2 text-green-500" />
-              অর্গানিক চাষ পদ্ধতি ব্যবহার করা হচ্ছে
-            </span>
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Step 4: Review
-  const Step4 = () => (
-    <div className="space-y-6">
-      <div className="text-center mb-6">
-        <FaTasks className="text-4xl text-green-500 mx-auto mb-2" />
-        <h3 className="text-lg font-semibold text-gray-800">পর্যালোচনা করুন</h3>
-        <p className="text-gray-600">আপনার প্রদানকৃত তথ্য পরীক্ষা করুন</p>
-      </div>
-
-      <div className="bg-gray-50 rounded-lg p-6 space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-2">সাধারণ তথ্য</h4>
-            <div className="space-y-2 text-sm">
-              <p>
-                <span className="font-medium">নাম:</span> {newFarm.name}
-              </p>
-              <p>
-                <span className="font-medium">অবস্থান:</span> {newFarm.location}
-              </p>
-              <p>
-                <span className="font-medium">আকার:</span> {newFarm.size} একর
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-2">ফসল বিবরণ</h4>
-            <div className="space-y-2 text-sm">
-              <p>
-                <span className="font-medium">প্রকার:</span> {newFarm.cropType}
-              </p>
-              <p>
-                <span className="font-medium">জাত:</span>{" "}
-                {newFarm.cropVariety || "নির্ধারিত নয়"}
-              </p>
-              <p>
-                <span className="font-medium">রোপণ তারিখ:</span>{" "}
-                {newFarm.plantingDate || "নির্ধারিত নয়"}
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-2">মাটির তথ্য</h4>
-            <div className="space-y-2 text-sm">
-              <p>
-                <span className="font-medium">প্রকার:</span>{" "}
-                {newFarm.soilType || "নির্ধারিত নয়"}
-              </p>
-              <p>
-                <span className="font-medium">pH মান:</span>{" "}
-                {newFarm.soilPH || "নির্ধারিত নয়"}
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-2">সেচ ব্যবস্থা</h4>
-            <div className="space-y-2 text-sm">
-              <p>
-                <span className="font-medium">উৎস:</span>{" "}
-                {newFarm.irrigationSource || "নির্ধারিত নয়"}
-              </p>
-              <p>
-                <span className="font-medium">নলকূপ গভীরতা:</span>{" "}
-                {newFarm.tubeWellDepth
-                  ? `${newFarm.tubeWellDepth} ফুট`
-                  : "প্রযোজ্য নয়"}
-              </p>
-              <p>
-                <span className="font-medium">অর্গানিক:</span>{" "}
-                {newFarm.organicPractices ? "হ্যাঁ" : "না"}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="flex items-start">
-          <FaInfoCircle className="text-blue-500 mt-1 mr-3 flex-shrink-0" />
-          <div>
-            <h4 className="font-semibold text-blue-800">মনে রাখুন</h4>
-            <p className="text-blue-700 text-sm mt-1">
-              ফার্ম যুক্ত করার পর আপনি যেকোন সময় এই তথ্য সম্পাদনা করতে পারবেন
-              এবং আরও বিস্তারিত তথ্য যোগ করতে পারবেন।
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const handleNext = () => {
-    if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (currentStep === totalSteps) {
-      onAddFarm(newFarm);
-      setNewFarm(initialNewFarmState);
-      setCurrentStep(1);
-    } else {
-      handleNext();
-    }
-  };
-
-  const isStepValid = () => {
-    switch (currentStep) {
-      case 1:
-        return newFarm.name && newFarm.location && newFarm.size;
-      case 2:
-        return newFarm.cropType;
-      default:
-        return true;
-    }
-  };
-
-  const handleClose = () => {
-    setNewFarm(initialNewFarmState);
-    setCurrentStep(1);
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white z-10 rounded-t-xl border-b border-gray-200">
-          <div className="flex justify-between items-center p-6">
-            <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-              <FaPlus className="mr-3 text-green-500" />
-              নতুন ফার্ম যুক্ত করুন
-            </h2>
-            <button
-              onClick={handleClose}
-              className="text-gray-500 hover:text-gray-800 text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
-            >
-              &times;
-            </button>
-          </div>
-
-          <div className="px-6 pb-4">
-            <ProgressBar />
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-6">
-          {currentStep === 1 && <Step1 />}
-          {currentStep === 2 && <Step2 />}
-          {currentStep === 3 && <Step3 />}
-          {currentStep === 4 && <Step4 />}
-
-          <div className="flex justify-between pt-6 mt-6 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={currentStep === 1 ? handleClose : handlePrev}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-8 rounded-lg transition-colors flex items-center"
-            >
-              {currentStep === 1 ? "বাতিল করুন" : "পিছনে"}
-            </button>
-
-            <button
-              type="submit"
-              disabled={!isStepValid()}
-              className={`${
-                isStepValid()
-                  ? "bg-green-600 hover:bg-green-700 text-white"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              } font-semibold py-3 px-8 rounded-lg transition-colors flex items-center`}
-            >
-              {currentStep === totalSteps ? (
-                <>
-                  <FaPlus className="mr-2" />
-                  ফার্ম যুক্ত করুন
-                </>
-              ) : (
-                <>
-                  পরবর্তী
-                  <FaArrowRight className="ml-2" />
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-// --- Main Component ---
 const MyFarmPage = () => {
-  // Initial farm data
+  // State management
   const [farms, setFarms] = useState([
     {
       id: 1,
@@ -570,6 +36,7 @@ const MyFarmPage = () => {
       soilDetails: { type: "দোআঁশ মাটি", pH: 6.5, nutrients: "মাধ্যমিক" },
       irrigation: { source: "নলকূপ", lastDate: "2025-10-08" },
       pestAlert: false,
+      organicPractices: true,
     },
     {
       id: 2,
@@ -588,49 +55,64 @@ const MyFarmPage = () => {
       soilDetails: { type: "এঁটেল মাটি", pH: 7.0, nutrients: "উচ্চ" },
       irrigation: { source: "বৃষ্টি", lastDate: "2025-10-05" },
       pestAlert: true,
+      organicPractices: false,
     },
   ]);
 
   // Activities data
-  const [activities] = useState([
+  const [activities, setActivities] = useState([
     {
       id: 1,
       title: "সেচ প্রদান",
+      description: "প্রধান ফার্মে সেচ দেওয়া প্রয়োজন",
       date: "২০২৫-১০-১০",
       status: "সম্পন্ন",
       priority: "উচ্চ",
+      category: "irrigation",
     },
     {
       id: 2,
       title: "সার প্রয়োগ",
+      description: "ইউরিয়া সার প্রয়োগ করতে হবে",
       date: "২০২৫-১০-১২",
       status: "চলমান",
       priority: "মাধ্যমিক",
+      category: "fertilizer",
     },
     {
       id: 3,
       title: "ফসল কাটা",
+      description: "ধান কাটার জন্য প্রস্তুতি নিতে হবে",
       date: "২০২৫-১১-১৫",
       status: "পরবর্তী",
       priority: "উচ্চ",
+      category: "harvest",
     },
   ]);
 
+  // Weather data
   const [weatherData] = useState({
     temperature: "২৮°C",
     humidity: "৬৫%",
     condition: "সূর্যোজ্জ্বল",
+    windSpeed: "১২ কিমি/ঘণ্টা",
     forecast: "গত ২ দিনের মধ্যে বৃষ্টির সম্ভাবনা নেই",
+    icon: "☀️",
   });
 
+  // Soil data
   const [soilData] = useState({
     pH: "৬.৫",
     moisture: "৬০%",
     nutrients: "মাধ্যমিক",
+    temperature: "২৫°C",
+    organicMatter: "৩.২%",
   });
 
-  // State for modal
+  // Modal state
   const [showAddFormModal, setShowAddFormModal] = useState(false);
+  const [lastSubmittedFarm, setLastSubmittedFarm] = useState(null);
+  const [showSubmittedData, setShowSubmittedData] = useState(false);
 
   // Handle adding a new farm
   const handleAddFarm = (farmData) => {
@@ -660,12 +142,58 @@ const MyFarmPage = () => {
       pestAlert: false,
       organicPractices: farmData.organicPractices,
     };
+
+    console.log(farm);
     setFarms([...farms, farm]);
+    setLastSubmittedFarm(farmData); // Store the original form data
+    setShowSubmittedData(true); // Show the submitted data
+    setShowAddFormModal(false);
+
+    // Auto-hide after 10 seconds
+    setTimeout(() => {
+      setShowSubmittedData(false);
+    }, 10000);
+  };
+
+  // Handle editing a farm
+  const handleEditFarm = (farm) => {
+    console.log("Edit farm:", farm);
+    // TODO: Implement edit functionality
   };
 
   // Handle deleting a farm
   const handleDeleteFarm = (id) => {
     setFarms(farms.filter((farm) => farm.id !== id));
+  };
+
+  // Handle adding new activity
+  const handleAddActivity = (activity) => {
+    setActivities([...activities, activity]);
+  };
+
+  // Handle updating activity
+  const handleUpdateActivity = (id, updates) => {
+    setActivities(
+      activities.map((activity) =>
+        activity.id === id ? { ...activity, ...updates } : activity
+      )
+    );
+  };
+
+  // Handle viewing weather/soil details
+  const handleViewDetails = (type) => {
+    if (type === "weather") {
+      // Navigate to weather page or show detailed modal
+      console.log("View weather details");
+    } else if (type === "soil") {
+      // Navigate to soil health page or show detailed modal
+      console.log("View soil details");
+    }
+  };
+
+  // Handle quick action clicks
+  const handleQuickActionClick = (action) => {
+    console.log("Quick action clicked:", action);
   };
 
   return (
@@ -690,84 +218,124 @@ const MyFarmPage = () => {
         </button>
       </div>
 
-      {/* Multi-step Modal */}
+      {/* Add Farm Modal */}
       <AddFarmModal
         isOpen={showAddFormModal}
         onClose={() => setShowAddFormModal(false)}
         onAddFarm={handleAddFarm}
       />
 
+      {/* Submitted Data Display */}
+      {showSubmittedData && lastSubmittedFarm && (
+        <div className="mb-6 bg-green-50 border border-green-200 rounded-xl p-6 shadow-lg">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-green-800 mb-4 flex items-center">
+                <FaTractor className="mr-2" />
+                সফলভাবে সাবমিট হয়েছে! 🎉
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="bg-white p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-700 mb-2">
+                    সাধারণ তথ্য
+                  </h3>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">নাম:</span>{" "}
+                      {lastSubmittedFarm.name}
+                    </p>
+                    <p>
+                      <span className="font-medium">অবস্থান:</span>{" "}
+                      {lastSubmittedFarm.location}
+                    </p>
+                    <p>
+                      <span className="font-medium">আকার:</span>{" "}
+                      {lastSubmittedFarm.size} একর
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-white p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-700 mb-2">ফসল</h3>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">প্রকার:</span>{" "}
+                      {lastSubmittedFarm.cropType}
+                    </p>
+                    <p>
+                      <span className="font-medium">জাত:</span>{" "}
+                      {lastSubmittedFarm.cropVariety || "নির্ধারিত নয়"}
+                    </p>
+                    <p>
+                      <span className="font-medium">রোপণ:</span>{" "}
+                      {lastSubmittedFarm.plantingDate || "নির্ধারিত নয়"}
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-white p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-700 mb-2">
+                    মাটি ও সেচ
+                  </h3>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">মাটি:</span>{" "}
+                      {lastSubmittedFarm.soilType || "নির্ধারিত নয়"}
+                    </p>
+                    <p>
+                      <span className="font-medium">pH:</span>{" "}
+                      {lastSubmittedFarm.soilPH || "নির্ধারিত নয়"}
+                    </p>
+                    <p>
+                      <span className="font-medium">সেচ:</span>{" "}
+                      {lastSubmittedFarm.irrigationSource || "নির্ধারিত নয়"}
+                    </p>
+                    <p>
+                      <span className="font-medium">অর্গানিক:</span>{" "}
+                      {lastSubmittedFarm.organicPractices ? "হ্যাঁ" : "না"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowSubmittedData(false)}
+              className="text-green-600 hover:text-green-800 ml-4 p-2 hover:bg-green-100 rounded-full transition-colors"
+              title="বন্ধ করুন"
+            >
+              <FaEdit className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Main Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Farms List & Info Cards */}
+        {/* Left Column - Weather, Soil & Farms */}
         <div className="lg:col-span-2">
           {/* Weather & Soil Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* Weather Card */}
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200 shadow-sm">
-              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                <FaCloudSun className="text-blue-600 mr-2" />
-                আবহাওয়া
-              </h2>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-3xl font-bold text-gray-800">
-                    {weatherData.temperature}
-                  </p>
-                  <p className="text-gray-600">{weatherData.condition}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-gray-700">
-                    <FaTint className="inline mr-1 text-blue-500" />
-                    {weatherData.humidity}
-                  </p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {weatherData.forecast}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Soil Health Card */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200 shadow-sm">
-              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                <FaLeaf className="text-green-600 mr-2" />
-                মাটির স্বাস্থ্য
-              </h2>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-700">পিএইচ মান</span>
-                  <span className="font-semibold">{soilData.pH}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-700">আর্দ্রতা</span>
-                  <span className="font-semibold">{soilData.moisture}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-700">পুষ্টি মাত্রা</span>
-                  <span className="font-semibold">{soilData.nutrients}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <WeatherSoilCards
+            weatherData={weatherData}
+            soilData={soilData}
+            onViewDetails={handleViewDetails}
+          />
 
           {/* Farms List */}
           <div className="bg-white rounded-xl border border-gray-200 shadow-lg">
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
                 <FaTractor className="text-green-600 mr-2" />
-                আমার ফার্মসমূহ
+                আমার ফার্মসমূহ ({farms.length}টি)
               </h2>
             </div>
             <div className="p-4">
               {farms.length === 0 ? (
                 <div className="text-center py-8">
                   <FaTractor className="text-4xl text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 mb-4">
                     এখনও কোন ফার্ম যুক্ত করা হয়নি
                   </p>
                   <button
                     onClick={() => setShowAddFormModal(true)}
-                    className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center transition-colors"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center transition-colors"
                   >
                     <FaPlus className="mr-2" />
                     প্রথম ফার্ম যুক্ত করুন
@@ -776,64 +344,12 @@ const MyFarmPage = () => {
               ) : (
                 <div className="grid grid-cols-1 gap-4">
                   {farms.map((farm) => (
-                    <div
+                    <FarmCard
                       key={farm.id}
-                      className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-bold text-lg text-gray-800">
-                            {farm.name}
-                          </h3>
-                          <p className="text-gray-600 flex items-center mt-1">
-                            <FaMapMarkerAlt className="mr-1 text-red-500" />
-                            {farm.location}
-                          </p>
-                          <div className="flex flex-wrap gap-2 mt-3">
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                              <FaRulerCombined className="inline mr-1" />
-                              {farm.size}
-                            </span>
-                            <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                              <FaSeedling className="inline mr-1" />
-                              {farm.crop}
-                            </span>
-                            <span
-                              className={`${
-                                farm.status === "চলমান"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-gray-100 text-gray-800"
-                              } text-xs font-medium px-2.5 py-0.5 rounded`}
-                            >
-                              {farm.status}
-                            </span>
-                            {farm.pestAlert && (
-                              <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                সতর্কতা
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <button
-                            title="সম্পাদনা করুন"
-                            className="text-blue-600 hover:text-blue-800 p-2 transition-colors"
-                          >
-                            <FaEdit />
-                          </button>
-                          <button
-                            title="মুছে ফেলুন"
-                            onClick={() => handleDeleteFarm(farm.id)}
-                            className="text-red-600 hover:text-red-800 p-2 transition-colors"
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="mt-3 text-sm text-gray-500">
-                        শেষ আপডেট: {farm.lastUpdate}
-                      </div>
-                    </div>
+                      farm={farm}
+                      onEdit={handleEditFarm}
+                      onDelete={handleDeleteFarm}
+                    />
                   ))}
                 </div>
               )}
@@ -841,101 +357,17 @@ const MyFarmPage = () => {
           </div>
         </div>
 
-        {/* Right Column - Activities & Quick Actions */}
-        <div className="lg:col-span-1">
-          {/* Upcoming Activities */}
-          <div className="bg-white rounded-xl border border-gray-200 mb-6 shadow-lg">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                <FaTasks className="text-green-600 mr-2" />
-                পরবর্তী কাজসমূহ 📝
-              </h2>
-            </div>
-            <div className="p-4">
-              {activities.length === 0 ? (
-                <p className="text-gray-600 text-center py-4">
-                  কোন নির্ধারিত কাজ নেই
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {activities.map((activity) => (
-                    <div
-                      key={activity.id}
-                      className="border-l-4 border-green-500 pl-4 py-1 bg-gray-50 rounded-md"
-                    >
-                      <div className="flex justify-between">
-                        <h3 className="font-semibold text-gray-800">
-                          {activity.title}
-                        </h3>
-                        <span
-                          className={`text-xs px-2 py-1 rounded ${
-                            activity.priority === "উচ্চ"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}
-                        >
-                          {activity.priority}
-                        </span>
-                      </div>
-                      <p className="text-gray-600 text-sm mt-1">
-                        <FaCalendarAlt className="inline mr-1" />{" "}
-                        {activity.date}
-                      </p>
-                      <span
-                        className={`inline-block mt-2 text-xs px-2 py-1 rounded ${
-                          activity.status === "সম্পন্ন"
-                            ? "bg-green-100 text-green-800"
-                            : activity.status === "চলমান"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {activity.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+        {/* Right Column - Progress & Quick Actions */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Farm Progress & Activities */}
+          <FarmProgress
+            activities={activities}
+            onAddActivity={handleAddActivity}
+            onUpdateActivity={handleUpdateActivity}
+          />
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-lg">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                <FaHistory className="text-green-600 mr-2" />
-                দ্রুত কাজ
-              </h2>
-            </div>
-            <div className="p-4">
-              <div className="grid grid-cols-2 gap-3">
-                <button className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-green-50 rounded-lg transition-colors border border-gray-100 hover:border-green-300">
-                  <FaSeedling className="text-2xl text-green-600 mb-2" />
-                  <span className="text-sm font-medium text-gray-700">
-                    ফসল উপদেশ
-                  </span>
-                </button>
-                <button className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-green-50 rounded-lg transition-colors border border-gray-100 hover:border-green-300">
-                  <FaCalendarAlt className="text-2xl text-green-600 mb-2" />
-                  <span className="text-sm font-medium text-gray-700">
-                    কৃষি ক্যালেন্ডার
-                  </span>
-                </button>
-                <button className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-green-50 rounded-lg transition-colors border border-gray-100 hover:border-green-300">
-                  <FaChartLine className="text-2xl text-green-600 mb-2" />
-                  <span className="text-sm font-medium text-gray-700">
-                    বাজার দাম
-                  </span>
-                </button>
-                <button className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-green-50 rounded-lg transition-colors border border-gray-100 hover:border-green-300">
-                  <FaCloudSun className="text-2xl text-green-600 mb-2" />
-                  <span className="text-sm font-medium text-gray-700">
-                    আবহাওয়া
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <QuickActions onActionClick={handleQuickActionClick} />
         </div>
       </div>
     </div>
