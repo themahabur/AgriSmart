@@ -1,7 +1,6 @@
 import { FaFlask, FaMapMarkerAlt, FaSeedling, FaTint, FaChartLine, FaDownload, FaSyncAlt, FaSun, FaMoon, FaLeaf } from 'react-icons/fa';
 import { IoIosWarning, IoIosCheckmarkCircle, IoIosCloseCircle } from 'react-icons/io';
 
-// --- FAKE DATA (Replace with API data) ---
 const soilData = {
     location: "Rajshahi, Bangladesh",
     sqiScore: 82,
@@ -29,9 +28,6 @@ const soilData = {
     drainage: "Moderate Drainage",
 };
 
-// --- Helper Components ---
-
-// 1. Overview Card Component
 const OverviewCard = ({ icon: Icon, title, value, unit = '', color = 'text-gray-700' }) => (
     <div className="flex items-center p-4 bg-white rounded-xl  hover: transition duration-300 border border-gray-100">
         <Icon className={`text-2xl mr-3 ${color}`} />
@@ -42,7 +38,6 @@ const OverviewCard = ({ icon: Icon, title, value, unit = '', color = 'text-gray-
     </div>
 );
 
-// 2. NPK Indicator Component
 const NPKIndicator = ({ nutrient, level, color }) => {
     const colorClasses = {
         High: "bg-green-500",
@@ -67,7 +62,6 @@ const NPKIndicator = ({ nutrient, level, color }) => {
     );
 };
 
-// 3. Crop Suitability Item
 const CropSuitabilityItem = ({ name, suitable }) => (
     <div className={`flex items-center p-2 rounded-lg ${suitable ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'} transition duration-150`}>
         {suitable ? <IoIosCheckmarkCircle className="text-lg mr-2" /> : <IoIosCloseCircle className="text-lg mr-2" />}
@@ -75,13 +69,12 @@ const CropSuitabilityItem = ({ name, suitable }) => (
     </div>
 );
 
-// --- Main Dashboard Component ---
 const SoilHealthDashboard = () => {
-    const primaryColor = "text-green-600"; // #16A34A
+    const primaryColor = "text-green-600"; 
     const sqiColor = soilData.sqiScore >= 75 ? "text-green-600" : soilData.sqiScore >= 50 ? "text-yellow-600" : "text-red-600";
     const sqiBarColor = soilData.sqiScore >= 75 ? "bg-green-600" : soilData.sqiScore >= 50 ? "bg-yellow-600" : "bg-red-600";
 
-    // Dummy logic for chart data (needs a proper chart library like Recharts/Chart.js)
+
     const ChartPlaceholder = () => (
         <div className="h-48 flex items-center justify-center bg-gray-50 border border-dashed rounded-xl text-gray-400">
             📊 Data History Graph Placeholder (pH / Moisture Change)
@@ -90,7 +83,6 @@ const SoilHealthDashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
-            {/* I. Header & Control (Top Bar) */}
             <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 border-b border-gray-200 mb-6">
                 <div className="flex items-center mb-3 sm:mb-0">
                     <FaFlask className={`text-3xl ${primaryColor} mr-3`} />
@@ -116,16 +108,13 @@ const SoilHealthDashboard = () => {
             </header>
 
             <main className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Left Column (Main Data & Scores) */}
                 <div className="lg:col-span-2 space-y-6">
 
-                    {/* II. Executive Summary & Score */}
                     <section className="p-6 bg-white rounded-2xl  border border-gray-100">
                         <h2 className={`text-xl font-bold mb-4 ${primaryColor}`}>Soil Quality Index (SQI)</h2>
                         <div className="flex items-center space-x-8">
                             {/* SQI Score */}
                             <div className="relative w-28 h-28">
-                                {/* This would be a proper Circular Progress Bar in a real app */}
                                 <div className={`w-full h-full rounded-full border-[10px] border-gray-200 flex items-center justify-center`}>
                                     <div className={`absolute top-0 left-0 w-full h-full rounded-full border-[10px] ${sqiBarColor} transition-all`}
                                         style={{ clipPath: `inset(0 0 0 ${100 - soilData.sqiScore}%)` }} // Simple visualization
@@ -141,7 +130,6 @@ const SoilHealthDashboard = () => {
                         </div>
                     </section>
 
-                    {/* Key Indicators Row */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <OverviewCard icon={FaFlask} title="pH Level" value={soilData.pH} color="text-yellow-600" />
                         <OverviewCard icon={FaTint} title="Moisture" value={soilData.moisture} unit="%" color="text-blue-600" />
@@ -149,10 +137,8 @@ const SoilHealthDashboard = () => {
                         <OverviewCard icon={FaLeaf} title="Soil Type" value={soilData.type} color={primaryColor} />
                     </div>
 
-                    {/* III. Core Data & Analysis */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
-                        {/* Nutrient Overview (NPK) */}
                         <section className="p-6 bg-white rounded-2xl ">
                             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
                                 <FaSeedling className={`${primaryColor} mr-2`} /> Important Nutrients (NPK)
@@ -162,7 +148,6 @@ const SoilHealthDashboard = () => {
                             <NPKIndicator nutrient="Potassium (K)" level={soilData.npk.K} />
                         </section>
 
-                        {/* Crop Suitability */}
                         <section className="p-6 bg-white rounded-2xl ">
                             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
                                 <IoIosCheckmarkCircle className={`${primaryColor} mr-2`} /> ফসল উপযোগিতা (Crop Suitability)
@@ -176,7 +161,6 @@ const SoilHealthDashboard = () => {
                         </section>
                     </div>
 
-                    {/* V. Advanced Data & History */}
                     <section className="p-6 bg-white rounded-2xl ">
                         <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
                             <FaChartLine className={`${primaryColor} mr-2`} /> Data History
@@ -185,10 +169,8 @@ const SoilHealthDashboard = () => {
                     </section>
                 </div>
 
-                {/* Right Column (Actionable Insights) */}
                 <div className="lg:col-span-1 space-y-6">
 
-                    {/* IV. Actionable Insights */}
                     <section className="p-6 bg-green-50 rounded-2xl  border border-green-200">
                         <h2 className="text-xl font-bold text-green-700 mb-4 flex items-center">
                             <FaSeedling className="mr-2" /> 🌱 পরামর্শ (Recommendations)
@@ -200,7 +182,6 @@ const SoilHealthDashboard = () => {
                         </ul>
                     </section>
                     
-                    {/* AI Recommendation */}
                     <section className="p-6 bg-white rounded-2xl ">
                         <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
                             <IoIosWarning className="text-yellow-600 mr-2" /> 💡 Soil Tips / Insights
@@ -212,7 +193,6 @@ const SoilHealthDashboard = () => {
                         </ul>
                     </section>
 
-                    {/* System Info & Download */}
                     <section className="p-6 bg-white rounded-2xl ">
                         <h2 className="text-xl font-bold text-gray-800 mb-4">System Details</h2>
                         <div className="space-y-2 text-gray-700">
