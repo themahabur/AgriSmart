@@ -258,7 +258,7 @@ const Dashboard = () => {
                   </div>
                   <div className="text-sm text-gray-600">ঢাকা</div>
                 </div>
-                <div className="text-4xl text-yellow-500">
+                <div className="text-4xl text-gray-500">
                   {weatherData?.weather?.[0]?.main === "Clear" ? (
                     <IoIosSunny />
                   ) : (
@@ -314,28 +314,28 @@ const Dashboard = () => {
                 <div
                   className={`${act.color} p-3 rounded-lg text-white text-xl`}
                 >
-                  <act.icon /> 
+                  <act.icon />
                 </div>
-               <div>
-                <p className="text-sm pb-1 ml-1">{act.income}</p>
-                 <div
-                  className={`text-sm px-2 py-1 rounded-full ${
-                    act.changeType === "positive"
-                      ? "bg-green-100 text-green-700"
-                      : act.changeType === "negative"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {act.changeType === "positive" && (
-                    <FaArrowUp className="inline mr-1" />
-                  )}
-                  {act.changeType === "negative" && (
-                    <FaArrowDown className="inline mr-1" />
-                  )}
-                  {act.change}
+                <div>
+                  <p className="text-sm pb-1 ml-1">{act.income}</p>
+                  <div
+                    className={`text-sm px-2 py-1 rounded-full ${
+                      act.changeType === "positive"
+                        ? "bg-green-100 text-green-700"
+                        : act.changeType === "negative"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    {act.changeType === "positive" && (
+                      <FaArrowUp className="inline mr-1" />
+                    )}
+                    {act.changeType === "negative" && (
+                      <FaArrowDown className="inline mr-1" />
+                    )}
+                    {act.change}
+                  </div>
                 </div>
-               </div>
               </div>
               <h3 className="text-sm text-gray-600 mb-1">{act.title}</h3>
               <p className="text-2xl font-bold text-gray-800">{act.value}</p>
@@ -449,9 +449,8 @@ const Dashboard = () => {
           <div className="space-y-6">
             {/* Weather Widget */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                <FaCloudSun className="mr-2 text-blue-600" />
-                আবহাওয়া
+              <h2 className="text-lg font-bold text-gray-800 mb-4  text-center">
+                আজকের আবহাওয়া
               </h2>
               {weatherData ? (
                 <div>
@@ -460,7 +459,7 @@ const Dashboard = () => {
                       {weatherData.weather?.[0]?.main === "Clear" ? (
                         <IoIosSunny className="text-yellow-500 mx-auto" />
                       ) : (
-                        <IoIosRainy className="text-blue-500 mx-auto" />
+                        <IoIosRainy className="text-gray-500 mx-auto" />
                       )}
                     </div>
                     <div className="text-2xl font-bold text-gray-800">
@@ -534,7 +533,7 @@ const Dashboard = () => {
             </div>
 
             {/* Agricultural Tips */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
+            {/* <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
               <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                 <FaLeaf className="mr-2 text-green-600" />
                 আজকের টিপস
@@ -565,12 +564,12 @@ const Dashboard = () => {
               >
                 আরও টিপস পড়ুন
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
 
         {/* Bottom Action Cards */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link
             href="/dashboard/market-price"
             className="group bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl p-6 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
@@ -613,7 +612,7 @@ const Dashboard = () => {
               অন্যান্য কৃষকদের সাথে অভিজ্ঞতা শেয়ার করুন এবং নতুন কিছু শিখুন।
             </p>
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );
