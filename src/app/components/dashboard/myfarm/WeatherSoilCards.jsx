@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React from "react";
 import {
   FaCloudSun,
@@ -91,16 +92,9 @@ const WeatherSoilCards = ({ weatherData, soilData, onViewDetails }) => {
       <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200 shadow-sm">
         <div className="flex justify-between items-start mb-4">
           <h2 className="text-xl font-bold text-gray-800 flex items-center">
-            <FaCloudSun className="text-blue-600 mr-2" />
-            আবহাওয়া
+            <FaCloudSun className="text-yellow-500 mr-2" />
+            আজকের আবহাওয়া
           </h2>
-          <button
-            onClick={() => onViewDetails && onViewDetails("weather")}
-            className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-100 rounded transition-colors"
-            title="বিস্তারিত দেখুন"
-          >
-            <FaEye className="w-4 h-4" />
-          </button>
         </div>
 
         {/* Main Weather Info */}
@@ -141,13 +135,19 @@ const WeatherSoilCards = ({ weatherData, soilData, onViewDetails }) => {
 
         {/* Weather Forecast */}
         {weather.forecast && (
-          <div className="mt-4 p-3 bg-blue-100 rounded-md">
+          <div className="my-6 p-3 bg-blue-100 rounded-md">
             <p className="text-blue-800 text-sm">
               <FaCloudSun className="inline mr-1" />
               {weather.forecast}
             </p>
           </div>
         )}
+        <Link
+          href={"/dashboard/weather"}
+          className=" p-3 bg-green-100 rounded-md block text-center text-gray-500 w-full"
+        >
+          বিস্তারিত দেখুন
+        </Link>
       </div>
 
       {/* Soil Health Card */}

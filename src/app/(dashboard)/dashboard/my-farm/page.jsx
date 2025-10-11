@@ -1,14 +1,12 @@
-"use client";
+
 "use client";
 import React, { useState } from "react";
 import {
   FaTractor,
   FaPlus,
-  FaMapMarkerAlt,
-  FaRulerCombined,
-  FaSeedling,
+ 
   FaEdit,
-  FaTrash,
+  
 } from "react-icons/fa";
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";

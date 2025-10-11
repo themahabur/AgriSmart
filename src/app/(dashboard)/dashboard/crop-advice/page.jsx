@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import AIAdviceEngine from "@/app/components/dashboard/cropAdvice/AIAdviceEngine";
 import CropDiagnosis from "@/app/components/dashboard/cropAdvice/CropDiagnosis";
 import AdviceHistory from "@/app/components/dashboard/cropAdvice/AdviceHistory";
-import SmartRecommendations from "@/app/components/dashboard/cropAdvice/SmartRecommendations";
+
 import WeatherIntegration from "@/app/components/dashboard/cropAdvice/WeatherIntegration";
 import { useSession } from "next-auth/react";
 
@@ -65,7 +65,7 @@ const CropAdvice = () => {
   const tabs = [
     { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: "🤖" },
     { id: "image-analysis", label: "ছবি বিশ্লেষণ", icon: "📸" },
-    { id: "smart-tips", label: "স্মার্ট পরামর্শ", icon: "💡" },
+   
     { id: "history", label: "ইতিহাস", icon: "📋" },
   ];
 
@@ -137,12 +137,7 @@ const CropAdvice = () => {
               />
             )}
 
-            {activeTab === "smart-tips" && (
-              <SmartRecommendations
-                weatherData={weatherData}
-                userHistory={adviceHistory}
-              />
-            )}
+           
 
             {activeTab === "history" && (
               <AdviceHistory
@@ -177,7 +172,7 @@ const CropAdvice = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">এই মাসে:</span>
-                  <span className="font-bold text-blue-600">
+                  <span className="font-bold text-green-600">
                     {
                       adviceHistory.filter((advice) => {
                         const adviceDate = new Date(advice.timestamp);

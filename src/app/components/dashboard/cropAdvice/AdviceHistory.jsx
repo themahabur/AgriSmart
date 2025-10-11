@@ -32,7 +32,7 @@ const AdviceHistory = ({ history, onClearHistory }) => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <FaHistory className="text-2xl text-purple-600 mr-3" />
+            <FaHistory className="text-2xl text-green-600 mr-3" />
             <div>
               <h2 className="text-xl font-bold text-gray-800">
                 📋 পরামর্শের ইতিহাস
@@ -147,7 +147,7 @@ const AdviceHistory = ({ history, onClearHistory }) => {
                     </span>
                   )}
                   {item.symptomArea && (
-                    <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded">
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded">
                       📍 {item.symptomArea}
                     </span>
                   )}

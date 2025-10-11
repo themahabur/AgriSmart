@@ -115,16 +115,16 @@ const WeatherIntegration = ({ weatherData }) => {
   return (
     <div className="space-y-6">
       {/* Current Weather */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div className="flex items-center mb-4">
-          <FaCloudSun className="text-2xl text-blue-600 mr-3" />
-          <h3 className="text-lg font-bold text-gray-800">
-            🌤️ বর্তমান আবহাওয়া
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-3">
+   
+          
+          <h3 className="text-lg font-bold text-gray-800 text-center">
+             বর্তমান আবহাওয়া
           </h3>
-        </div>
+      
 
         <div className="text-center mb-4">
-          <div className="text-4xl mb-2">{getWeatherIcon(weatherData)}</div>
+          <div className="text-4xl mb-2 w-10 mx-auto">{getWeatherIcon(weatherData)}</div>
           <div className="text-2xl font-bold text-gray-800">
             {Math.round(weatherData.main?.temp || 0)}°C
           </div>
@@ -134,7 +134,7 @@ const WeatherIntegration = ({ weatherData }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between">
+          <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between lg:flex-col">
             <span className="text-gray-600 flex items-center">
               <FaThermometerHalf className="mr-2 text-red-500" />
               অনুভূত
@@ -143,7 +143,7 @@ const WeatherIntegration = ({ weatherData }) => {
               {Math.round(weatherData.main?.feels_like || 0)}°C
             </span>
           </div>
-          <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between">
+          <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between lg:flex-col">
             <span className="text-gray-600 flex items-center">
               <FaTint className="mr-2 text-blue-500" />
               আর্দ্রতা
@@ -152,7 +152,7 @@ const WeatherIntegration = ({ weatherData }) => {
               {weatherData.main?.humidity || 0}%
             </span>
           </div>
-          <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between">
+          <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between lg:flex-col">
             <span className="text-gray-600 flex items-center">
               <FaWind className="mr-2 text-gray-500" />
               বাতাস
@@ -161,7 +161,7 @@ const WeatherIntegration = ({ weatherData }) => {
               {Math.round((weatherData.wind?.speed || 0) * 3.6)} কিমি/ঘ
             </span>
           </div>
-          <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between">
+          <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between lg:flex-col">
             <span className="text-gray-600">চাপ</span>
             <span className="font-bold text-blue-700">
               {weatherData.main?.pressure || 0} hPa

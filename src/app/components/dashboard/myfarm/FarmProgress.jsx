@@ -168,17 +168,7 @@ const FarmProgress = ({
               <FaTasks className="inline mr-2" />
               পরবর্তী কাজসমূহ
             </button>
-            <button
-              onClick={() => setActiveTab("suggestions")}
-              className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                activeTab === "suggestions"
-                  ? "bg-green-100 text-green-800"
-                  : "text-gray-600 hover:text-gray-800"
-              }`}
-            >
-              <FaLightbulb className="inline mr-2" />
-              স্মার্ট পরামর্শ
-            </button>
+            
           </div>
 
           {activeTab === "activities" && (
@@ -237,22 +227,7 @@ const FarmProgress = ({
                       </div>
 
                       <div className="flex space-x-2 ml-4">
-                        <button
-                          title="সম্পাদনা করুন"
-                          className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
-                        >
-                          <FaEdit className="w-3 h-3" />
-                        </button>
-                        <button
-                          title="সম্পন্ন করুন"
-                          className="text-green-600 hover:text-green-800 p-1 hover:bg-green-50 rounded transition-colors"
-                          onClick={() =>
-                            onUpdateActivity &&
-                            onUpdateActivity(activity.id, { status: "সম্পন্ন" })
-                          }
-                        >
-                          <FaCheckCircle className="w-3 h-3" />
-                        </button>
+                        
                       </div>
                     </div>
                   </div>
@@ -274,69 +249,7 @@ const FarmProgress = ({
           </div>
         )}
 
-        {/* Suggestions Tab */}
-        {activeTab === "suggestions" && (
-          <div className="space-y-4">
-            {generateSuggestions().map((suggestion) => {
-              const IconComponent = suggestion.icon;
-              return (
-                <div
-                  key={suggestion.id}
-                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start">
-                      <div
-                        className={`p-2 rounded-lg mr-3 ${
-                          suggestion.color === "blue"
-                            ? "bg-blue-100 text-blue-600"
-                            : suggestion.color === "green"
-                            ? "bg-green-100 text-green-600"
-                            : suggestion.color === "red"
-                            ? "bg-red-100 text-red-600"
-                            : "bg-yellow-100 text-yellow-600"
-                        }`}
-                      >
-                        <IconComponent className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-800 mb-1">
-                          {suggestion.title}
-                        </h4>
-                        <p className="text-gray-600 text-sm mb-2">
-                          {suggestion.message}
-                        </p>
-                        <span
-                          className={`inline-block px-2 py-1 rounded text-xs ${getPriorityColor(
-                            suggestion.priority
-                          )}`}
-                        >
-                          {suggestion.priority} অগ্রাধিকার
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex space-x-2 ml-4">
-                      <button
-                        onClick={() => handleSuggestionAction(suggestion)}
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium transition-colors flex items-center"
-                      >
-                        {suggestion.action}
-                        <FaArrowRight className="ml-1 w-3 h-3" />
-                      </button>
-                      <button
-                        title="বিস্তারিত দেখুন"
-                        className="text-gray-600 hover:text-gray-800 p-1 hover:bg-gray-50 rounded transition-colors"
-                      >
-                        <FaEye className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+        
       </div>
 
       {/* Add Activity Modal */}

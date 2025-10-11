@@ -3,30 +3,12 @@ import { FaRobot, FaMicrophone, FaStop, FaPaperPlane } from "react-icons/fa";
 
 const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
   const [question, setQuestion] = useState("");
-  const [cropType, setCropType] = useState("");
+
   const [symptomArea, setSymptomArea] = useState("");
   const [severity, setSeverity] = useState("");
   const [duration, setDuration] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [isListening, setIsListening] = useState(false);
-
-  const cropOptions = [
-    "ধান",
-    "গম",
-    "ভুট্টা",
-    "আলু",
-    "টমেটো",
-    "পেঁয়াজ",
-    "রসুন",
-    "মরিচ",
-    "বেগুন",
-    "কুমড়া",
-    "লাউ",
-    "পাট",
-    "তিল",
-    "সরিষা",
-    "চিনাবাদাম",
-  ];
 
   const symptomAreas = ["পাতা", "কান্ড", "শিকড়", "ফুল", "ফল", "সম্পূর্ণ গাছ"];
 
@@ -75,6 +57,7 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const cropType = e.target.cropType.value;
     if (!question.trim()) return;
 
     setIsLoading(true);
@@ -114,7 +97,7 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
         id: Date.now(),
         question: question,
         answer: aiAnswer,
-        cropType,
+        cropType, //
         symptomArea,
         severity,
         duration,
@@ -122,7 +105,13 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
         type: "ai-diagnosis",
         solved: false,
       };
+      setQuestion("");
+      e.target.cropType.value = "";
+      setSymptomArea("");
+      setSeverity("");
+      setDuration("");
 
+      console.log(adviceData);
       onAdviceGenerated(adviceData);
     } catch (error) {
       console.error("AI request failed:", error);
@@ -157,18 +146,12 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 🌱 ফসলের ধরন
               </label>
-              <select
-                value={cropType}
-                onChange={(e) => setCropType(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              >
-                <option value="">ফসল নির্বাচন করুন</option>
-                {cropOptions.map((crop) => (
-                  <option key={crop} value={crop}>
-                    {crop}
-                  </option>
-                ))}
-              </select>
+              <input
+                type="text"
+                name="cropType"
+                placeholder="ধান, ডাল, গম, ভুট্টা..."
+                className="w-full px-4 py-[13px] border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
             </div>
 
             <div>
