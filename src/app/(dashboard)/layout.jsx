@@ -8,15 +8,15 @@ import DashboardNavbar from "../components/dashboard/navbar/DashboardNavbar";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const pathname = usePathname();
+  const {  status } = useSession();
+  // const router = useRouter();
+  // const pathname = usePathname();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push(`/auth/login?callbackUrl=${pathname}`);
-    }
-  }, [status, router, pathname]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     router.push(`/auth/login?callbackUrl=${pathname}`);
+  //   }
+  // }, [status, router, pathname]);
 
   if (status === "loading") {
     return <p>Loading...</p>;
