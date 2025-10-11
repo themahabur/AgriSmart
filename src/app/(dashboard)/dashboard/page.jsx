@@ -7,35 +7,27 @@ import {
   FaCloudSun,
   FaChartLine,
   FaRobot,
-  FaPenFancy,
   FaUsers,
-  FaCalendarAlt,
-  FaWater,
   FaUserTie,
-  FaShoppingCart,
   FaBell,
   FaLeaf,
-  FaTemperatureHigh,
   FaTint,
   FaWind,
   FaArrowUp,
   FaArrowDown,
-  FaMinus,
-  FaPlus,
   FaCheck,
   FaClock,
-  FaNewspaper,
   FaBookOpen,
   FaHandHoldingUsd,
 } from "react-icons/fa";
 import { HiOutlineChartBar } from "react-icons/hi";
-import { IoIosSunny, IoIosRainy } from "react-icons/io";
+import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
+import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 
 const Dashboard = () => {
   const { data: session } = useSession();
   const [weatherData, setWeatherData] = useState(null);
-  const [marketData, setMarketData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   // Quick Stats Data
@@ -51,24 +43,29 @@ const Dashboard = () => {
     {
       title: "আজকের কাজ",
       value: "৩টি",
-      icon: FaCheck,
+      icon: IoMdCheckmark,
       color: "bg-blue-500",
       change: "১ সম্পূর্ণ",
       changeType: "neutral",
     },
+    //
+  ];
+  const activities = [
     {
-      title: "আয় (মাসিক)",
+      title: "সর্বোচ্চ আয় (মাসিক)",
       value: "২৫,০০০৳",
-      icon: FaHandHoldingUsd,
-      color: "bg-amber-500",
+      icon: PiChartLineUpBold,
+      color: "bg-green-500",
+      income: "আয় বৃদ্ধি",
       change: "+১২%",
       changeType: "positive",
     },
     {
-      title: "ব্যয় (মাসিক)",
+      title: "সর্বোনিম্ন আয় (মাসিক)",
       value: "১৮,০০০৳",
-      icon: FaChartLine,
+      icon: PiChartLineDownBold,
       color: "bg-red-500",
+      income: "আয় হ্রাস",
       change: "-৫%",
       changeType: "negative",
     },
@@ -306,6 +303,42 @@ const Dashboard = () => {
               </div>
               <h3 className="text-sm text-gray-600 mb-1">{stat.title}</h3>
               <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
+            </div>
+          ))}
+          {activities.map((act, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-300"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div
+                  className={`${act.color} p-3 rounded-lg text-white text-xl`}
+                >
+                  <act.icon /> 
+                </div>
+               <div>
+                <p className="text-sm pb-1 ml-1">{act.income}</p>
+                 <div
+                  className={`text-sm px-2 py-1 rounded-full ${
+                    act.changeType === "positive"
+                      ? "bg-green-100 text-green-700"
+                      : act.changeType === "negative"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {act.changeType === "positive" && (
+                    <FaArrowUp className="inline mr-1" />
+                  )}
+                  {act.changeType === "negative" && (
+                    <FaArrowDown className="inline mr-1" />
+                  )}
+                  {act.change}
+                </div>
+               </div>
+              </div>
+              <h3 className="text-sm text-gray-600 mb-1">{act.title}</h3>
+              <p className="text-2xl font-bold text-gray-800">{act.value}</p>
             </div>
           ))}
         </div>
