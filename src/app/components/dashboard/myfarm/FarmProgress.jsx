@@ -227,22 +227,7 @@ const FarmProgress = ({
                       </div>
 
                       <div className="flex space-x-2 ml-4">
-                        <button
-                          title="সম্পাদনা করুন"
-                          className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
-                        >
-                          <FaEdit className="w-3 h-3" />
-                        </button>
-                        <button
-                          title="সম্পন্ন করুন"
-                          className="text-green-600 hover:text-green-800 p-1 hover:bg-green-50 rounded transition-colors"
-                          onClick={() =>
-                            onUpdateActivity &&
-                            onUpdateActivity(activity.id, { status: "সম্পন্ন" })
-                          }
-                        >
-                          <FaCheckCircle className="w-3 h-3" />
-                        </button>
+                        
                       </div>
                     </div>
                   </div>

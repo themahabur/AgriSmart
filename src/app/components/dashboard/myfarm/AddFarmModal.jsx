@@ -51,7 +51,7 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
       [name]: type === "checkbox" ? checked : value,
     }));
   }, []);
-
+// console.log(newFarm);
   const ProgressBar = () => (
     <div className="mb-8">
       <div className="flex justify-between items-center">
