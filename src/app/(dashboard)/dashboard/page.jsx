@@ -18,9 +18,8 @@ import {
   FaCheck,
   FaClock,
   FaBookOpen,
-  FaHandHoldingUsd,
 } from "react-icons/fa";
-import { HiOutlineChartBar } from "react-icons/hi";
+
 import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
