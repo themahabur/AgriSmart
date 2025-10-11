@@ -119,21 +119,21 @@ const SmartRecommendations = ({ weatherData, userHistory }) => {
       {weatherData && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center mb-4">
-            <FaCloudSun className="text-2xl text-blue-600 mr-3" />
+            <FaCloudSun className="text-2xl text-green-600 mr-3" />
             <h3 className="text-lg font-bold text-gray-800">
               🌤️ আবহাওয়া ভিত্তিক পরামর্শ
             </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-            <div className="bg-blue-50 rounded-lg p-3">
+            <div className="bg-green-50 rounded-lg p-3">
               <span className="text-sm text-gray-600">বর্তমান তাপমাত্রা:</span>
-              <span className="font-bold text-blue-700 ml-2">
+              <span className="font-bold text-green-700 ml-2">
                 {Math.round(weatherData.main?.temp || 0)}°C
               </span>
             </div>
-            <div className="bg-blue-50 rounded-lg p-3">
+            <div className="bg-green-50 rounded-lg p-3">
               <span className="text-sm text-gray-600">আর্দ্রতা:</span>
-              <span className="font-bold text-blue-700 ml-2">
+              <span className="font-bold text-green-700 ml-2">
                 {weatherData.main?.humidity || 0}%
               </span>
             </div>
@@ -142,7 +142,7 @@ const SmartRecommendations = ({ weatherData, userHistory }) => {
             {weatherBasedTips.map((tip, index) => (
               <div
                 key={index}
-                className="bg-blue-50 border border-blue-100 rounded-lg p-3"
+                className="bg-green-50 border border-green-100 rounded-lg p-3"
               >
                 <p className="text-gray-700 text-sm">{tip}</p>
               </div>
@@ -174,38 +174,38 @@ const SmartRecommendations = ({ weatherData, userHistory }) => {
       )}
 
       {/* General AI Tips */}
-      <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-6">
+      <div className="bg-gradient-to-r from-green-50 to-pink-50 rounded-xl border border-green-200 p-6">
         <div className="flex items-center mb-4">
-          <FaLeaf className="text-2xl text-purple-600 mr-3" />
-          <h3 className="text-lg font-bold text-purple-800">
+          <FaLeaf className="text-2xl text-green-600 mr-3" />
+          <h3 className="text-lg font-bold text-green-800">
             🌿 সাধারণ কৃষি টিপস
           </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white rounded-lg p-4 border border-purple-100">
-            <h4 className="font-semibold text-purple-700 mb-2">🌱 বীজ বপন</h4>
+          <div className="bg-white rounded-lg p-4 border border-green-100">
+            <h4 className="font-semibold text-green-700 mb-2">🌱 বীজ বপন</h4>
             <p className="text-gray-700 text-sm">
               ভালো মানের বীজ ব্যবহার করুন এবং মাটির pH ৬-৭ রাখুন
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-purple-100">
-            <h4 className="font-semibold text-purple-700 mb-2">
+          <div className="bg-white rounded-lg p-4 border border-green-100">
+            <h4 className="font-semibold text-green-700 mb-2">
               💧 সেচ ব্যবস্থা
             </h4>
             <p className="text-gray-700 text-sm">
               সকাল বা বিকালে সেচ দিন, দুপুরে এড়িয়ে চলুন
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-purple-100">
-            <h4 className="font-semibold text-purple-700 mb-2">
+          <div className="bg-white rounded-lg p-4 border border-green-100">
+            <h4 className="font-semibold text-green-700 mb-2">
               🛡️ রোগ প্রতিরোধ
             </h4>
             <p className="text-gray-700 text-sm">
               নিয়মিত ক্ষেত পরিদর্শন করুন এবং আক্রান্ত অংশ তুলে ফেলুন
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-purple-100">
-            <h4 className="font-semibold text-purple-700 mb-2">
+          <div className="bg-white rounded-lg p-4 border border-green-100">
+            <h4 className="font-semibold text-green-700 mb-2">
               🌾 ফসল সংগ্রহ
             </h4>
             <p className="text-gray-700 text-sm">

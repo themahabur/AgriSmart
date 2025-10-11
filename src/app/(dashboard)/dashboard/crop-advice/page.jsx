@@ -177,7 +177,7 @@ const CropAdvice = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">এই মাসে:</span>
-                  <span className="font-bold text-blue-600">
+                  <span className="font-bold text-green-600">
                     {
                       adviceHistory.filter((advice) => {
                         const adviceDate = new Date(advice.timestamp);
