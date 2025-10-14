@@ -1,117 +1,103 @@
-import React, { useState, useRef } from "react";
-import { FaCamera, FaUpload, FaRobot, FaTrash } from "react-icons/fa";
+import React, { useState } from "react";
+import ImageUploader from "./ImageUploader";
+import ImageAnalysis from "./ImageAnalysis";
+import { FaInfoCircle } from "react-icons/fa";
 
 const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [description, setDescription] = useState("");
-  const [diagnosis, setDiagnosis] = useState("");
-  const fileInputRef = useRef(null);
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onload = (e) => setImagePreview(e.target.result);
-      reader.readAsDataURL(file);
-    }
+  const handleImageUploaded = (cloudinaryUrl, previewUrl) => {
+    setUploadedImageUrl(cloudinaryUrl);
+    setImagePreview(previewUrl);
   };
 
-  const handleDiagnosis = async () => {
-    if (!selectedImage && !description.trim()) {
-      alert("অনুগ্রহ করে একটি ছবি আপলোড করুন অথবা সমস্যার বর্ণনা দিন");
-      return;
-    }
+  const handleImageRemoved = () => {
+    setUploadedImageUrl(null);
+    setImagePreview(null);
+  };
 
-    setIsLoading(true);
-    const prompt = `ছবি বিশ্লেষণ: "${description}"\n\nফসলের সমস্যা চিহ্নিত করে সমাধান দিন।`;
+  const handleAnalysisComplete = (analysisData) => {
+    // Add description and preview image to the analysis data
+    const completeData = {
+      ...analysisData,
+      description,
+      imagePreview,
+    };
 
-    try {
-      const response = await fetch("/api/ask-ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: prompt }),
-      });
-
-      const data = await response.json();
-      const aiDiagnosis = data.answer || "বিশ্লেষণ সেবা উপলব্ধ নেই।";
-      setDiagnosis(aiDiagnosis);
-
-      onDiagnosisComplete({
-        id: Date.now(),
-        type: "image-analysis",
-        image: imagePreview,
-        description,
-        diagnosis: aiDiagnosis,
-        timestamp: new Date().toISOString(),
-        solved: false,
-      });
-    } catch (error) {
-      setDiagnosis("বিশ্লেষণ করতে সমস্যা হয়েছে।");
-    } finally {
-      setIsLoading(false);
-    }
+    onDiagnosisComplete(completeData);
   };
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-bold mb-4">📸 ছবি দিয়ে ফসল নির্ণয়</h2>
+      {/* Header Section */}
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
+        <h2 className="text-2xl font-bold text-green-800 mb-3 flex items-center">
+          📸 AI চালিত ছবি বিশ্লেষণ
+        </h2>
+        <p className="text-green-700 mb-4">
+          উন্নত কৃত্রিম বুদ্ধিমত্তা ব্যবহার করে আপনার ফসলের ছবি বিশ্লেষণ করুন
+          এবং রোগ নির্ণয়, পুষ্টি মূল্যায়ন ও চিকিৎসার পরামর্শ পান।
+        </p>
 
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="w-full p-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors mb-4"
-        >
-          <FaUpload className="text-3xl text-gray-400 mx-auto mb-2" />
-          <span>ছবি আপলোড করুন</span>
-        </button>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="hidden"
-        />
-
-        {imagePreview && (
-          <div className="mb-4">
-            <img
-              src={imagePreview}
-              alt="Crop"
-              className="max-h-64 mx-auto rounded-lg"
-            />
+        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+          <div className="flex items-start space-x-2">
+            <FaInfoCircle className="text-blue-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <h4 className="font-medium text-blue-800 mb-1">
+                কিভাবে কাজ করে:
+              </h4>
+              <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
+                <li>আপনার ফসলের স্পষ্ট ছবি আপলোড করুন</li>
+                <li>বিশ্লেষণের ধরন নির্বাচন করুন (রোগ, পুষ্টি, বৃদ্ধি)</li>
+                <li>AI আপনার ছবি বিশ্লেষণ করে বিস্তারিত রিপোর্ট দেবে</li>
+              </ol>
+            </div>
           </div>
-        )}
-
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="সমস্যার বর্ণনা দিন..."
-          rows={3}
-          className="w-full px-4 py-3 border rounded-lg mb-4"
-        />
-
-        <button
-          onClick={handleDiagnosis}
-          disabled={isLoading}
-          className="w-full bg-blue-500 text-white py-3 rounded-lg disabled:opacity-50"
-        >
-          {isLoading ? "বিশ্লেষণ করছে..." : "AI বিশ্লেষণ করুন"}
-        </button>
+        </div>
       </div>
 
-      {diagnosis && (
-        <div className="bg-blue-50 rounded-xl p-6">
-          <h3 className="font-bold mb-4">🔬 AI বিশ্লেষণ রিপোর্ট</h3>
-          <div className="bg-white rounded-lg p-4">
-            {diagnosis.split("\n").map((line, index) => (
-              <p key={index} className="mb-2">
-                {line}
-              </p>
-            ))}
-          </div>
+      {/* Image Upload Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-lg font-bold text-gray-800 mb-4">
+          ধাপ ১: ছবি আপলোড করুন
+        </h3>
+        <ImageUploader
+          onImageUploaded={handleImageUploaded}
+          onImageRemoved={handleImageRemoved}
+          disabled={isLoading}
+        />
+      </div>
+
+      {/* Description Section */}
+      {uploadedImageUrl && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">
+            ধাপ ২: অতিরিক্ত তথ্য (ঐচ্ছিক)
+          </h3>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="আপনার ফসল সম্পর্কে অতিরিক্ত তথ্য দিন... যেমন: কখন সমস্যা শুরু হয়েছে, আবহাওয়ার অবস্থা, ব্যবহৃত সার বা কীটনাশক ইত্যাদি।"
+            rows={4}
+            disabled={isLoading}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+          />
+        </div>
+      )}
+
+      {/* Analysis Section */}
+      {uploadedImageUrl && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">
+            ধাপ ৩: AI বিশ্লেষণ
+          </h3>
+          <ImageAnalysis
+            imageUrl={uploadedImageUrl}
+            onAnalysisComplete={handleAnalysisComplete}
+            disabled={isLoading}
+          />
         </div>
       )}
     </div>
