@@ -7,6 +7,7 @@ import ImageUploader from "./ImageUploader";
 import VideoUrlInput from "./VideoUrlInput";
 import RichTextEditor from "./RichTextEditor";
 import TagInput from "./TagInput";
+import toast from "react-hot-toast";
 
 const AddBlogForm = ({ user }) => {
   const [postData, setPostData] = useState({
@@ -94,10 +95,11 @@ const AddBlogForm = ({ user }) => {
 
       const data = await response.json();
       console.log("✅ Server Response:", data);
-      alert("✅ Blog submitted successfully!");
+      toast.success(" Blog submitted successfully!");
     } catch (err) {
       console.error(err);
       setError(err.message || "An unexpected error occurred.");
+      toast.error(" Blog submitted failed!");
     } finally {
       setIsSubmitting(false);
     }
@@ -210,18 +212,6 @@ const AddBlogForm = ({ user }) => {
                   <FiSend />
                 )}
                 প্রকাশ করুন (Publish)
-              </button>
-              <button
-                onClick={() => handleSubmit("draft")}
-                disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 border-2 border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 font-semibold py-3 px-4 rounded-lg transition-all duration-300 disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <FiLoader className="animate-spin" />
-                ) : (
-                  <FiSave />
-                )}
-                ড্রাফট সংরক্ষণ (Save Draft)
               </button>
             </div>
           </div>
