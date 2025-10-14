@@ -221,7 +221,7 @@ const KrishiCalendar = () => {
                   <button
                     key={crop}
                     onClick={() => setSelectedCrop(crop)}
-                    className={`p-4 rounded-xl border-2 transition-all duration-300 font-bangla ${
+                    className={`p-4 rounded-xl border transition-all duration-300 font-bangla ${
                       selectedCrop === crop
                         ? 'border-green-500 bg-green-50 text-green-700 shadow-sm transform scale-105'
                         : 'border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50'
@@ -353,10 +353,10 @@ const KrishiCalendar = () => {
                   <button
                     key={month}
                     onClick={() => setSelectedMonth(month)}
-                    className={`p-3 rounded-lg border-2 transition-all font-bangla ${
+                    className={`p-3 rounded-lg border transition-all font-bangla ${
                       selectedMonth === month
                         ? 'border-green-500 bg-green-100 text-green-800 font-bold'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-green-300'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-green-300'
                     }`}
                   >
                     {month}
