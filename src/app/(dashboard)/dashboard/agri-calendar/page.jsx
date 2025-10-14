@@ -169,19 +169,19 @@ const KrishiCalendar = () => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-4 shadow-md border border-green-200">
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-green-200">
             <p className="text-sm text-gray-600 font-bangla">বর্তমান মৌসুম</p>
             <p className="font-bold text-green-700 text-lg font-bangla">রবি মৌসুম</p>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-md border border-amber-200">
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-amber-200">
             <p className="text-sm text-gray-600 font-bangla">বাজারে চাহিদা</p>
             <p className="font-bold text-amber-700 text-lg font-bangla">আলু, টমেটো</p>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-md border border-blue-200">
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-blue-200">
             <p className="text-sm text-gray-600 font-bangla">আবহাওয়া</p>
-            <p className="font-bold text-blue-700 text-lg font-bangla">শীতকাল</p>
+            <p className="font-bold text-green-700 text-lg font-bangla">শীতকাল</p>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-md border border-red-200">
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-red-200">
             <p className="text-sm text-gray-600 font-bangla">সতর্কতা</p>
             <p className="font-bold text-red-700 text-lg font-bangla">কুয়াশা</p>
           </div>
@@ -200,7 +200,7 @@ const KrishiCalendar = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 font-bangla ${
                 activeTab === tab.id
-                  ? 'bg-green-600 text-white shadow-lg transform scale-105'
+                  ? 'bg-green-600 text-white shadow-sm transform scale-105'
                   : 'bg-white text-green-700 hover:bg-green-50 border border-green-200'
               }`}
             >
@@ -212,18 +212,18 @@ const KrishiCalendar = () => {
         {/* Crops Tab */}
         {activeTab === 'crops' && (
           <div className="space-y-8">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+            <div className="bg-white rounded-2xl shadow-sm p-6 border border-green-200">
               <h2 className="text-2xl font-bold text-green-800 mb-6 text-center font-bangla">
-                ফসল নির্বাচন করুন
+                ফসল নির্বাচন করুনxx
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {Object.keys(cropData).map((crop) => (
                   <button
                     key={crop}
                     onClick={() => setSelectedCrop(crop)}
-                    className={`p-4 rounded-xl border-2 transition-all duration-300 font-bangla ${
+                    className={`p-4 rounded-xl border transition-all duration-300 font-bangla ${
                       selectedCrop === crop
-                        ? 'border-green-500 bg-green-50 text-green-700 shadow-md transform scale-105'
+                        ? 'border-green-500 bg-green-50 text-green-700 shadow-sm transform scale-105'
                         : 'border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50'
                     }`}
                   >
@@ -241,7 +241,7 @@ const KrishiCalendar = () => {
             </div>
 
             {selectedCrop && (
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+              <div className="bg-white rounded-2xl shadow-sm p-6 border border-green-200">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="text-3xl">
                     {selectedCrop === 'ধান' && '🌾'}
@@ -260,7 +260,7 @@ const KrishiCalendar = () => {
                     {Object.keys(cropData[selectedCrop]).map((variety) => (
                       <div key={variety} className="bg-gradient-to-br from-green-50 to-amber-50 rounded-xl p-6 border border-green-200">
                         <h4 className="text-xl font-bold text-green-700 mb-4 font-bangla">
-                          {variety} ধান
+                          {variety} ধান 
                         </h4>
                         <div className="space-y-4">
                           <div className="grid grid-cols-2 gap-4">
@@ -343,7 +343,7 @@ const KrishiCalendar = () => {
         {/* Calendar Tab */}
         {activeTab === 'calendar' && (
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+            <div className="bg-white rounded-2xl shadow-sm p-6 border border-green-200">
               <h2 className="text-2xl font-bold text-green-800 mb-6 text-center font-bangla">
                 মাসভিত্তিক কৃষি কার্যক্রম - {selectedMonth || 'মাস নির্বাচন করুন'}
               </h2>
@@ -353,10 +353,10 @@ const KrishiCalendar = () => {
                   <button
                     key={month}
                     onClick={() => setSelectedMonth(month)}
-                    className={`p-3 rounded-lg border-2 transition-all font-bangla ${
+                    className={`p-3 rounded-lg border transition-all font-bangla ${
                       selectedMonth === month
                         ? 'border-green-500 bg-green-100 text-green-800 font-bold'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-green-300'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-green-300'
                     }`}
                   >
                     {month}
@@ -394,7 +394,7 @@ const KrishiCalendar = () => {
                     <h4 className="font-bold text-blue-700 mb-3 font-bangla">🌾 চাষযোগ্য ফসল</h4>
                     <div className="flex flex-wrap gap-2">
                       {monthlyActivities[selectedMonth].crops.map((crop, index) => (
-                        <span key={index} className="bg-white px-3 py-1 rounded-full text-blue-800 text-sm font-bangla border border-blue-200">
+                        <span key={index} className="bg-white px-3 py-1 rounded-full text-green-800 text-sm font-bangla border border-blue-200">
                           {crop}
                         </span>
                       ))}
@@ -409,7 +409,7 @@ const KrishiCalendar = () => {
         {/* Market Prices Tab */}
         {activeTab === 'market' && (
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+            <div className="bg-white rounded-2xl shadow-sm p-6 border border-green-200">
               <h2 className="text-2xl font-bold text-green-800 mb-6 text-center font-bangla">
                 সর্বশেষ বাজার দাম
               </h2>
@@ -448,7 +448,7 @@ const KrishiCalendar = () => {
         {/* Tools Tab */}
         {activeTab === 'tools' && (
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+            <div className="bg-white rounded-2xl shadow-sm p-6 border border-green-200">
               <h2 className="text-2xl font-bold text-green-800 mb-6 text-center font-bangla">
                 কৃষি সরঞ্জাম ও ক্যালকুলেটর
               </h2>
@@ -463,9 +463,9 @@ const KrishiCalendar = () => {
                 </div>
 
                 <div className="bg-blue-50 rounded-xl p-5">
-                  <h4 className="font-bold text-blue-700 mb-3 font-bangla">💧 সেচ ক্যালকুলেটর</h4>
-                  <p className="text-blue-800 mb-4 font-bangla">ফসল ও জমি অনুযায়ী সেচের পরিমাণ নির্ণয় করুন</p>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bangla hover:bg-blue-700">
+                  <h4 className="font-bold text-green-700 mb-3 font-bangla">💧 সেচ ক্যালকুলেটর</h4>
+                  <p className="text-green-800 mb-4 font-bangla">ফসল ও জমি অনুযায়ী সেচের পরিমাণ নির্ণয় করুন</p>
+                  <button className="bg-green-600 text-white px-4 py-2 rounded-lg font-bangla hover:bg-blue-700">
                     ক্যালকুলেটর ব্যবহার করুন
                   </button>
                 </div>
@@ -479,9 +479,9 @@ const KrishiCalendar = () => {
                 </div>
 
                 <div className="bg-purple-50 rounded-xl p-5">
-                  <h4 className="font-bold text-purple-700 mb-3 font-bangla">🌦️ আবহাওয়া পূর্বাভাস</h4>
-                  <p className="text-purple-800 mb-4 font-bangla">আপনার এলাকার ৭ দিনের আবহাওয়া পূর্বাভাস</p>
-                  <button className="bg-purple-600 text-white px-4 py-2 rounded-lg font-bangla hover:bg-purple-700">
+                  <h4 className="font-bold text-green-700 mb-3 font-bangla">🌦️ আবহাওয়া পূর্বাভাস</h4>
+                  <p className="text-green-800 mb-4 font-bangla">আপনার এলাকার ৭ দিনের আবহাওয়া পূর্বাভাস</p>
+                  <button className="bg-green-600 text-white px-4 py-2 rounded-lg font-bangla hover:bg-green-700">
                     পূর্বাভাস দেখুন
                   </button>
                 </div>
