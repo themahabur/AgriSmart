@@ -87,32 +87,27 @@ const WeatherSoilCards = ({ weatherData, soilData, onViewDetails }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-      {/* Weather Card */}
-      <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200 shadow-sm">
-        <div className="flex justify-between items-start mb-4">
-          <h2 className="text-xl font-bold text-gray-800 flex items-center">
-            <FaCloudSun className="text-yellow-500 mr-2" />
-            আজকের আবহাওয়া
-          </h2>
-        </div>
+    <div className="my-3 bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200 shadow-sm">
+      <div className="flex justify-between items-start mb-4">
+        <h2 className="text-xl font-bold text-gray-800 flex items-center">
+          <FaCloudSun className="text-yellow-500 mr-2" />
+          আজকের আবহাওয়া
+        </h2>
+      </div>
 
-        {/* Main Weather Info */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <span className="text-4xl mr-3">
-              {getWeatherIcon(weather.condition)}
-            </span>
-            <div>
-              <p className="text-3xl font-bold text-gray-800">
-                {weather.temperature}
-              </p>
-              <p className="text-gray-600">{weather.condition}</p>
-            </div>
+      {/* Main Weather Info */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <span className="text-4xl mr-3">
+            {getWeatherIcon(weather.condition)}
+          </span>
+          <div>
+            <p className="text-3xl font-bold text-gray-800">
+              {weather.temperature}
+            </p>
+            <p className="text-gray-600">{weather.condition}</p>
           </div>
         </div>
-
-        {/* Weather Details */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center">
             <FaTint className="text-blue-500 mr-2" />
@@ -132,107 +127,25 @@ const WeatherSoilCards = ({ weatherData, soilData, onViewDetails }) => {
             </div>
           )}
         </div>
-
-        {/* Weather Forecast */}
-        {weather.forecast && (
-          <div className="my-6 p-3 bg-blue-100 rounded-md">
-            <p className="text-blue-800 text-sm">
-              <FaCloudSun className="inline mr-1" />
-              {weather.forecast}
-            </p>
-          </div>
-        )}
-        <Link
-          href={"/dashboard/weather"}
-          className=" p-3 bg-green-100 rounded-md block text-center text-gray-500 w-full"
-        >
-          বিস্তারিত দেখুন
-        </Link>
       </div>
 
-      {/* Soil Health Card */}
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200 shadow-sm">
-        <div className="flex justify-between items-start mb-4">
-          <h2 className="text-xl font-bold text-gray-800 flex items-center">
-            <FaLeaf className="text-green-600 mr-2" />
-            মাটির স্বাস্থ্য
-          </h2>
-          <button
-            onClick={() => onViewDetails && onViewDetails("soil")}
-            className="text-green-600 hover:text-green-800 p-1 hover:bg-green-100 rounded transition-colors"
-            title="বিস্তারিত দেখুন"
-          >
-            <FaEye className="w-4 h-4" />
-          </button>
+      
+
+      {/* Weather Forecast */}
+      {weather.forecast && (
+        <div className="my-6 p-3 bg-blue-100 rounded-md">
+          <p className="text-blue-800 text-sm">
+            <FaCloudSun className="inline mr-1" />
+            {weather.forecast}
+          </p>
         </div>
-
-        {/* Soil Parameters */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <FaFlask className="text-purple-500 mr-2" />
-              <span className="text-gray-700">পিএইচ মান</span>
-            </div>
-            <span className={`font-semibold ${getPHColor(soil.pH)}`}>
-              {soil.pH}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <FaDroplet className="text-blue-500 mr-2" />
-              <span className="text-gray-700">আর্দ্রতা</span>
-            </div>
-            <span
-              className={`font-semibold ${getMoistureColor(soil.moisture)}`}
-            >
-              {soil.moisture}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <FaSeedling className="text-green-500 mr-2" />
-              <span className="text-gray-700">পুষ্টি মাত্রা</span>
-            </div>
-            <span
-              className={`font-semibold ${getNutrientColor(soil.nutrients)}`}
-            >
-              {soil.nutrients}
-            </span>
-          </div>
-
-          {soil.temperature && (
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <FaThermometerHalf className="text-red-500 mr-2" />
-                <span className="text-gray-700">মাটির তাপমাত্রা</span>
-              </div>
-              <span className="font-semibold">{soil.temperature}</span>
-            </div>
-          )}
-
-          {soil.organicMatter && (
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <FaLeaf className="text-brown-500 mr-2" />
-                <span className="text-gray-700">জৈব পদার্থ</span>
-              </div>
-              <span className="font-semibold">{soil.organicMatter}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Soil Health Status */}
-        <div className="mt-4 p-3 bg-green-100 rounded-md">
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-            <span className="text-green-800 text-sm font-medium">
-              মাটির অবস্থা ভালো
-            </span>
-          </div>
-        </div>
-      </div>
+      )}
+      <Link
+        href={"/dashboard/weather"}
+        className=" p-3 bg-green-200 rounded-md block text-center text-gray-600 w-full"
+      >
+        বিস্তারিত দেখুন
+      </Link>
     </div>
   );
 };
