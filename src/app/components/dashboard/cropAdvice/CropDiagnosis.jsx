@@ -43,10 +43,10 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
         </p>
 
         <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-          <div className="flex items-start space-x-2">
-            <FaInfoCircle className="text-blue-500 mt-0.5 flex-shrink-0" />
+          <div className="flex justify-between space-x-2">
             <div>
-              <h4 className="font-medium text-blue-800 mb-1">
+              <h4 className="font-medium inline-flex items-center text-blue-800 mb-1">
+                <FaInfoCircle className="text-blue -500 mt-0.5 flex-shrink-0 mr-1" />
                 কিভাবে কাজ করে:
               </h4>
               <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
@@ -54,6 +54,20 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
                 <li>বিশ্লেষণের ধরন নির্বাচন করুন (রোগ, পুষ্টি, বৃদ্ধি)</li>
                 <li>AI আপনার ছবি বিশ্লেষণ করে বিস্তারিত রিপোর্ট দেবে</li>
               </ol>
+            </div>
+            <div>
+              <h4 className="font-medium text-blue-800 mb-2">
+                <IoImage className="inline-flex items-center mr-1 " /> ভালো ছবির
+                জন্য টিপস:
+              </h4>
+              <ul className="text-sm text-blue-700 space-y-1">
+                <li>• দিনের স্বাভাবিক আলোতে ছবি তুলুন</li>
+                <li>• পাতার উপর এবং নিচ থেকে আলাদা ছবি নিন</li>
+                <li>
+                  • সমস্যাগ্রস্ত অংশ স্পষ্ট ভাবে দেখা যায় এমন দূরত্ব রাখুন
+                </li>
+                <li>• ঝাপসা বা অস্পষ্ট ছবি এড়িয়ে চলুন</li>
+              </ul>
             </div>
           </div>
         </div>
