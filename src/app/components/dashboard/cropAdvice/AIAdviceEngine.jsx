@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { FaRobot, FaMicrophone, FaStop, FaPaperPlane } from "react-icons/fa";
-import AiResponse from "./AdviceEngine/AiResponse";
+import { BiCheck } from "react-icons/bi";
+import {
+  FaRobot,
+  FaMicrophone,
+  FaStop,
+  FaPaperPlane,
+  FaHistory,
+} from "react-icons/fa";
+import ReactMarkdown from "react-markdown";
 
 const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
   const [question, setQuestion] = useState("");
@@ -268,24 +275,20 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
           <div className="flex items-center mb-4">
             <FaRobot className="text-2xl text-green-600 mr-3" />
             <h3 className="text-lg font-bold text-green-800">
-              🧠 AI বিশেষজ্ঞের পরামর্শ
+              AI বিশেষজ্ঞের পরামর্শ
             </h3>
           </div>
           <div className="bg-white rounded-lg p-4 border border-green-100">
             <div className="prose prose-sm max-w-none">
-              {aiResponse.split("\n").map((line, index) => (
-                <p key={index} className="text-gray-700 mb-2 leading-relaxed">
-                  {line}
-                </p>
-              ))}
+              <ReactMarkdown>{aiResponse}</ReactMarkdown>
             </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-              ✅ AI বিশ্লেষণ সম্পূর্ণ
+            <span className="px-3 py-1 inline-flex items-center bg-green-100 text-green-700 rounded-full text-sm">
+              <BiCheck size={25} /> AI বিশ্লেষণ সম্পূর্ণ
             </span>
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-              📱 ইতিহাসে সংরক্ষিত
+            <span className="px-3 py-1 inline-flex items-center gap-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+              <FaHistory size={20} /> ইতিহাসে সংরক্ষিত
             </span>
           </div>
         </div>
