@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ImageUploader from "./ImageUploader";
 import ImageAnalysis from "./ImageAnalysis";
 import { FaInfoCircle } from "react-icons/fa";
+import { IoImage } from "react-icons/io5";
 
 const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
@@ -34,7 +35,7 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
       {/* Header Section */}
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
         <h2 className="text-2xl font-bold text-green-800 mb-3 flex items-center">
-          📸 AI চালিত ছবি বিশ্লেষণ
+          <IoImage className="mr-2 " /> AI চালিত ছবি বিশ্লেষণ
         </h2>
         <p className="text-green-700 mb-4">
           উন্নত কৃত্রিম বুদ্ধিমত্তা ব্যবহার করে আপনার ফসলের ছবি বিশ্লেষণ করুন

@@ -6,6 +6,8 @@ import AdviceHistory from "@/app/components/dashboard/cropAdvice/AdviceHistory";
 
 import WeatherIntegration from "@/app/components/dashboard/cropAdvice/WeatherIntegration";
 import { useSession } from "next-auth/react";
+import { GiPlantRoots } from "react-icons/gi";
+import { FaRobot } from "react-icons/fa";
 
 const CropAdvice = () => {
   const { data: session } = useSession();
@@ -78,7 +80,8 @@ const CropAdvice = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 flex items-center">
-                  🌾 এআই চালিত ফসল পরামর্শ কেন্দ্র
+                  <FaRobot className="mr-2 text-green-600" /> এআই চালিত ফসল
+                  পরামর্শ কেন্দ্র
                 </h1>
                 <p className="text-gray-600">
                   কৃত্রিম বুদ্ধিমত্তা দিয়ে আপনার ফসলের সমস্যা নির্ণয় এবং
