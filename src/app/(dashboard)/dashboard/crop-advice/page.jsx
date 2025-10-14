@@ -65,7 +65,7 @@ const CropAdvice = () => {
   const tabs = [
     { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: "🤖" },
     { id: "image-analysis", label: "ছবি বিশ্লেষণ", icon: "📸" },
-   
+
     { id: "history", label: "ইতিহাস", icon: "📋" },
   ];
 
@@ -136,8 +136,6 @@ const CropAdvice = () => {
                 setIsLoading={setIsLoading}
               />
             )}
-
-           
 
             {activeTab === "history" && (
               <AdviceHistory

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaRobot, FaMicrophone, FaStop, FaPaperPlane } from "react-icons/fa";
+import AiResponse from "./AdviceEngine/AiResponse";
 
 const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
   const [question, setQuestion] = useState("");
@@ -131,7 +132,7 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
           <FaRobot className="text-2xl text-green-600 mr-3" />
           <div>
             <h2 className="text-xl font-bold text-gray-800">
-              🤖 AI কৃষি বিশেষজ্ঞ
+              AI কৃষি বিশেষজ্ঞ
             </h2>
             <p className="text-gray-600 text-sm">
               আপনার ফসলের সমস্যা বর্ণনা করুন, AI আপনাকে সমাধান দেবে
