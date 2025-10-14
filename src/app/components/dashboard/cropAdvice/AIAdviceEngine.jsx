@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { FaRobot, FaMicrophone, FaStop, FaPaperPlane } from "react-icons/fa";
+
+import {
+  FaRobot,
+  FaMicrophone,
+  FaStop,
+  FaPaperPlane,
+  FaClock,
+} from "react-icons/fa";
+import AiResponse from "./AiResponse";
+import { GiFarmer, GiWheat } from "react-icons/gi";
+import { IoWarning } from "react-icons/io5";
 
 const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
   const [question, setQuestion] = useState("");
@@ -131,7 +141,7 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
           <FaRobot className="text-2xl text-green-600 mr-3" />
           <div>
             <h2 className="text-xl font-bold text-gray-800">
-              🤖 AI কৃষি বিশেষজ্ঞ
+              AI কৃষি বিশেষজ্ঞ
             </h2>
             <p className="text-gray-600 text-sm">
               আপনার ফসলের সমস্যা বর্ণনা করুন, AI আপনাকে সমাধান দেবে
@@ -143,8 +153,9 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
           {/* Crop Selection */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                🌱 ফসলের ধরন
+              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                <GiFarmer className="mr-1" />
+                ফসলের ধরন
               </label>
               <input
                 type="text"
@@ -155,8 +166,9 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                📍 সমস্যার এলাকা
+              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                <GiWheat className="mr-1" />
+                সমস্যার এলাকা
               </label>
               <select
                 value={symptomArea}
@@ -175,8 +187,9 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                ⚠️ সমস্যার তীব্রতা
+              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                <IoWarning className="mr-1" />
+                সমস্যার তীব্রতা
               </label>
               <select
                 value={severity}
@@ -193,8 +206,9 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                ⏱️ সমস্যার সময়কাল
+              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                <FaClock className="mr-1" />
+                সমস্যার সময়কাল
               </label>
               <select
                 value={duration}
@@ -264,29 +278,7 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
       {/* AI Response */}
       {aiResponse && (
         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
-          <div className="flex items-center mb-4">
-            <FaRobot className="text-2xl text-green-600 mr-3" />
-            <h3 className="text-lg font-bold text-green-800">
-              🧠 AI বিশেষজ্ঞের পরামর্শ
-            </h3>
-          </div>
-          <div className="bg-white rounded-lg p-4 border border-green-100">
-            <div className="prose prose-sm max-w-none">
-              {aiResponse.split("\n").map((line, index) => (
-                <p key={index} className="text-gray-700 mb-2 leading-relaxed">
-                  {line}
-                </p>
-              ))}
-            </div>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-              ✅ AI বিশ্লেষণ সম্পূর্ণ
-            </span>
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-              📱 ইতিহাসে সংরক্ষিত
-            </span>
-          </div>
+          <AiResponse aiResponse={aiResponse} />
         </div>
       )}
     </div>
