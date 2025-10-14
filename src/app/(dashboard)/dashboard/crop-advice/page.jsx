@@ -191,33 +191,6 @@ const CropAdvice = () => {
                 </div>
               </div>
             </div>
-
-            {/* AI Tips */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6 mt-6">
-              <h3 className="text-lg font-bold text-green-800 mb-4">
-                🤖 এআই টিপস
-              </h3>
-              <div className="space-y-3 text-sm">
-                <div className="bg-white rounded-lg p-3 border border-green-100">
-                  <p className="text-gray-700">
-                    📸 ভালো ছবি তুলুন: দিনের আলোতে, পাতার উপর ও নিচ থেকে ছবি
-                    তুলুন
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-green-100">
-                  <p className="text-gray-700">
-                    📝 বিস্তারিত লিখুন: কখন সমস্যা শুরু, কোন অংশে, আবহাওয়ার
-                    অবস্থা
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-green-100">
-                  <p className="text-gray-700">
-                    ⏰ দ্রুত পদক্ষেপ: সমস্যা চিহ্নিত হওয়ার সাথে সাথে ব্যবস্থা
-                    নিন
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
