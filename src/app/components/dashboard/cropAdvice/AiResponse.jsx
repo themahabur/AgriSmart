@@ -14,7 +14,62 @@ const AiResponse = ({ aiResponse }) => {
       </div>
       <div className="bg-white rounded-lg p-4 border border-green-100">
         <div className="prose prose-sm max-w-none">
-          <ReactMarkdown>{aiResponse}</ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              h1: ({ node, ...props }) => (
+                <h1
+                  className="font-bold text-2xl text-green-700 mb-2"
+                  {...props}
+                />
+              ),
+              h2: ({ node, ...props }) => (
+                <h2
+                  className="font-bold text-xl text-green-700 mb-2"
+                  {...props}
+                />
+              ),
+              h3: ({ node, ...props }) => (
+                <h3
+                  className="font-bold text-lg text-green-700 mb-2"
+                  {...props}
+                />
+              ),
+              h4: ({ node, ...props }) => (
+                <h4
+                  className="font-bold text-base text-green-700 mb-2"
+                  {...props}
+                />
+              ),
+              p: ({ node, ...props }) => <p className="mb-2" {...props} />,
+              ul: ({ node, ...props }) => (
+                <ul className="list-disc pl-5 mb-2" {...props} />
+              ),
+              ol: ({ node, ...props }) => (
+                <ol className="list-decimal pl-5 mb-2" {...props} />
+              ),
+              li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+              strong: ({ node, ...props }) => (
+                <strong className="font-bold" {...props} />
+              ),
+              em: ({ node, ...props }) => <em className="italic" {...props} />,
+              a: ({ node, ...props }) => (
+                <a
+                  className="text-green-700 underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  {...props}
+                />
+              ),
+              code: ({ node, ...props }) => (
+                <code
+                  className="bg-gray-100 rounded px-1 py-0.5 text-sm"
+                  {...props}
+                />
+              ),
+            }}
+          >
+            {aiResponse}
+          </ReactMarkdown>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
