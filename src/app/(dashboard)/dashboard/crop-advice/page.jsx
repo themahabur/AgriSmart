@@ -40,7 +40,7 @@ const CropAdvice = () => {
   useEffect(() => {
     const loadAdviceHistory = async () => {
       const response = await fetch(
-        `http://localhost:5000/api/ai-history?email=${session.user.email}`
+        `${process.env.SERVER_URL}/api/ai-history?email=${session.user.email}`
       );
       const data = await response.json();
       setAdviceHistory(data.data || []);
@@ -49,9 +49,10 @@ const CropAdvice = () => {
     loadAdviceHistory();
   }, []);
 
+  // Clear advice history
   const onClearHistory = async () => {
     const response = await fetch(
-      `http://localhost:5000/api/ai-history?email=${session.user.email}`,
+      `${process.env.SERVER_URL}/api/ai-history?email=${session.user.email}`,
       {
         method: "DELETE",
         headers: {
@@ -66,7 +67,6 @@ const CropAdvice = () => {
   const tabs = [
     { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: FaRobot },
     { id: "image-analysis", label: "ছবি বিশ্লেষণ", icon: IoImage },
-
     { id: "history", label: "ইতিহাস", icon: FaHistory },
   ];
 

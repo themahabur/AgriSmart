@@ -31,7 +31,7 @@ const CropDiagnosis = ({ isLoading, setIsLoading }) => {
       // imagePreview,
     };
 
-    const response = await fetch("http://localhost:5000/api/ai-history", {
+    const response = await fetch(`${process.env.SERVER_URL}/api/ai-history`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,8 +40,6 @@ const CropDiagnosis = ({ isLoading, setIsLoading }) => {
     });
 
     const result = await response.json();
-
-    // onDiagnosisComplete(completeData);
   };
 
   return (
