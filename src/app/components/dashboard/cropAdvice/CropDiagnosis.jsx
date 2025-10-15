@@ -19,13 +19,23 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
     setImagePreview(null);
   };
 
-  const handleAnalysisComplete = (analysisData) => {
+  const handleAnalysisComplete = async (analysisData) => {
     // Add description and preview image to the analysis data
     const completeData = {
       ...analysisData,
       description,
-      imagePreview,
+      // imagePreview,
     };
+
+    const response = await fetch("http://localhost:5000/api/ai-history", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(completeData),
+    });
+
+    const result = await response.json();
 
     onDiagnosisComplete(completeData);
   };

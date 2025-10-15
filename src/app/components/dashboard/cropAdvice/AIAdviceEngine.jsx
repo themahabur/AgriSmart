@@ -130,9 +130,7 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
       });
 
       const responseData = await postResponse.json();
-      console.log(responseData);
 
-      console.log(adviceData);
       onAdviceGenerated(adviceData);
     } catch (error) {
       console.error("AI request failed:", error);
