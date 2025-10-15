@@ -5,7 +5,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { IoImage } from "react-icons/io5";
 import { useSession } from "next-auth/react";
 
-const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
+const CropDiagnosis = ({ isLoading, setIsLoading }) => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [description, setDescription] = useState("");
@@ -41,7 +41,7 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
 
     const result = await response.json();
 
-    onDiagnosisComplete(completeData);
+    // onDiagnosisComplete(completeData);
   };
 
   return (

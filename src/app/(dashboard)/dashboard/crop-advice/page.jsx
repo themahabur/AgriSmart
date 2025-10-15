@@ -39,25 +39,16 @@ const CropAdvice = () => {
   // Load user's advice history
   useEffect(() => {
     const loadAdviceHistory = async () => {
-      const response = await fetch("localhost:5000/ai-history");
+      const response = await fetch(
+        `http://localhost:5000/api/ai-history?email=${session.user.email}`
+      );
       const data = await response.json();
-      setAdviceHistory(data);
+      console.log(data);
+      setAdviceHistory(data.data || []);
     };
 
     loadAdviceHistory();
   }, []);
-
-  // // Save advice to history
-  // const saveAdviceToHistory = (advice) => {
-  //   const newHistory = [advice, ...adviceHistory].slice(0, 20); // Keep last 20 advice
-  //   setAdviceHistory(newHistory);
-  //   if (session?.user?.email) {
-  //     localStorage.setItem(
-  //       `crop_advice_${session.user.email}`,
-  //       JSON.stringify(newHistory)
-  //     );
-  //   }
-  // };
 
   const tabs = [
     { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: FaRobot },

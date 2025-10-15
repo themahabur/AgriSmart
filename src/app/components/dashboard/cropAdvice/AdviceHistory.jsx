@@ -13,8 +13,6 @@ const AdviceHistory = ({ history, onClearHistory }) => {
     });
   };
 
-  console.log("history", history);
-
   if (history.length === 0) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
