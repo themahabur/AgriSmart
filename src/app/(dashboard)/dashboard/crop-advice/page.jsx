@@ -180,12 +180,6 @@ const CropAdvice = () => {
                     }
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">সফল সমাধান:</span>
-                  <span className="font-bold text-purple-600">
-                    {adviceHistory.filter((advice) => advice.solved).length}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
