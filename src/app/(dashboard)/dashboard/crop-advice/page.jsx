@@ -40,7 +40,7 @@ const CropAdvice = () => {
   useEffect(() => {
     const loadAdviceHistory = async () => {
       const response = await fetch(
-        `${process.env.SERVER_URL}/api/ai-history?email=${session.user.email}`
+        `https://agri-smart-server.vercel.app/api/ai-history?email=${session.user.email}`
       );
       const data = await response.json();
       setAdviceHistory(data.data || []);
@@ -52,7 +52,7 @@ const CropAdvice = () => {
   // Clear advice history
   const onClearHistory = async () => {
     const response = await fetch(
-      `${process.env.SERVER_URL}/api/ai-history?email=${session.user.email}`,
+      `https://agri-smart-server.vercel.app/api/ai-history?email=${session.user.email}`,
       {
         method: "DELETE",
         headers: {

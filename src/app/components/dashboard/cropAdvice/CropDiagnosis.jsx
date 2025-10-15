@@ -27,17 +27,18 @@ const CropDiagnosis = ({ isLoading, setIsLoading }) => {
       ...analysisData,
       description,
       email: session?.user?.email || "guest",
-
-      // imagePreview,
     };
 
-    const response = await fetch(`${process.env.SERVER_URL}/api/ai-history`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(completeData),
-    });
+    const response = await fetch(
+      `https://agri-smart-server.vercel.app/api/ai-history`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(completeData),
+      }
+    );
 
     const result = await response.json();
   };

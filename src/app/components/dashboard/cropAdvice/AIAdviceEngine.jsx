@@ -124,13 +124,16 @@ const AIAdviceEngine = ({ isLoading, setIsLoading }) => {
       setSeverity("");
       setDuration("");
 
-      const postResponse = await fetch("http://localhost:5000/api/ai-history", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(adviceData),
-      });
+      const postResponse = await fetch(
+        `https://agri-smart-server.vercel.app/api/ai-history`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(adviceData),
+        }
+      );
 
       const responseData = await postResponse.json();
     } catch (error) {
