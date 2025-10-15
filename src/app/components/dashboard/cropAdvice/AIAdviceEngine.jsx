@@ -121,6 +121,17 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
       setSeverity("");
       setDuration("");
 
+      const postResponse = await fetch("http://localhost:5000/api/ai-history", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(adviceData),
+      });
+
+      const responseData = await postResponse.json();
+      console.log(responseData);
+
       console.log(adviceData);
       onAdviceGenerated(adviceData);
     } catch (error) {

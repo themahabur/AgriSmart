@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHistory, FaTrash, FaEye, FaRobot, FaCamera } from "react-icons/fa";
+import { FaHistory, FaTrash, FaRobot, FaCamera } from "react-icons/fa";
 
 const AdviceHistory = ({ history, onClearHistory }) => {
   const formatDate = (dateString) => {
