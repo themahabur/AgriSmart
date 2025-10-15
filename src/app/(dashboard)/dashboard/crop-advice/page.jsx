@@ -43,12 +43,25 @@ const CropAdvice = () => {
         `http://localhost:5000/api/ai-history?email=${session.user.email}`
       );
       const data = await response.json();
-      console.log(data);
       setAdviceHistory(data.data || []);
     };
 
     loadAdviceHistory();
   }, []);
+
+  const onClearHistory = async () => {
+    const response = await fetch(
+      `http://localhost:5000/api/ai-history?email=${session.user.email}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+  };
 
   const tabs = [
     { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: FaRobot },
@@ -130,14 +143,7 @@ const CropAdvice = () => {
             {activeTab === "history" && (
               <AdviceHistory
                 history={adviceHistory}
-                onClearHistory={() => {
-                  setAdviceHistory([]);
-                  if (session?.user?.email) {
-                    localStorage.removeItem(
-                      `crop_advice_${session.user.email}`
-                    );
-                  }
-                }}
+                onClearHistory={onClearHistory}
               />
             )}
           </div>
