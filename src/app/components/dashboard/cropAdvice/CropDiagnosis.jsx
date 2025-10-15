@@ -3,11 +3,13 @@ import ImageUploader from "./ImageUploader";
 import ImageAnalysis from "./ImageAnalysis";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoImage } from "react-icons/io5";
+import { useSession } from "next-auth/react";
 
 const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [description, setDescription] = useState("");
+  const { data: session } = useSession();
 
   const handleImageUploaded = (cloudinaryUrl, previewUrl) => {
     setUploadedImageUrl(cloudinaryUrl);
@@ -24,6 +26,8 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
     const completeData = {
       ...analysisData,
       description,
+      email: session?.user?.email || "guest",
+
       // imagePreview,
     };
 
