@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHistory, FaTrash, FaEye, FaRobot, FaCamera } from "react-icons/fa";
+import { FaHistory, FaTrash, FaRobot, FaCamera } from "react-icons/fa";
 
 const AdviceHistory = ({ history, onClearHistory }) => {
   const formatDate = (dateString) => {
@@ -34,8 +34,8 @@ const AdviceHistory = ({ history, onClearHistory }) => {
           <div className="flex items-center">
             <FaHistory className="text-2xl text-green-600 mr-3" />
             <div>
-              <h2 className="text-xl font-bold text-gray-800">
-                📋 পরামর্শের ইতিহাস
+              <h2 className="text-xl font-bold inline-flex items-center text-gray-800">
+                <FaHistory className="mr-1" /> পরামর্শের ইতিহাস
               </h2>
               <p className="text-gray-600 text-sm">আপনার আগের সব AI পরামর্শ</p>
             </div>
@@ -104,11 +104,11 @@ const AdviceHistory = ({ history, onClearHistory }) => {
               )}
 
               {/* Image if available */}
-              {item.image && (
+              {item.imageUrl && (
                 <div className="mb-3">
                   <h4 className="font-semibold text-gray-800 mb-1">ছবি:</h4>
                   <img
-                    src={item.image}
+                    src={item.imageUrl}
                     alt="Crop issue"
                     className="max-h-32 rounded border"
                   />

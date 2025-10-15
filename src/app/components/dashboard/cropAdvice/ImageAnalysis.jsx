@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { BiBrain } from "react-icons/bi";
 import { FaRobot, FaEye, FaLeaf, FaBug, FaClipboardList } from "react-icons/fa";
+import AiResponse from "./AiResponse";
 
 const ImageAnalysis = ({ imageUrl, onAnalysisComplete, disabled = false }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -175,16 +177,12 @@ const ImageAnalysis = ({ imageUrl, onAnalysisComplete, disabled = false }) => {
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6">
           <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center">
             <FaEye className="mr-2" />
-            🔬 AI বিশ্লেষণ রিপোর্ট
+            <BiBrain className="mr-2" /> AI বিশ্লেষণ রিপোর্ট
           </h3>
 
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <div className="prose prose-sm max-w-none">
-              {analysis.split("\n").map((paragraph, index) => (
-                <p key={index} className="mb-3 text-gray-700 leading-relaxed">
-                  {paragraph}
-                </p>
-              ))}
+              <AiResponse aiResponse={analysis} />
             </div>
           </div>
 

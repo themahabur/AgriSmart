@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import ImageUploader from "./ImageUploader";
 import ImageAnalysis from "./ImageAnalysis";
 import { FaInfoCircle } from "react-icons/fa";
+import { IoImage } from "react-icons/io5";
+import { useSession } from "next-auth/react";
 
-const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
+const CropDiagnosis = ({ isLoading, setIsLoading }) => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [description, setDescription] = useState("");
+  const { data: session } = useSession();
 
   const handleImageUploaded = (cloudinaryUrl, previewUrl) => {
     setUploadedImageUrl(cloudinaryUrl);
@@ -18,15 +21,26 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
     setImagePreview(null);
   };
 
-  const handleAnalysisComplete = (analysisData) => {
+  const handleAnalysisComplete = async (analysisData) => {
     // Add description and preview image to the analysis data
     const completeData = {
       ...analysisData,
       description,
-      imagePreview,
+      email: session?.user?.email || "guest",
     };
 
-    onDiagnosisComplete(completeData);
+    const response = await fetch(
+      `https://agri-smart-server.vercel.app/api/ai-history`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(completeData),
+      }
+    );
+
+    const result = await response.json();
   };
 
   return (
@@ -34,7 +48,7 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
       {/* Header Section */}
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
         <h2 className="text-2xl font-bold text-green-800 mb-3 flex items-center">
-          📸 AI চালিত ছবি বিশ্লেষণ
+          <IoImage className="mr-2 " /> AI চালিত ছবি বিশ্লেষণ
         </h2>
         <p className="text-green-700 mb-4">
           উন্নত কৃত্রিম বুদ্ধিমত্তা ব্যবহার করে আপনার ফসলের ছবি বিশ্লেষণ করুন
@@ -42,10 +56,10 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
         </p>
 
         <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-          <div className="flex items-start space-x-2">
-            <FaInfoCircle className="text-blue-500 mt-0.5 flex-shrink-0" />
+          <div className="flex justify-between space-x-2">
             <div>
-              <h4 className="font-medium text-blue-800 mb-1">
+              <h4 className="font-medium inline-flex items-center text-blue-800 mb-1">
+                <FaInfoCircle className="text-blue -500 mt-0.5 flex-shrink-0 mr-1" />
                 কিভাবে কাজ করে:
               </h4>
               <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
@@ -53,6 +67,20 @@ const CropDiagnosis = ({ onDiagnosisComplete, isLoading, setIsLoading }) => {
                 <li>বিশ্লেষণের ধরন নির্বাচন করুন (রোগ, পুষ্টি, বৃদ্ধি)</li>
                 <li>AI আপনার ছবি বিশ্লেষণ করে বিস্তারিত রিপোর্ট দেবে</li>
               </ol>
+            </div>
+            <div>
+              <h4 className="font-medium text-blue-800 mb-2">
+                <IoImage className="inline-flex items-center mr-1 " /> ভালো ছবির
+                জন্য টিপস:
+              </h4>
+              <ul className="text-sm text-blue-700 space-y-1">
+                <li>• দিনের স্বাভাবিক আলোতে ছবি তুলুন</li>
+                <li>• পাতার উপর এবং নিচ থেকে আলাদা ছবি নিন</li>
+                <li>
+                  • সমস্যাগ্রস্ত অংশ স্পষ্ট ভাবে দেখা যায় এমন দূরত্ব রাখুন
+                </li>
+                <li>• ঝাপসা বা অস্পষ্ট ছবি এড়িয়ে চলুন</li>
+              </ul>
             </div>
           </div>
         </div>

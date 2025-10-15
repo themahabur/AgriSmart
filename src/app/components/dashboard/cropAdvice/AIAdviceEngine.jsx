@@ -10,8 +10,9 @@ import {
 import AiResponse from "./AiResponse";
 import { GiFarmer, GiWheat } from "react-icons/gi";
 import { IoWarning } from "react-icons/io5";
+import { useSession } from "next-auth/react";
 
-const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
+const AIAdviceEngine = ({ isLoading, setIsLoading }) => {
   const [question, setQuestion] = useState("");
 
   const [symptomArea, setSymptomArea] = useState("");
@@ -19,6 +20,7 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
   const [duration, setDuration] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [isListening, setIsListening] = useState(false);
+  const { data: session } = useSession();
 
   const symptomAreas = ["পাতা", "কান্ড", "শিকড়", "ফুল", "ফল", "সম্পূর্ণ গাছ"];
 
@@ -114,6 +116,7 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
         timestamp: new Date().toISOString(),
         type: "ai-diagnosis",
         solved: false,
+        email: session?.user?.email || "guest",
       };
       setQuestion("");
       e.target.cropType.value = "";
@@ -121,8 +124,18 @@ const AIAdviceEngine = ({ onAdviceGenerated, isLoading, setIsLoading }) => {
       setSeverity("");
       setDuration("");
 
-      console.log(adviceData);
-      onAdviceGenerated(adviceData);
+      const postResponse = await fetch(
+        `https://agri-smart-server.vercel.app/api/ai-history`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(adviceData),
+        }
+      );
+
+      const responseData = await postResponse.json();
     } catch (error) {
       console.error("AI request failed:", error);
       setAiResponse(
