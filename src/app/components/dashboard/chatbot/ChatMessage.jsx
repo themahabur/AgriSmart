@@ -1,3 +1,5 @@
+import ReactMarkdown from "react-markdown";
+
 /**
  * Renders a single chat message bubble.
  * Styles vary based on the sender and content (text/image).
@@ -32,7 +34,38 @@ const ChatMessage = ({ message }) => {
             className="rounded-lg mb-2 max-h-64 object-cover"
           />
         )}
-        {message.text && <p>{message.text}</p>}
+        {message.text && (
+          <ReactMarkdown
+            components={{
+              p: ({ node, ...props }) => <p {...props} />,
+              strong: ({ node, ...props }) => <strong {...props} />,
+              em: ({ node, ...props }) => <em {...props} />,
+              ul: ({ node, ...props }) => (
+                <ul className="list-disc pl-5" {...props} />
+              ),
+              ol: ({ node, ...props }) => (
+                <ol className="list-decimal pl-5" {...props} />
+              ),
+              li: ({ node, ...props }) => <li {...props} />,
+              a: ({ node, ...props }) => (
+                <a
+                  className="text-green-700 underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  {...props}
+                />
+              ),
+              code: ({ node, ...props }) => (
+                <code
+                  className="bg-gray-100 rounded px-1 py-0.5 text-sm"
+                  {...props}
+                />
+              ),
+            }}
+          >
+            {message.text}
+          </ReactMarkdown>
+        )}
       </div>
     </div>
   );
