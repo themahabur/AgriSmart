@@ -6,8 +6,8 @@ import AdviceHistory from "@/app/components/dashboard/cropAdvice/AdviceHistory";
 
 import WeatherIntegration from "@/app/components/dashboard/cropAdvice/WeatherIntegration";
 import { useSession } from "next-auth/react";
-import { GiPlantRoots } from "react-icons/gi";
-import { FaRobot } from "react-icons/fa";
+import { FaChartBar, FaHistory, FaRobot } from "react-icons/fa";
+import { IoImage } from "react-icons/io5";
 
 const CropAdvice = () => {
   const { data: session } = useSession();
@@ -65,10 +65,10 @@ const CropAdvice = () => {
   };
 
   const tabs = [
-    { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: "🤖" },
-    { id: "image-analysis", label: "ছবি বিশ্লেষণ", icon: "📸" },
+    { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: FaRobot },
+    { id: "image-analysis", label: "ছবি বিশ্লেষণ", icon: IoImage },
 
-    { id: "history", label: "ইতিহাস", icon: "📋" },
+    { id: "history", label: "ইতিহাস", icon: FaHistory },
   ];
 
   return (
@@ -112,7 +112,10 @@ const CropAdvice = () => {
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  <span>{tab.icon}</span>
+                  <span className="text-lg">
+                    <tab.icon />
+                  </span>
+
                   <span>{tab.label}</span>
                 </button>
               ))}
@@ -161,8 +164,9 @@ const CropAdvice = () => {
 
             {/* Quick Stats */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">
-                📊 আপনার পরিসংখ্যান
+              <h3 className="text-lg font-bold text-gray-800 mb-4 inline-flex items-center ">
+                <FaChartBar className="mr-2 text-green-600" />
+                আপনার পরিসংখ্যান
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
