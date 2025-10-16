@@ -6,6 +6,7 @@ import AdviceHistory from "@/app/components/dashboard/cropAdvice/AdviceHistory";
 
 import WeatherIntegration from "@/app/components/dashboard/cropAdvice/WeatherIntegration";
 import { useSession } from "next-auth/react";
+import { fetchWeather } from "@/app/lib/fetchWeather";
 
 const CropAdvice = () => {
   const { data: session } = useSession();
@@ -15,24 +16,37 @@ const CropAdvice = () => {
   const [weatherData, setWeatherData] = useState(null);
 console.log(session);
   // Fetch weather data for smart recommendations
-  useEffect(() => {
-    const fetchWeatherData = async () => {
-      try {
-        const lat = "23.8103";
-        const lon = "90.4125";
-        const apiKey = "eed75703a552ed1ad8db7b42f4f3e024";
-        const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=bn`
-        );
-        const data = await response.json();
-        setWeatherData(data);
-      } catch (error) {
-        console.error("Weather data fetch error:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchWeatherData = async () => {
+  //     try {
+  //       const lat = "23.8103";
+  //       const lon = "90.4125";
+  //       const apiKey = "eed75703a552ed1ad8db7b42f4f3e024";
+  //       const response = await fetch(
+  //         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=bn`
+  //       );
+  //       const data = await response.json();
+  //       setWeatherData(data);
+  //     } catch (error) {
+  //       console.error("Weather data fetch error:", error);
+  //     }
+  //   };
 
-    fetchWeatherData();
-  }, []);
+  //   fetchWeatherData();
+  // }, []);
+
+   useEffect(() => {
+        async function loadWeather() {
+          try {
+            const data = await fetchWeather("23.8103","90.4125");
+            setWeatherData(data);
+            console.log("Weather data:", data);
+          } catch (err) {
+            console.error("Weather fetch error:", err);
+          }
+        }
+        loadWeather();
+      }, []);
 
   // Load user's advice history
   useEffect(() => {

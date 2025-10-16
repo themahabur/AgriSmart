@@ -199,8 +199,9 @@ const Dashboard = () => {
     useEffect(() => {
       async function loadWeather() {
         try {
-          const data = await fetchWeather();
+          const data = await fetchWeather("23.8103","90.4125");
           setWeatherData(data);
+          console.log("Weather data:", data);
         } catch (err) {
           console.error("Weather fetch error:", err);
         }
@@ -265,9 +266,9 @@ const Dashboard = () => {
               <div className="mt-4 md:mt-0 flex items-center space-x-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">
-                    {weatherData ? Math.round(weatherData.main?.temp) : "--"}°C
+                    {weatherData ? Math.round(weatherData.today?.temp) : "--"}°C
                   </div>
-                  <div className="text-sm text-gray-600">ঢাকা</div>
+                  <div className="text-sm text-gray-600">{weatherData?.city}</div>
                 </div>
                 <div className="text-4xl text-gray-500">
                   {weatherData?.weather?.[0]?.main === "Clear" ? (
@@ -467,14 +468,14 @@ const Dashboard = () => {
                 <div>
                   <div className="text-center mb-4">
                     <div className="text-3xl mb-2">
-                      {weatherData.weather?.[0]?.main === "Clear" ? (
+                      {weatherData.today?.weather=== "Clear" ? (
                         <IoIosSunny className="text-yellow-500 mx-auto" />
                       ) : (
                         <IoIosRainy className="text-gray-500 mx-auto" />
                       )}
                     </div>
                     <div className="text-2xl font-bold text-gray-800">
-                      {Math.round(weatherData.main?.temp)}°C
+                      {Math.round(weatherData.today?.temp)}°C
                     </div>
                     <div className="text-gray-600 capitalize">
                       {weatherData.weather?.[0]?.description}
@@ -487,7 +488,7 @@ const Dashboard = () => {
                         আর্দ্রতা
                       </span>
                       <span className="font-medium">
-                        {weatherData.main?.humidity}%
+                        {weatherData.today.humidity}%
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -496,7 +497,7 @@ const Dashboard = () => {
                         বাতাস
                       </span>
                       <span className="font-medium">
-                        {Math.round(weatherData.wind?.speed)} কিমি/ঘ
+                        {Math.round(weatherData.today?.feels_like)} কিমি/ঘ
                       </span>
                     </div>
                   </div>
