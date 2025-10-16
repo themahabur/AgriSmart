@@ -13,7 +13,7 @@ const CropAdvice = () => {
   const [adviceHistory, setAdviceHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
-
+console.log(session);
   // Fetch weather data for smart recommendations
   useEffect(() => {
     const fetchWeatherData = async () => {

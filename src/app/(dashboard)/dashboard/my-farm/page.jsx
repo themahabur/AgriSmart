@@ -1,6 +1,6 @@
 
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaTractor,
   FaPlus,
@@ -13,8 +13,10 @@ import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
 import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
 import WeatherSoilCards from "../../../components/dashboard/myfarm/WeatherSoilCards";
 import QuickActions from "../../../components/dashboard/myfarm/QuickActions";
+import { fetchWeather } from "@/app/lib/fetchWeather";
 
 const MyFarmPage = () => {
+   const [weatherData, setWeatherData] = useState(null);
   // State management
   const [farms, setFarms] = useState([
     {
@@ -89,14 +91,25 @@ const MyFarmPage = () => {
   ]);
 
   // Weather data
-  const [weatherData] = useState({
-    temperature: "২৮°C",
-    humidity: "৬৫%",
-    condition: "সূর্যোজ্জ্বল",
-    windSpeed: "১২ কিমি/ঘণ্টা",
-    forecast: "গত ২ দিনের মধ্যে বৃষ্টির সম্ভাবনা নেই",
-    icon: "☀️",
-  });
+  useEffect(() => {
+    async function loadWeather() {
+      try {
+        const data = await fetchWeather();
+        setWeatherData(data);
+      } catch (err) {
+        console.error("Weather fetch error:", err);
+      }
+    }
+    loadWeather();
+  }, []);
+  // const [weatherData] = useState({
+  //   temperature: "২৮°C",
+  //   humidity: "৬৫%",
+  //   condition: "সূর্যোজ্জ্বল",
+  //   windSpeed: "১২ কিমি/ঘণ্টা",
+  //   forecast: "গত ২ দিনের মধ্যে বৃষ্টির সম্ভাবনা নেই",
+  //   icon: "☀️",
+  // });
 
   // Soil data
   const [soilData] = useState({

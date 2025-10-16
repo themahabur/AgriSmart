@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 
 const WeatherSoilCards = ({ weatherData, soilData, onViewDetails }) => {
+  
   // Default weather data if not provided
   const defaultWeatherData = {
     temperature: "২৮°C",
