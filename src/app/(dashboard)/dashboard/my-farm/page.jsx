@@ -94,8 +94,9 @@ const MyFarmPage = () => {
   useEffect(() => {
     async function loadWeather() {
       try {
-        const data = await fetchWeather();
+        const data = await fetchWeather("23.8103","90.4125");
         setWeatherData(data);
+        
       } catch (err) {
         console.error("Weather fetch error:", err);
       }
