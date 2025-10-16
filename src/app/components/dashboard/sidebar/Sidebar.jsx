@@ -22,7 +22,7 @@ import { FiX } from "react-icons/fi";
 import Logo from "../../shared/logo/Logo";
 import UserProfile from "./UserProfile";
 import SidebarNavLinks from "./SidebarNavLinks";
-import { MdNotificationAdd } from "react-icons/md";
+import { MdNotificationAdd, MdPostAdd } from "react-icons/md";
 
 const navItems = [
   { href: "/dashboard", icon: FaHome, text: "হোম ড্যাশবোর্ড" },
@@ -32,7 +32,9 @@ const navItems = [
   { href: "/dashboard/market-price", icon: FaChartLine, text: "বাজার দাম" },
   { href: "/dashboard/ai-chatbot", icon: FaRobot, text: "এআই চ্যাটবট" },
   { href: "/dashboard/blog", icon: FaPenFancy, text: "ব্লগ" },
+  { href: "/dashboard/add-blog", icon: MdPostAdd, text: "ব্লগ যোগ করুন" },
   { href: "/dashboard/news-alerts", icon: FaNewspaper, text: "খবর ও সতর্কতা" },
+
   {
     href: "/dashboard/agri-calendar",
     icon: FaCalendarAlt,
@@ -56,7 +58,11 @@ const navItems = [
     text: "বিশেষজ্ঞের পরামর্শ",
   },
   { href: "/dashboard/community", icon: FaUsers, text: "কৃষক কমিউনিটি" },
-  { href: "/dashboard/add-notification", icon: MdNotificationAdd , text: "নোটিফিকেশন যুক্ত করুণ" },
+  {
+    href: "/dashboard/add-notification",
+    icon: MdNotificationAdd,
+    text: "নোটিফিকেশন যুক্ত করুণ",
+  },
   { href: "/dashboard/settings", icon: FaCog, text: "সেটিংস" },
 ];
 
