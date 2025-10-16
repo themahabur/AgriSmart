@@ -7,7 +7,8 @@ import AdviceHistory from "@/app/components/dashboard/cropAdvice/AdviceHistory";
 import WeatherIntegration from "@/app/components/dashboard/cropAdvice/WeatherIntegration";
 import { useSession } from "next-auth/react";
 import { fetchWeather } from "@/app/lib/fetchWeather";
-
+import { FaChartBar, FaHistory, FaRobot } from "react-icons/fa";
+import { IoImage } from "react-icons/io5";
 const CropAdvice = () => {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("ai-diagnosis");
