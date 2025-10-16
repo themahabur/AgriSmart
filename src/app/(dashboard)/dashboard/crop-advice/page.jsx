@@ -9,13 +9,14 @@ import { useSession } from "next-auth/react";
 import { fetchWeather } from "@/app/lib/fetchWeather";
 import { FaChartBar, FaHistory, FaRobot } from "react-icons/fa";
 import { IoImage } from "react-icons/io5";
+
 const CropAdvice = () => {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("ai-diagnosis");
   const [adviceHistory, setAdviceHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
-console.log(session);
+  console.log(session);
   // Fetch weather data for smart recommendations
   // useEffect(() => {
   //   const fetchWeatherData = async () => {
@@ -36,18 +37,18 @@ console.log(session);
   //   fetchWeatherData();
   // }, []);
 
-   useEffect(() => {
-        async function loadWeather() {
-          try {
-            const data = await fetchWeather("23.8103","90.4125");
-            setWeatherData(data);
-            console.log("Weather data:", data);
-          } catch (err) {
-            console.error("Weather fetch error:", err);
-          }
-        }
-        loadWeather();
-      }, []);
+  useEffect(() => {
+    async function loadWeather() {
+      try {
+        const data = await fetchWeather("23.8103", "90.4125");
+        setWeatherData(data);
+        console.log("Weather data:", data);
+      } catch (err) {
+        console.error("Weather fetch error:", err);
+      }
+    }
+    loadWeather();
+  }, []);
 
   // Load user's advice history
   useEffect(() => {
