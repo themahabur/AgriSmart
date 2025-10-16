@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 const Irrigation = () => {
-    // সিমুলেটেড ডেটা - বাস্তবে API থেকে আসবে
     const [weatherData, setWeatherData] = useState({
         temperature: 32,
         humidity: 65,
@@ -17,7 +16,6 @@ const Irrigation = () => {
     const [soilType, setSoilType] = useState('দোআঁশ');
     const [area, setArea] = useState(1);
 
-    // ফসলের ডেটা
     const cropsData = {
         'ধান': {
             waterRequirement: 25,
@@ -45,14 +43,12 @@ const Irrigation = () => {
         }
     };
 
-    // মাটির ধরন অনুযায়ী পানির ধারণ ক্ষমতা
     const soilWaterCapacity = {
         'বেলে': 15,
         'দোআঁশ': 25,
         'এটেল': 35
     };
 
-    // সেচ ক্যালকুলেশন
     const calculateIrrigation = () => {
         const crop = cropsData[selectedCrop];
         const soilCapacity = soilWaterCapacity[soilType];
@@ -62,7 +58,7 @@ const Irrigation = () => {
         return {
             requiredWater: Math.max(crop.waterRequirement, waterDeficit),
             timing: currentMoisture < 30 ? 'জরুরি সেচ প্রয়োজন' : 'নিয়মিত সেচ',
-            duration: Math.round((area * crop.waterRequirement * 60) / 10) // মিনিটে
+            duration: Math.round((area * crop.waterRequirement * 60) / 10)
         };
     };
 
@@ -72,7 +68,7 @@ const Irrigation = () => {
         <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 p-4">
             <div className="max-w-6xl mx-auto">
                 
-                {/* হেডার */}
+                {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-3xl md:text-4xl font-bold text-green-800 mb-3">
                         🚜 স্মার্ট সেচ ব্যবস্থাপনা
@@ -82,10 +78,9 @@ const Irrigation = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
-                    {/* বাম কলাম - ইনপুট এবং আবহাওয়া */}
+                    {/* Left Column */}
                     <div className="space-y-6">
-                        
-                        {/* ফসল সিলেকশন কার্ড */}
+                        {/* Crop Selection */}
                         <div className="bg-white rounded-xl shadow-lg p-6">
                             <h2 className="text-xl font-semibold text-gray-800 mb-4">
                                 🌾 ফসল নির্বাচন করুন
@@ -132,7 +127,7 @@ const Irrigation = () => {
                             </div>
                         </div>
 
-                        {/* বর্তমান আবহাওয়া */}
+                        {/* Weather Info */}
                         <div className="bg-white rounded-xl shadow-lg p-6">
                             <h2 className="text-xl font-semibold text-gray-800 mb-4">
                                 📊 বর্তমান অবস্থা
@@ -158,10 +153,9 @@ const Irrigation = () => {
                         </div>
                     </div>
 
-                    {/* মাঝের কলাম - সেচ সুপারিশ */}
+                    {/* Middle Column */}
                     <div className="space-y-6">
-                        
-                        {/* আজকের সেচ সুপারিশ */}
+                        {/* Irrigation Advice */}
                         <div className="bg-white rounded-xl shadow-lg p-6">
                             <h2 className="text-xl font-semibold text-gray-800 mb-4">
                                 💧 আজকের সেচ সুপারিশ
@@ -199,7 +193,7 @@ const Irrigation = () => {
                             </div>
                         </div>
 
-                        {/* ফসলের বিস্তারিত তথ্য */}
+                        {/* Crop Details */}
                         <div className="bg-white rounded-xl shadow-lg p-6">
                             <h2 className="text-xl font-semibold text-gray-800 mb-4">
                                 📝 {selectedCrop} এর সেচ নির্দেশিকা
@@ -229,30 +223,8 @@ const Irrigation = () => {
                         </div>
                     </div>
 
-                    {/* ডান কলাম - অতিরিক্ত টুলস */}
+                    {/* Right Column - Tips only */}
                     <div className="space-y-6">
-                        
-                        {/* পানির হিসাব */}
-                        <div className="bg-white rounded-xl shadow-lg p-6">
-                            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                                💰 পানির খরচ ক্যালকুলেটর
-                            </h2>
-                            <div className="space-y-3">
-                                <div className="flex justify-between">
-                                    <span>আনুমানিক পানি:</span>
-                                    <span className="font-semibold">{(irrigationAdvice.requiredWater * area * 1000).toLocaleString()} লিটার</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>বিদ্যুৎ খরচ:</span>
-                                    <span className="font-semibold">{Math.round(irrigationAdvice.duration * 0.5 * 8)} টাকা</span>
-                                </div>
-                                <div className="flex justify-between text-green-600 font-bold">
-                                    <span>মোট মাসিক খরচ:</span>
-                                    <span>{Math.round(irrigationAdvice.duration * 0.5 * 8 * 4)} টাকা</span>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* জরুরি তথ্য */}
                         <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
                             <h2 className="text-xl font-semibold text-yellow-800 mb-3">
@@ -281,7 +253,7 @@ const Irrigation = () => {
                     </div>
                 </div>
 
-                {/* সেচ শিডিউল */}
+                {/* Weekly Schedule */}
                 <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                         🗓️ সাপ্তাহিক সেচ শিডিউল

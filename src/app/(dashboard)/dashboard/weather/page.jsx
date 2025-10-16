@@ -337,7 +337,7 @@ const WeatherPage = () => {
         
         {/* Enhanced Header with Icons */}
         <header className="text-center mb-8 pt-8">
-          <div className="inline-flex items-center justify-center bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-2xl shadow-2xl mb-6">
+          <div className="inline-flex items-center justify-center bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-2xl  mb-6">
             <div className="bg-white/20 p-3 rounded-full mr-4">
               <FaCloudSun className="text-3xl text-white" />
             </div>
@@ -354,10 +354,10 @@ const WeatherPage = () => {
 
         <main className="space-y-8">
           {/* Location Card with Enhanced Icons */}
-          <section className="bg-white rounded-3xl shadow-2xl p-8 border-l-8 border-green-500 transform  transition-all ">
+          <section className="bg-white rounded-3xl  p-8 border-l-8 border-green-500 transform  transition-all ">
             <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
               <div className="flex items-center">
-                <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-4 rounded-2xl mr-6 shadow-lg">
+                <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-4  mr-6 shadow-lg">
                   <FaMapMarkerAlt className="text-white text-3xl" />
                 </div>
                 <div>
@@ -391,7 +391,7 @@ const WeatherPage = () => {
           </section>
 
           {loading && (
-            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl shadow-2xl">
+            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl ">
               <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-green-500 mb-6"></div>
               <FaCloudSun className="text-6xl text-green-500 mb-4 animate-pulse" />
               <p className="text-gray-700 text-xl font-semibold">আবহাওয়ার তথ্য লোড হচ্ছে...</p>
@@ -400,7 +400,7 @@ const WeatherPage = () => {
           )}
 
           {error && (
-            <div className="bg-gradient-to-r from-red-50 to-orange-50 border-l-8 border-red-500 text-red-800 px-8 py-6 rounded-3xl shadow-2xl">
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 border-l-8 border-red-500 text-red-800 px-8 py-6 rounded-3xl ">
               <div className="flex items-center">
                 <div className="bg-red-500 p-3 rounded-xl mr-4">
                   <FaInfoCircle className="text-white text-2xl" />
@@ -416,7 +416,7 @@ const WeatherPage = () => {
           {!loading && !error && weather && (
             <>
               {/* Today's Weather - Enhanced with Icons */}
-              <section className="bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 text-white rounded-3xl shadow-2xl p-8 transform  transition-all ">
+              <section className="bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 text-white rounded-3xl  p-8 transform  transition-all ">
                 <div className="flex flex-col lg:flex-row justify-between items-start mb-8">
                   <div className="flex-1">
                     <div className="flex items-center mb-4">
@@ -500,7 +500,7 @@ const WeatherPage = () => {
               </section>
 
               {/* Weekly Forecast - Enhanced with Icons */}
-              <section className="bg-white rounded-3xl shadow-2xl p-8 border-l-8 border-blue-500">
+              <section className="bg-white rounded-3xl  p-8 border-l-8 border-blue-500">
                 <div className="flex items-center mb-8">
                   <div className="bg-gradient-to-br from-blue-500 to-cyan-600 p-4 rounded-2xl mr-4 shadow-lg">
                     <FaCalendarAlt className="text-white text-2xl" />
@@ -533,7 +533,7 @@ const WeatherPage = () => {
               </section>
 
               {/* Agriculture Advice - Enhanced with Icons */}
-              <section className="bg-white rounded-3xl shadow-2xl p-8 border-l-8 border-emerald-500">
+              <section className="bg-white rounded-3xl  p-8 border-l-8 border-emerald-500">
                 <div className="flex items-center mb-8">
                   <div className="bg-gradient-to-br from-emerald-500 to-green-600 p-4 rounded-2xl mr-4 shadow-lg">
                     <FaSeedling className="text-white text-2xl" />
@@ -599,7 +599,7 @@ const WeatherPage = () => {
               </section>
 
               {/* Additional Resources - Enhanced with Icons */}
-              <section className="bg-white rounded-3xl shadow-2xl p-8 border-l-8 border-amber-500">
+              <section className="bg-white rounded-3xl  p-8 border-l-8 border-amber-500">
                 <h3 className="text-2xl font-bold text-gray-800 mb-8 text-center">কৃষি সম্পদ</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200 hover:shadow-xl transition-all  transform ">
