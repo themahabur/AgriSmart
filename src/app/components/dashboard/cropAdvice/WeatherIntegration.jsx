@@ -126,7 +126,7 @@ const WeatherIntegration = ({ weatherData }) => {
         <div className="text-center mb-4">
           <div className="text-4xl mb-2 w-10 mx-auto">{getWeatherIcon(weatherData)}</div>
           <div className="text-2xl font-bold text-gray-800">
-            {Math.round(weatherData.main?.temp || 0)}°C
+            {Math.round(weatherData.today?.temp || 0)}°C
           </div>
           <div className="text-gray-600 capitalize">
             {weatherData.weather?.[0]?.description || "তথ্য নেই"}
@@ -140,7 +140,7 @@ const WeatherIntegration = ({ weatherData }) => {
               অনুভূত
             </span>
             <span className="font-bold text-blue-700">
-              {Math.round(weatherData.main?.feels_like || 0)}°C
+              {Math.round(weatherData.today?.feels_like || 0)}°C
             </span>
           </div>
           <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between lg:flex-col">
@@ -149,7 +149,7 @@ const WeatherIntegration = ({ weatherData }) => {
               আর্দ্রতা
             </span>
             <span className="font-bold text-blue-700">
-              {weatherData.main?.humidity || 0}%
+              {weatherData.today.humidity || 0}%
             </span>
           </div>
           <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-between lg:flex-col">

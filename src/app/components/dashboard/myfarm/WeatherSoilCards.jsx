@@ -103,7 +103,7 @@ const WeatherSoilCards = ({ weatherData, soilData, onViewDetails }) => {
           </span>
           <div>
             <p className="text-3xl font-bold text-gray-800">
-              {weather.temperature}
+              {weather.today?.temp }
             </p>
             <p className="text-gray-600">{weather.condition}</p>
           </div>
@@ -113,7 +113,7 @@ const WeatherSoilCards = ({ weatherData, soilData, onViewDetails }) => {
             <FaTint className="text-blue-500 mr-2" />
             <div>
               <span className="text-gray-600">আর্দ্রতা</span>
-              <p className="font-semibold">{weather.humidity}</p>
+              <p className="font-semibold">{weather.today?.humidity}</p>
             </div>
           </div>
 
