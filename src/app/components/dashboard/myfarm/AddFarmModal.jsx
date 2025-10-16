@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   FaTractor,
   FaSeedling,
   FaPlus,
+  FaEdit,
   FaMapMarkerAlt,
   FaCalendarAlt,
   FaFlask,
@@ -15,7 +16,13 @@ import {
   FaEye,
 } from "react-icons/fa";
 
-const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
+const AddFarmModal = ({ 
+  isOpen, 
+  onClose, 
+  onAddFarm, 
+  onUpdateFarm,
+  editingFarm = null 
+}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showAllData, setShowAllData] = useState(false);
   const totalSteps = 4;
@@ -36,14 +43,40 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
 
   const [newFarm, setNewFarm] = useState(initialNewFarmState);
 
+  useEffect(() => {
+    if (isOpen) {
+      if (editingFarm) {
+        setNewFarm({
+          name: editingFarm.name || "",
+          location: editingFarm.location || "",
+          size: editingFarm.sizeAcre?.toString() || "",
+          cropType: editingFarm.cropDetails?.type || "",
+          cropVariety: editingFarm.cropDetails?.variety || "",
+          plantingDate: editingFarm.cropDetails?.plantingDate || "",
+          soilType: editingFarm.soilDetails?.type || "",
+          soilPH: editingFarm.soilDetails?.pH?.toString() || "",
+          irrigationSource: editingFarm.irrigation?.source || "",
+          tubeWellDepth: editingFarm.irrigation?.tubeWellDepth?.toString() || "",
+          organicPractices: editingFarm.organicPractices || false,
+        });
+        setCurrentStep(1);
+        setShowAllData(false);
+      } else {
+        setNewFarm(initialNewFarmState);
+        setCurrentStep(1);
+        setShowAllData(false);
+      }
+    }
+  }, [isOpen, editingFarm]);
+
   const steps = [
     { number: 1, title: "সাধারণ তথ্য", icon: "📋" },
     { number: 2, title: "ফসল বিবরণ", icon: "🌱" },
     { number: 3, title: "মাটি ও সেচ", icon: "🌊" },
-    { number: 4, title: "পর্যালোচনা", icon: "👁️" },
+    { number: 4, title: "পর্যালোচনা", icon: "👁️‍🗨️" },
   ];
 
-  // Handle input changes for new farm (use useCallback to prevent re-renders)
+
   const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
     setNewFarm((prev) => ({
@@ -51,14 +84,13 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
       [name]: type === "checkbox" ? checked : value,
     }));
   }, []);
-// console.log(newFarm);
+
   const ProgressBar = () => (
     <div className="mb-8">
       <div className="flex justify-between items-center">
         {steps.map((step, index) => (
           <div key={step.number} className="flex flex-col items-center flex-1">
             <div className="flex items-center w-full">
-              {/* Connecting Line */}
               {index > 0 && (
                 <div
                   className={`flex-1 h-1 ${
@@ -66,8 +98,6 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
                   }`}
                 />
               )}
-
-              {/* Step Circle */}
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
                   currentStep >= step.number
@@ -81,8 +111,6 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
                   <span>{step.icon}</span>
                 )}
               </div>
-
-              {/* Connecting Line */}
               {index < steps.length - 1 && (
                 <div
                   className={`flex-1 h-1 ${
@@ -106,7 +134,6 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
     </div>
   );
 
-  // Step 1: Basic Information
   const Step1 = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -176,7 +203,6 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
     </div>
   );
 
-  // Step 2: Crop Details
   const Step2 = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -239,7 +265,6 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
     </div>
   );
 
-  // Step 3: Soil & Irrigation
   const Step3 = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -358,66 +383,35 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
           <div>
             <h4 className="font-semibold text-gray-700 mb-2">সাধারণ তথ্য</h4>
             <div className="space-y-2 text-sm">
-              <p>
-                <span className="font-medium">নাম:</span> {newFarm.name}
-              </p>
-              <p>
-                <span className="font-medium">অবস্থান:</span> {newFarm.location}
-              </p>
-              <p>
-                <span className="font-medium">আকার:</span> {newFarm.size} একর
-              </p>
+              <p><span className="font-medium">নাম:</span> {newFarm.name}</p>
+              <p><span className="font-medium">অবস্থান:</span> {newFarm.location}</p>
+              <p><span className="font-medium">আকার:</span> {newFarm.size} একর</p>
             </div>
           </div>
 
           <div>
             <h4 className="font-semibold text-gray-700 mb-2">ফসল বিবরণ</h4>
             <div className="space-y-2 text-sm">
-              <p>
-                <span className="font-medium">প্রকার:</span> {newFarm.cropType}
-              </p>
-              <p>
-                <span className="font-medium">জাত:</span>{" "}
-                {newFarm.cropVariety || "নির্ধারিত নয়"}
-              </p>
-              <p>
-                <span className="font-medium">রোপণ তারিখ:</span>{" "}
-                {newFarm.plantingDate || "নির্ধারিত নয়"}
-              </p>
+              <p><span className="font-medium">প্রকার:</span> {newFarm.cropType}</p>
+              <p><span className="font-medium">জাত:</span> {newFarm.cropVariety || "নির্ধারিত নয়"}</p>
+              <p><span className="font-medium">রোপণ তারিখ:</span> {newFarm.plantingDate || "নির্ধারিত নয়"}</p>
             </div>
           </div>
 
           <div>
             <h4 className="font-semibold text-gray-700 mb-2">মাটির তথ্য</h4>
             <div className="space-y-2 text-sm">
-              <p>
-                <span className="font-medium">প্রকার:</span>{" "}
-                {newFarm.soilType || "নির্ধারিত নয়"}
-              </p>
-              <p>
-                <span className="font-medium">pH মান:</span>{" "}
-                {newFarm.soilPH || "নির্ধারিত নয়"}
-              </p>
+              <p><span className="font-medium">প্রকার:</span> {newFarm.soilType || "নির্ধারিত নয়"}</p>
+              <p><span className="font-medium">pH মান:</span> {newFarm.soilPH || "নির্ধারিত নয়"}</p>
             </div>
           </div>
 
           <div>
             <h4 className="font-semibold text-gray-700 mb-2">সেচ ব্যবস্থা</h4>
             <div className="space-y-2 text-sm">
-              <p>
-                <span className="font-medium">উৎস:</span>{" "}
-                {newFarm.irrigationSource || "নির্ধারিত নয়"}
-              </p>
-              <p>
-                <span className="font-medium">নলকূপ গভীরতা:</span>{" "}
-                {newFarm.tubeWellDepth
-                  ? `${newFarm.tubeWellDepth} ফুট`
-                  : "প্রযোজ্য নয়"}
-              </p>
-              <p>
-                <span className="font-medium">অর্গানিক:</span>{" "}
-                {newFarm.organicPractices ? "হ্যাঁ" : "না"}
-              </p>
+              <p><span className="font-medium">উৎস:</span> {newFarm.irrigationSource || "নির্ধারিত নয়"}</p>
+              <p><span className="font-medium">নলকূপ গভীরতা:</span> {newFarm.tubeWellDepth ? `${newFarm.tubeWellDepth} ফুট` : "প্রযোজ্য নয়"}</p>
+              <p><span className="font-medium">অর্গানিক:</span> {newFarm.organicPractices ? "হ্যাঁ" : "না"}</p>
             </div>
           </div>
         </div>
@@ -429,14 +423,15 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
           <div>
             <h4 className="font-semibold text-blue-800">মনে রাখুন</h4>
             <p className="text-blue-700 text-sm mt-1">
-              ফার্ম যুক্ত করার পর আপনি যেকোন সময় এই তথ্য সম্পাদনা করতে পারবেন
-              এবং আরও বিস্তারিত তথ্য যোগ করতে পারবেন।
+              {editingFarm 
+                ? "ফার্ম আপডেট করার পর আপনি যেকোন সময় এই তথ্য পুনরায় সম্পাদনা করতে পারবেন"
+                : "ফার্ম যুক্ত করার পর আপনি যেকোন সময় এই তথ্য সম্পাদনা করতে পারবেন"
+              }
             </p>
           </div>
         </div>
       </div>
 
-      {/* Show All Data Button */}
       <div className="text-center mb-4">
         <button
           type="button"
@@ -448,74 +443,36 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
         </button>
       </div>
 
-      {/* All Data Display */}
       {showAllData && (
         <div className="bg-gray-100 border border-gray-300 rounded-lg p-6 mb-4">
-          <h4 className="font-bold text-gray-800 mb-4 text-center">
-            সম্পূর্ণ ডেটা
-          </h4>
+          <h4 className="font-bold text-gray-800 mb-4 text-center">সম্পূর্ণ ডেটা</h4>
           <div className="space-y-4">
             <div className="bg-white p-4 rounded-lg">
               <h5 className="font-semibold text-gray-700 mb-2">সাধারণ তথ্য</h5>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                <p>
-                  <span className="font-medium">নাম:</span>{" "}
-                  {newFarm.name || "নির্ধারিত নয়"}
-                </p>
-                <p>
-                  <span className="font-medium">অবস্থান:</span>{" "}
-                  {newFarm.location || "নির্ধারিত নয়"}
-                </p>
-                <p>
-                  <span className="font-medium">আকার:</span>{" "}
-                  {newFarm.size ? `${newFarm.size} একর` : "নির্ধারিত নয়"}
-                </p>
+                <p><span className="font-medium">নাম:</span> {newFarm.name || "নির্ধারিত নয়"}</p>
+                <p><span className="font-medium">অবস্থান:</span> {newFarm.location || "নির্ধারিত নয়"}</p>
+                <p><span className="font-medium">আকার:</span> {newFarm.size ? `${newFarm.size} একর` : "নির্ধারিত নয়"}</p>
               </div>
             </div>
 
             <div className="bg-white p-4 rounded-lg">
               <h5 className="font-semibold text-gray-700 mb-2">ফসল বিবরণ</h5>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                <p>
-                  <span className="font-medium">প্রকার:</span>{" "}
-                  {newFarm.cropType || "নির্ধারিত নয়"}
-                </p>
-                <p>
-                  <span className="font-medium">জাত:</span>{" "}
-                  {newFarm.cropVariety || "নির্ধারিত নয়"}
-                </p>
-                <p>
-                  <span className="font-medium">রোপণ তারিখ:</span>{" "}
-                  {newFarm.plantingDate || "নির্ধারিত নয়"}
-                </p>
+                <p><span className="font-medium">প্রকার:</span> {newFarm.cropType || "নির্ধারিত নয়"}</p>
+                <p><span className="font-medium">জাত:</span> {newFarm.cropVariety || "নির্ধারিত নয়"}</p>
+                <p><span className="font-medium">রোপণ তারিখ:</span> {newFarm.plantingDate || "নির্ধারিত নয়"}</p>
               </div>
             </div>
 
             <div className="bg-white p-4 rounded-lg">
               <h5 className="font-semibold text-gray-700 mb-2">মাটি ও সেচ</h5>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                <p>
-                  <span className="font-medium">মাটির প্রকার:</span>{" "}
-                  {newFarm.soilType || "নির্ধারিত নয়"}
-                </p>
-                <p>
-                  <span className="font-medium">pH মান:</span>{" "}
-                  {newFarm.soilPH || "নির্ধারিত নয়"}
-                </p>
-                <p>
-                  <span className="font-medium">সেচের উৎস:</span>{" "}
-                  {newFarm.irrigationSource || "নির্ধারিত নয়"}
-                </p>
-                <p>
-                  <span className="font-medium">নলকূপ গভীরতা:</span>{" "}
-                  {newFarm.tubeWellDepth
-                    ? `${newFarm.tubeWellDepth} ফুট`
-                    : "প্রযোজ্য নয়"}
-                </p>
-                <p>
-                  <span className="font-medium">অর্গানিক চাষ:</span>{" "}
-                  {newFarm.organicPractices ? "হ্যাঁ" : "না"}
-                </p>
+                <p><span className="font-medium">মাটির প্রকার:</span> {newFarm.soilType || "নির্ধারিত নয়"}</p>
+                <p><span className="font-medium">pH মান:</span> {newFarm.soilPH || "নির্ধারিত নয়"}</p>
+                <p><span className="font-medium">সেচের উৎস:</span> {newFarm.irrigationSource || "নির্ধারিত নয়"}</p>
+                <p><span className="font-medium">নলকূপ গভীরতা:</span> {newFarm.tubeWellDepth ? `${newFarm.tubeWellDepth} ফুট` : "প্রযোজ্য নয়"}</p>
+                <p><span className="font-medium">অর্গানিক চাষ:</span> {newFarm.organicPractices ? "হ্যাঁ" : "না"}</p>
               </div>
             </div>
           </div>
@@ -536,12 +493,19 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (currentStep === totalSteps) {
-      onAddFarm(newFarm);
-      setNewFarm(initialNewFarmState);
-      setCurrentStep(1);
+      try {
+        if (editingFarm) {
+          await onUpdateFarm(editingFarm.id || editingFarm._id, newFarm);
+        } else {
+          await onAddFarm(newFarm);
+        }
+        handleClose();
+      } catch (error) {
+        console.error("Submit error:", error);
+      }
     } else {
       handleNext();
     }
@@ -561,6 +525,7 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
   const handleClose = () => {
     setNewFarm(initialNewFarmState);
     setCurrentStep(1);
+    setShowAllData(false);
     onClose();
   };
 
@@ -572,14 +537,23 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
         <div className="sticky top-0 bg-white z-10 rounded-t-xl border-b border-gray-200">
           <div className="flex justify-between items-center p-6">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-              <FaPlus className="mr-3 text-green-500" />
-              নতুন ফার্ম যুক্ত করুন
+              {editingFarm ? (
+                <>
+                  <FaEdit className="mr-3 text-blue-500" />
+                  ফার্ম সম্পাদনা করুন
+                </>
+              ) : (
+                <>
+                  <FaPlus className="mr-3 text-green-500" />
+                  নতুন ফার্ম যুক্ত করুন
+                </>
+              )}
             </h2>
             <button
               onClick={handleClose}
               className="text-gray-500 hover:text-gray-800 text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
             >
-              &times;
+              ×
             </button>
           </div>
 
@@ -614,8 +588,17 @@ const AddFarmModal = ({ isOpen, onClose, onAddFarm }) => {
             >
               {currentStep === totalSteps ? (
                 <>
-                  <FaPlus className="mr-2" />
-                  ফার্ম যুক্ত করুন
+                  {editingFarm ? (
+                    <>
+                      <FaEdit className="mr-2" />
+                      আপডেট করুন
+                    </>
+                  ) : (
+                    <>
+                      <FaPlus className="mr-2" />
+                      ফার্ম যুক্ত করুন
+                    </>
+                  )}
                 </>
               ) : (
                 <>

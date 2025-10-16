@@ -1,65 +1,24 @@
-
 "use client";
-import React, { useEffect, useState } from "react";
-import {
-  FaTractor,
-  FaPlus,
- 
-  FaEdit,
-  
-} from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaTractor, FaPlus } from "react-icons/fa";
+import toast from "react-hot-toast";
+
+const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
 import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
 import WeatherSoilCards from "../../../components/dashboard/myfarm/WeatherSoilCards";
 import QuickActions from "../../../components/dashboard/myfarm/QuickActions";
-import { fetchWeather } from "@/app/lib/fetchWeather";
 
 const MyFarmPage = () => {
-   const [weatherData, setWeatherData] = useState(null);
-  // State management
-  const [farms, setFarms] = useState([
-    {
-      id: 1,
-      name: "আমার প্রধান ফার্ম",
-      location: "সিলেট, বাংলাদেশ",
-      size: "২.৫ একর",
-      crop: "ধান",
-      status: "চলমান",
-      lastUpdate: "২ দিন আগে",
-      coordinates: { latitude: 24.8917, longitude: 91.8833 },
-      cropDetails: {
-        type: "ধান",
-        variety: "BRRI Dhan-29",
-        plantingDate: "2025-09-20",
-      },
-      soilDetails: { type: "দোআঁশ মাটি", pH: 6.5, nutrients: "মাধ্যমিক" },
-      irrigation: { source: "নলকূপ", lastDate: "2025-10-08" },
-      pestAlert: false,
-      organicPractices: true,
-    },
-    {
-      id: 2,
-      name: "আমার বাগান",
-      location: "সিলেট, বাংলাদেশ",
-      size: "০.৫ একর",
-      crop: "সবজি",
-      status: "পরিকল্পনাধীন",
-      lastUpdate: "৫ দিন আগে",
-      coordinates: { latitude: 24.8917, longitude: 91.8833 },
-      cropDetails: {
-        type: "সবজি",
-        variety: "টমেটো",
-        plantingDate: "2025-10-01",
-      },
-      soilDetails: { type: "এঁটেল মাটি", pH: 7.0, nutrients: "উচ্চ" },
-      irrigation: { source: "বৃষ্টি", lastDate: "2025-10-05" },
-      pestAlert: true,
-      organicPractices: false,
-    },
-  ]);
+  const [farms, setFarms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editingFarm, setEditingFarm] = useState(null);
+  const [showAddFormModal, setShowAddFormModal] = useState(false);
+  const [lastSubmittedFarm, setLastSubmittedFarm] = useState(null);
+  const [showSubmittedData, setShowSubmittedData] = useState(false);
 
-  // Activities data
   const [activities, setActivities] = useState([
     {
       id: 1,
@@ -90,29 +49,15 @@ const MyFarmPage = () => {
     },
   ]);
 
-  // Weather data
-  useEffect(() => {
-    async function loadWeather() {
-      try {
-        const data = await fetchWeather("23.8103","90.4125");
-        setWeatherData(data);
-        
-      } catch (err) {
-        console.error("Weather fetch error:", err);
-      }
-    }
-    loadWeather();
-  }, []);
-  // const [weatherData] = useState({
-  //   temperature: "২৮°C",
-  //   humidity: "৬৫%",
-  //   condition: "সূর্যোজ্জ্বল",
-  //   windSpeed: "১২ কিমি/ঘণ্টা",
-  //   forecast: "গত ২ দিনের মধ্যে বৃষ্টির সম্ভাবনা নেই",
-  //   icon: "☀️",
-  // });
+  const [weatherData] = useState({
+    temperature: "২৮°C",
+    humidity: "৬৫%",
+    condition: "সূর্যোজ্জ্বল",
+    windSpeed: "১২ কিমি/ঘণ্টা",
+    forecast: "গত ২ দিনের মধ্যে বৃষ্টির সম্ভাবনা নেই",
+    icon: "☀️",
+  });
 
-  // Soil data
   const [soilData] = useState({
     pH: "৬.৫",
     moisture: "৬০%",
@@ -121,69 +66,221 @@ const MyFarmPage = () => {
     organicMatter: "৩.২%",
   });
 
-  // Modal state
-  const [showAddFormModal, setShowAddFormModal] = useState(false);
-  const [lastSubmittedFarm, setLastSubmittedFarm] = useState(null);
-  const [showSubmittedData, setShowSubmittedData] = useState(false);
+  // Fetch farms data
+  useEffect(() => {
+    const fetchFarms = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_BASE_URL}/farms`);
 
-  // Handle adding a new farm
-  const handleAddFarm = (farmData) => {
-    const farm = {
-      id: farms.length + 1,
-      name: farmData.name,
-      location: farmData.location,
-      size: farmData.size + " একর",
-      crop: farmData.cropType,
-      status: "পরিকল্পনাধীন",
-      lastUpdate: "এই মুহূর্তে",
-      coordinates: { latitude: 0, longitude: 0 },
-      cropDetails: {
-        type: farmData.cropType,
-        variety: farmData.cropVariety,
-        plantingDate: farmData.plantingDate,
-      },
-      soilDetails: {
-        type: farmData.soilType,
-        pH: parseFloat(farmData.soilPH) || 0,
-        nutrients: "অজানা",
-      },
-      irrigation: {
-        source: farmData.irrigationSource,
-        lastDate: "আজ",
-      },
-      pestAlert: false,
-      organicPractices: farmData.organicPractices,
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.status && data.data) {
+          setFarms(data.data.farms || data.data);
+        } else {
+          setFarms([]);
+        }
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching farms:", err);
+        setError("ফার্ম ডেটা লোড করতে সমস্যা হয়েছে");
+        toast.error("ফার্ম ডেটা লোড করতে সমস্যা হয়েছে");
+        setFarms([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    console.log(farm);
-    setFarms([...farms, farm]);
-    setLastSubmittedFarm(farmData); // Store the original form data
-    setShowSubmittedData(true); // Show the submitted data
-    setShowAddFormModal(false);
+    fetchFarms();
+  }, []);
 
-    // Auto-hide after 10 seconds
-    setTimeout(() => {
-      setShowSubmittedData(false);
-    }, 10000);
+  // Add farm
+  const handleAddFarm = async (farmData) => {
+    try {
+      setLoading(true);
+
+      const farmPayload = {
+        name: farmData.name,
+        location: farmData.location,
+        sizeAcre: parseFloat(farmData.size) || 0,
+        coordinates: { latitude: 0, longitude: 0 },
+        cropDetails: {
+          type: farmData.cropType,
+          variety: farmData.cropVariety,
+          plantingDate: farmData.plantingDate,
+        },
+        soilDetails: {
+          type: farmData.soilType,
+          pH: parseFloat(farmData.soilPH) || 0,
+          nutrients: "অজানা",
+        },
+        irrigation: {
+          source: farmData.irrigationSource,
+          lastDate: new Date().toISOString().split("T")[0],
+          tubeWellDepth: parseInt(farmData.tubeWellDepth) || null,
+        },
+        pestAlert: false,
+        organicPractices: farmData.organicPractices,
+      };
+
+      const response = await fetch(`${API_BASE_URL}/farms`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(farmPayload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const newFarm = await response.json();
+      const createdFarm = newFarm.data || newFarm;
+
+      setFarms([...farms, createdFarm]);
+      setLastSubmittedFarm(farmData);
+      setShowSubmittedData(true);
+      toast.success("নতুন ফার্ম সফলভাবে যুক্ত হয়েছে! 🎉");
+      setShowAddFormModal(false);
+      setEditingFarm(null);
+      setError(null);
+
+      setTimeout(() => {
+        setShowSubmittedData(false);
+      }, 10000);
+    } catch (err) {
+      console.error("Error adding farm:", err);
+      setError("ফার্ম যোগ করতে সমস্যা হয়েছে");
+      toast.error("ফার্ম যোগ করতে সমস্যা হয়েছে");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Handle editing a farm
+  // Update farm
+  const handleUpdateFarm = async (farmId, updatedData) => {
+    try {
+      setLoading(true);
+
+      const updatePayload = {
+        name: updatedData.name,
+        location: updatedData.location,
+        sizeAcre: parseFloat(updatedData.size) || 0,
+        cropDetails: {
+          type: updatedData.cropType,
+          variety: updatedData.cropVariety,
+          plantingDate: updatedData.plantingDate,
+        },
+        soilDetails: {
+          type: updatedData.soilType,
+          pH: parseFloat(updatedData.soilPH) || 0,
+          nutrients: "অজানা",
+        },
+        irrigation: {
+          source: updatedData.irrigationSource,
+          lastDate: new Date().toISOString().split("T")[0],
+          tubeWellDepth: parseInt(updatedData.tubeWellDepth) || null,
+        },
+        organicPractices: updatedData.organicPractices,
+      };
+
+      const response = await fetch(`${API_BASE_URL}/farms/${farmId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatePayload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const updatedFarmResponse = await response.json();
+      const updatedFarm = updatedFarmResponse.data || updatedFarmResponse;
+
+      setFarms(
+        farms.map((farm) =>
+          farm.id === farmId || farm._id === farmId ? updatedFarm : farm
+        )
+      );
+
+      toast.success("ফার্ম সফলভাবে আপডেট হয়েছে! ✅");
+      setShowAddFormModal(false);
+      setEditingFarm(null);
+      setError(null);
+    } catch (err) {
+      console.error("Error updating farm:", err);
+      setError("ফার্ম আপডেট করতে সমস্যা হয়েছে");
+      toast.error("ফার্ম আপডেট করতে সমস্যা হয়েছে");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Edit farm
   const handleEditFarm = (farm) => {
-    console.log("Edit farm:", farm);
-    // TODO: Implement edit functionality
+    setEditingFarm(farm);
+    setShowAddFormModal(true);
   };
 
-  // Handle deleting a farm
-  const handleDeleteFarm = (id) => {
-    setFarms(farms.filter((farm) => farm.id !== id));
+  // ✅ Delete farm (alert replaced with toast)
+  const handleDeleteFarm = async (id) => {
+    toast(
+      (t) => (
+        <div className="flex flex-col space-y-3">
+          <p className="font-semibold text-gray-800">
+            আপনি কি নিশ্চিত এই ফার্মটি মুছে ফেলতে চান?
+          </p>
+          <div className="flex justify-end space-x-2">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                confirmDeleteFarm(id);
+              }}
+              className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700"
+            >
+              হ্যাঁ, মুছে ফেলুন
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="bg-gray-300 text-gray-800 px-3 py-1 rounded-md hover:bg-gray-400"
+            >
+              বাতিল
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 8000 }
+    );
   };
 
-  // Handle adding new activity
-  const handleAddActivity = (activity) => {
-    setActivities([...activities, activity]);
+  // ✅ Actual delete logic
+  const confirmDeleteFarm = async (id) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/farms/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      setFarms(farms.filter((farm) => farm.id !== id && farm._id !== id));
+      toast.success("ফার্ম সফলভাবে মুছে ফেলা হয়েছে 🗑️");
+      setError(null);
+    } catch (err) {
+      console.error("Error deleting farm:", err);
+      setError("ফার্ম ডিলিট করতে সমস্যা হয়েছে");
+      toast.error("ফার্ম ডিলিট করতে সমস্যা হয়েছে");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Handle updating activity
+  const handleAddActivity = (activity) => setActivities([...activities, activity]);
+
   const handleUpdateActivity = (id, updates) => {
     setActivities(
       activities.map((activity) =>
@@ -192,20 +289,16 @@ const MyFarmPage = () => {
     );
   };
 
-  // Handle viewing weather/soil details
-  const handleViewDetails = (type) => {
-    if (type === "weather") {
-      // Navigate to weather page or show detailed modal
-      console.log("View weather details");
-    } else if (type === "soil") {
-      // Navigate to soil health page or show detailed modal
-      console.log("View soil details");
-    }
-  };
-
-  // Handle quick action clicks
   const handleQuickActionClick = (action) => {
     console.log("Quick action clicked:", action);
+  };
+
+  // Modal close handler
+  const handleCloseModal = () => {
+    setShowAddFormModal(false);
+    setEditingFarm(null);
+    setLastSubmittedFarm(null);
+    setShowSubmittedData(false);
   };
 
   return (
@@ -222,8 +315,12 @@ const MyFarmPage = () => {
           </p>
         </div>
         <button
-          onClick={() => setShowAddFormModal(true)}
-          className="mt-4 md:mt-0 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors shadow-md"
+          onClick={() => {
+            setEditingFarm(null);
+            setShowAddFormModal(true);
+          }}
+          className="mt-4 md:mt-0 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors shadow-md disabled:opacity-50"
+          disabled={loading}
         >
           <FaPlus className="mr-2" />
           নতুন ফার্ম যুক্ত করুন
@@ -233,17 +330,18 @@ const MyFarmPage = () => {
       {/* Add Farm Modal */}
       <AddFarmModal
         isOpen={showAddFormModal}
-        onClose={() => setShowAddFormModal(false)}
+        onClose={handleCloseModal}
         onAddFarm={handleAddFarm}
+        onUpdateFarm={handleUpdateFarm}
+        editingFarm={editingFarm}
       />
 
-      {/* Submitted Data Display */}
+      {/* Submitted Data */}
       {showSubmittedData && lastSubmittedFarm && (
         <div className="mb-6 bg-green-50 border border-green-200 rounded-xl p-6 shadow-lg">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h2 className="text-xl font-bold text-green-800 mb-4 flex items-center">
-                <FaTractor className="mr-2" />
                 সফলভাবে সাবমিট হয়েছে! 🎉
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -251,86 +349,48 @@ const MyFarmPage = () => {
                   <h3 className="font-semibold text-gray-700 mb-2">
                     সাধারণ তথ্য
                   </h3>
-                  <div className="space-y-1 text-sm">
-                    <p>
-                      <span className="font-medium">নাম:</span>{" "}
-                      {lastSubmittedFarm.name}
-                    </p>
-                    <p>
-                      <span className="font-medium">অবস্থান:</span>{" "}
-                      {lastSubmittedFarm.location}
-                    </p>
-                    <p>
-                      <span className="font-medium">আকার:</span>{" "}
-                      {lastSubmittedFarm.size} একর
-                    </p>
-                  </div>
-                </div>
-                <div className="bg-white p-4 rounded-lg">
-                  <h3 className="font-semibold text-gray-700 mb-2">ফসল</h3>
-                  <div className="space-y-1 text-sm">
-                    <p>
-                      <span className="font-medium">প্রকার:</span>{" "}
-                      {lastSubmittedFarm.cropType}
-                    </p>
-                    <p>
-                      <span className="font-medium">জাত:</span>{" "}
-                      {lastSubmittedFarm.cropVariety || "নির্ধারিত নয়"}
-                    </p>
-                    <p>
-                      <span className="font-medium">রোপণ:</span>{" "}
-                      {lastSubmittedFarm.plantingDate || "নির্ধারিত নয়"}
-                    </p>
-                  </div>
-                </div>
-                <div className="bg-white p-4 rounded-lg">
-                  <h3 className="font-semibold text-gray-700 mb-2">
-                    মাটি ও সেচ
-                  </h3>
-                  <div className="space-y-1 text-sm">
-                    <p>
-                      <span className="font-medium">মাটি:</span>{" "}
-                      {lastSubmittedFarm.soilType || "নির্ধারিত নয়"}
-                    </p>
-                    <p>
-                      <span className="font-medium">pH:</span>{" "}
-                      {lastSubmittedFarm.soilPH || "নির্ধারিত নয়"}
-                    </p>
-                    <p>
-                      <span className="font-medium">সেচ:</span>{" "}
-                      {lastSubmittedFarm.irrigationSource || "নির্ধারিত নয়"}
-                    </p>
-                    <p>
-                      <span className="font-medium">অর্গানিক:</span>{" "}
-                      {lastSubmittedFarm.organicPractices ? "হ্যাঁ" : "না"}
-                    </p>
-                  </div>
+                  <p>
+                    <b>নাম:</b> {lastSubmittedFarm.name}
+                  </p>
+                  <p>
+                    <b>অবস্থান:</b> {lastSubmittedFarm.location}
+                  </p>
+                  <p>
+                    <b>আকার:</b> {lastSubmittedFarm.size} একর
+                  </p>
                 </div>
               </div>
             </div>
             <button
               onClick={() => setShowSubmittedData(false)}
               className="text-green-600 hover:text-green-800 ml-4 p-2 hover:bg-green-100 rounded-full transition-colors"
-              title="বন্ধ করুন"
             >
-              <FaEdit className="w-5 h-5" />
+              <FaPlus className="w-5 h-5" />
             </button>
           </div>
         </div>
       )}
 
-      {/* Main Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Weather, Soil & Farms */}
-        <div className="lg:col-span-2">
-          {/* Weather & Soil Cards */}
-          <WeatherSoilCards
-            weatherData={weatherData}
-            soilData={soilData}
-            onViewDetails={handleViewDetails}
-          />
+      {/* Error */}
+      {error && (
+        <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 shadow-lg">
+          <div className="flex items-center">
+            <div className="text-red-600 mr-3">⚠️</div>
+            <p className="text-red-800 font-medium">{error}</p>
+            <button
+              onClick={() => setError(null)}
+              className="ml-auto text-red-600 hover:text-red-800"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
-          {/* Farms List */}
+      {/* Farms Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <WeatherSoilCards weatherData={weatherData} soilData={soilData} />
           <div className="bg-white rounded-xl border border-gray-200 shadow-lg">
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
@@ -339,15 +399,21 @@ const MyFarmPage = () => {
               </h2>
             </div>
             <div className="p-4">
-              {farms.length === 0 ? (
+              {loading ? (
+                <div className="text-center py-8">লোড হচ্ছে...</div>
+              ) : farms.length === 0 ? (
                 <div className="text-center py-8">
                   <FaTractor className="text-4xl text-gray-400 mx-auto mb-3" />
                   <p className="text-gray-600 mb-4">
                     এখনও কোন ফার্ম যুক্ত করা হয়নি
                   </p>
                   <button
-                    onClick={() => setShowAddFormModal(true)}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center transition-colors"
+                    onClick={() => {
+                      setEditingFarm(null);
+                      setShowAddFormModal(true);
+                    }}
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center transition-colors disabled:opacity-50"
+                    disabled={loading}
                   >
                     <FaPlus className="mr-2" />
                     প্রথম ফার্ম যুক্ত করুন
@@ -355,12 +421,13 @@ const MyFarmPage = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">
-                  {farms.map((farm) => (
+                  {farms.map((farm, index) => (
                     <FarmCard
-                      key={farm.id}
+                      key={farm.id || farm._id || `farm-${index}`}
                       farm={farm}
                       onEdit={handleEditFarm}
                       onDelete={handleDeleteFarm}
+                      loading={loading}
                     />
                   ))}
                 </div>
@@ -369,16 +436,12 @@ const MyFarmPage = () => {
           </div>
         </div>
 
-        {/* Right Column - Progress & Quick Actions */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Farm Progress & Activities */}
           <FarmProgress
             activities={activities}
             onAddActivity={handleAddActivity}
             onUpdateActivity={handleUpdateActivity}
           />
-
-          {/* Quick Actions */}
           <QuickActions onActionClick={handleQuickActionClick} />
         </div>
       </div>
