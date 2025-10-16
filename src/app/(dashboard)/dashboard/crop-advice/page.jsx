@@ -50,37 +50,36 @@ console.log(session);
 
   // Load user's advice history
   useEffect(() => {
-    const loadAdviceHistory = () => {
-      const savedHistory = localStorage.getItem(
-        `crop_advice_${session?.user?.email}`
+    const loadAdviceHistory = async () => {
+      const response = await fetch(
+        `https://agri-smart-server.vercel.app/api/ai-history?email=${session.user.email}`
       );
-      if (savedHistory) {
-        setAdviceHistory(JSON.parse(savedHistory));
-      }
+      const data = await response.json();
+      setAdviceHistory(data.data || []);
     };
 
-    if (session?.user?.email) {
-      loadAdviceHistory();
-    }
-  }, [session]);
+    loadAdviceHistory();
+  }, []);
 
-  // Save advice to history
-  const saveAdviceToHistory = (advice) => {
-    const newHistory = [advice, ...adviceHistory].slice(0, 20); // Keep last 20 advice
-    setAdviceHistory(newHistory);
-    if (session?.user?.email) {
-      localStorage.setItem(
-        `crop_advice_${session.user.email}`,
-        JSON.stringify(newHistory)
-      );
-    }
+  // Clear advice history
+  const onClearHistory = async () => {
+    const response = await fetch(
+      `https://agri-smart-server.vercel.app/api/ai-history?email=${session.user.email}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
   };
 
   const tabs = [
-    { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: "🤖" },
-    { id: "image-analysis", label: "ছবি বিশ্লেষণ", icon: "📸" },
-   
-    { id: "history", label: "ইতিহাস", icon: "📋" },
+    { id: "ai-diagnosis", label: "এআই ডায়াগনসিস", icon: FaRobot },
+    { id: "image-analysis", label: "ছবি বিশ্লেষণ", icon: IoImage },
+    { id: "history", label: "ইতিহাস", icon: FaHistory },
   ];
 
   return (
@@ -92,7 +91,8 @@ console.log(session);
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 flex items-center">
-                  🌾 এআই চালিত ফসল পরামর্শ কেন্দ্র
+                  <FaRobot className="mr-2 text-green-600" /> এআই চালিত ফসল
+                  পরামর্শ কেন্দ্র
                 </h1>
                 <p className="text-gray-600">
                   কৃত্রিম বুদ্ধিমত্তা দিয়ে আপনার ফসলের সমস্যা নির্ণয় এবং
@@ -123,7 +123,10 @@ console.log(session);
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  <span>{tab.icon}</span>
+                  <span className="text-lg">
+                    <tab.icon />
+                  </span>
+
                   <span>{tab.label}</span>
                 </button>
               ))}
@@ -137,7 +140,6 @@ console.log(session);
           <div className="lg:col-span-3">
             {activeTab === "ai-diagnosis" && (
               <AIAdviceEngine
-                onAdviceGenerated={saveAdviceToHistory}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
               />
@@ -145,25 +147,15 @@ console.log(session);
 
             {activeTab === "image-analysis" && (
               <CropDiagnosis
-                onDiagnosisComplete={saveAdviceToHistory}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
               />
             )}
 
-           
-
             {activeTab === "history" && (
               <AdviceHistory
                 history={adviceHistory}
-                onClearHistory={() => {
-                  setAdviceHistory([]);
-                  if (session?.user?.email) {
-                    localStorage.removeItem(
-                      `crop_advice_${session.user.email}`
-                    );
-                  }
-                }}
+                onClearHistory={onClearHistory}
               />
             )}
           </div>
@@ -174,8 +166,9 @@ console.log(session);
 
             {/* Quick Stats */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">
-                📊 আপনার পরিসংখ্যান
+              <h3 className="text-lg font-bold text-gray-800 mb-4 inline-flex items-center ">
+                <FaChartBar className="mr-2 text-green-600" />
+                আপনার পরিসংখ্যান
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
@@ -198,39 +191,6 @@ console.log(session);
                       }).length
                     }
                   </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">সফল সমাধান:</span>
-                  <span className="font-bold text-purple-600">
-                    {adviceHistory.filter((advice) => advice.solved).length}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* AI Tips */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6 mt-6">
-              <h3 className="text-lg font-bold text-green-800 mb-4">
-                🤖 এআই টিপস
-              </h3>
-              <div className="space-y-3 text-sm">
-                <div className="bg-white rounded-lg p-3 border border-green-100">
-                  <p className="text-gray-700">
-                    📸 ভালো ছবি তুলুন: দিনের আলোতে, পাতার উপর ও নিচ থেকে ছবি
-                    তুলুন
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-green-100">
-                  <p className="text-gray-700">
-                    📝 বিস্তারিত লিখুন: কখন সমস্যা শুরু, কোন অংশে, আবহাওয়ার
-                    অবস্থা
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-green-100">
-                  <p className="text-gray-700">
-                    ⏰ দ্রুত পদক্ষেপ: সমস্যা চিহ্নিত হওয়ার সাথে সাথে ব্যবস্থা
-                    নিন
-                  </p>
                 </div>
               </div>
             </div>

@@ -539,7 +539,7 @@ const KrishiCalendar = () => {
                     onClick={() => setSelectedCrop(crop)}
                     className={`p-4 rounded-xl border-2 transition-all duration-300 font-bangla group hover:shadow-md ${
                       selectedCrop === crop
-                        ? 'border-green-500 bg-green-50 text-green-700 shadow-md transform scale-105'
+                        ? 'border-green-500 bg-green-50 text-green-700 shadow-sm transform scale-105'
                         : 'border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50'
                     }`}
                   >
@@ -553,7 +553,7 @@ const KrishiCalendar = () => {
             </div>
 
             {selectedCrop && (
-              <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
+              <div className="bg-white rounded-2xl shadow-sm p-6 border border-green-200">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="text-3xl bg-green-100 p-3 rounded-full">
                     {getCropIcon(selectedCrop)}

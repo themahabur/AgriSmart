@@ -52,21 +52,21 @@ const Dashboard = () => {
   ];
   const activities = [
     {
-      title: "সর্বোচ্চ আয় (মাসিক)",
-      value: "২৫,০০০৳",
+      title: "মুশুর ডাল",
+      value: "২৫,০০০/-৳",
       icon: PiChartLineUpBold,
       color: "bg-green-500",
-      income: "আয় বৃদ্ধি",
-      change: "+১২%",
+      income: "সর্বোচ্চ বাজার মূল্য ", //🌾
+      change: "🌾",
       changeType: "positive",
     },
     {
-      title: "সর্বোনিম্ন আয় (মাসিক)",
-      value: "১৮,০০০৳",
+      title: "আলু",
+      value: "১৮,০০০/-৳",
       icon: PiChartLineDownBold,
       color: "bg-red-500",
-      income: "আয় হ্রাস",
-      change: "-৫%",
+      income: "সর্বোনিম্ন বাজার মূল্য ",
+      change: "🌾",
       changeType: "negative",
     },
   ];
@@ -331,13 +331,7 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm pb-1 ml-1">{act.income}</p>
                   <div
-                    className={`text-sm px-2 py-1 rounded-full ${
-                      act.changeType === "positive"
-                        ? "bg-green-100 text-green-700"
-                        : act.changeType === "negative"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
+                    className={`text-sm px-2 py-1`}
                   >
                     {act.changeType === "positive" && (
                       <FaArrowUp className="inline mr-1" />
@@ -349,7 +343,7 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-              <h3 className="text-sm text-gray-600 mb-1">{act.title}</h3>
+              <h3 className="font-bold text-gray-600 mb-1">{act.title} <span className="text-sm font-normal">/ মণ</span></h3>
               <p className="text-2xl font-bold text-gray-800">{act.value}</p>
             </div>
           ))}

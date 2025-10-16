@@ -21,7 +21,7 @@ const AiChat = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = async(e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if ((!input.trim() && !imageFile) || isLoading) return;
 
@@ -37,33 +37,68 @@ const AiChat = () => {
     setImageFile(null);
     setIsLoading(true);
 
-    // Real AI response
-try {
-  const res = await fetch("/api/ask-ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question: input }),
-  });
-  const data = await res.json();
+    try {
+      let aiResponse;
+      if (imageFile) {
+        // 1. Upload image to Cloudinary
+        const formData = new FormData();
+        formData.append("file", imageFile);
 
-  const aiResponse = {
-    id: Date.now() + 1,
-    sender: "ai",
-    text: data.answer || "দুঃখিত, আমি এখন উত্তর দিতে পারছি না। পরে আবার চেষ্টা করুন।",
-  };
-  setMessages((prev) => [...prev, aiResponse]);
-} catch (error) {
-  console.error("AI error:", error);
-  const aiResponse = {
-    id: Date.now() + 1,
-    sender: "ai",
-    text: "AI response failed. Please try again later.",
-  };
-  setMessages((prev) => [...prev, aiResponse]);
-} finally {
-  setIsLoading(false);
-}
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const uploadData = await uploadRes.json();
 
+        if (!uploadRes.ok || !uploadData.url) {
+          throw new Error("Image upload failed");
+        }
+
+        // 2. Send image URL and prompt to analyze-image API
+        const analyzeRes = await fetch("/api/analyze-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imageUrl: uploadData.url,
+            prompt: input,
+          }),
+        });
+        const analyzeData = await analyzeRes.json();
+
+        aiResponse = {
+          id: Date.now() + 1,
+          sender: "ai",
+          text: analyzeData.analysis || "দুঃখিত, বিশ্লেষণ পাওয়া যায়নি।",
+        };
+      } else {
+        // Text-only chat
+        const res = await fetch("/api/ask-ai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: input }),
+        });
+        const data = await res.json();
+
+        aiResponse = {
+          id: Date.now() + 1,
+          sender: "ai",
+          text:
+            data.answer ||
+            "দুঃখিত, আমি এখন উত্তর দিতে পারছি না। পরে আবার চেষ্টা করুন।",
+        };
+      }
+      setMessages((prev) => [...prev, aiResponse]);
+    } catch (error) {
+      console.error("AI error:", error);
+      const aiResponse = {
+        id: Date.now() + 1,
+        sender: "ai",
+        text: "AI response failed. Please try again later.",
+      };
+      setMessages((prev) => [...prev, aiResponse]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
