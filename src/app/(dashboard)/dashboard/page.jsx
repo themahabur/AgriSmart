@@ -24,6 +24,7 @@ import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
+import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/TodayFarmTaskCard";
 
 const Dashboard = () => {
   const { data: session } = useSession();
@@ -248,19 +249,6 @@ const Dashboard = () => {
     });
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "উচ্চ":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "মাধ্যম":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "নিম্ন":
-        return "bg-green-100 text-green-700 border-green-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 py-6 px-4 font-hind">
       <div className="container mx-auto max-w-7xl">
@@ -387,55 +375,8 @@ const Dashboard = () => {
                 </Link>
               </div>
               <div className="space-y-4">
-                {todaysTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className={`border rounded-lg p-4 transition-all duration-200 ${
-                      task.status === "completed"
-                        ? "bg-green-50 border-green-200 opacity-75"
-                        : "bg-white border-gray-200 hover:border-green-300"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3
-                          className={`font-medium ${
-                            task.status === "completed"
-                              ? "line-through text-green-700"
-                              : "text-gray-800"
-                          }`}
-                        >
-                          {task.task}
-                        </h3>
-                        <div className="flex items-center space-x-4 mt-2">
-                          <span className="text-sm text-gray-600">
-                            <FaClock className="inline mr-1" />
-                            {task.time}
-                          </span>
-                          <span className="text-sm text-gray-600">
-                            <FaLeaf className="inline mr-1" />
-                            {task.crop}
-                          </span>
-                          <span
-                            className={`text-xs px-2 py-1 rounded-full border ${getPriorityColor(
-                              task.priority
-                            )}`}
-                          >
-                            {task.priority}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        className={`ml-4 p-2 rounded-full transition-colors ${
-                          task.status === "completed"
-                            ? "bg-green-500 text-white"
-                            : "bg-gray-100 text-gray-600 hover:bg-green-100 hover:text-green-600"
-                        }`}
-                      >
-                        <FaCheck className="text-sm" />
-                      </button>
-                    </div>
-                  </div>
+                {farmTasks.map((task) => (
+                  <TodayFarmTaskCard key={task.id} task={task} />
                 ))}
               </div>
             </div>
