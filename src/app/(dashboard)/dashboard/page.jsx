@@ -44,7 +44,7 @@ const Dashboard = () => {
     },
     {
       title: "আজকের কাজ",
-      value: "৩টি",
+      value: farmTasks.length.toString(),
       icon: IoMdCheckmark,
       color: "bg-blue-500",
       change: "১ সম্পূর্ণ",
