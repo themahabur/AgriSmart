@@ -24,11 +24,13 @@ import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
+import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/TodayFarmTaskCard";
 
 const Dashboard = () => {
   const { data: session } = useSession();
   const [weatherData, setWeatherData] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [farmTasks, setFarmTasks] = useState([]);
 
   // Quick Stats Data
   const quickStats = [
@@ -42,7 +44,7 @@ const Dashboard = () => {
     },
     {
       title: "আজকের কাজ",
-      value: "৩টি",
+      value: farmTasks.length.toString(),
       icon: IoMdCheckmark,
       color: "bg-blue-500",
       change: "১ সম্পূর্ণ",
@@ -68,34 +70,6 @@ const Dashboard = () => {
       income: "সর্বোনিম্ন বাজার মূল্য ",
       change: "🌾",
       changeType: "negative",
-    },
-  ];
-
-  // Today's Tasks
-  const todaysTasks = [
-    {
-      id: 1,
-      task: "ধানের ক্ষেতে সেচ দেওয়া",
-      priority: "উচ্চ",
-      status: "pending",
-      time: "সকাল ৮:০০",
-      crop: "ধান",
-    },
-    {
-      id: 2,
-      task: "সবজি ক্ষেতে কীটনাশক স্প্রে",
-      priority: "মাধ্যম",
-      status: "completed",
-      time: "সকাল ১০:০০",
-      crop: "সবজি",
-    },
-    {
-      id: 3,
-      task: "গরুর খাবার প্রস্তুতি",
-      priority: "উচ্চ",
-      status: "pending",
-      time: "দুপুর ২:০০",
-      crop: "পশুপালন",
     },
   ];
 
@@ -196,18 +170,34 @@ const Dashboard = () => {
 
   //   fetchWeatherData();
   // }, []);
-    useEffect(() => {
-      async function loadWeather() {
-        try {
-          const data = await fetchWeather("23.8103","90.4125");
-          setWeatherData(data);
-          console.log("Weather data:", data);
-        } catch (err) {
-          console.error("Weather fetch error:", err);
-        }
+  useEffect(() => {
+    async function loadWeather() {
+      try {
+        const data = await fetchWeather("23.8103", "90.4125");
+        setWeatherData(data);
+        console.log("Weather data:", data);
+      } catch (err) {
+        console.error("Weather fetch error:", err);
       }
-      loadWeather();
-    }, []);
+    }
+    loadWeather();
+  }, []);
+
+  useEffect(() => {
+    const farmTask = async () => {
+      try {
+        const response = await fetch(
+          `https://agri-smart-server.vercel.app/api/farm-tasks/${session?.user?.email}`
+        );
+        const data = await response.json();
+        setFarmTasks(data.tasks);
+        // console.log("Today's farm tasks:", data.tasks);
+      } catch (error) {
+        console.error("Farm tasks fetch error:", error);
+      }
+    };
+    farmTask();
+  }, []);
 
   // Update current time
   useEffect(() => {
@@ -229,19 +219,6 @@ const Dashboard = () => {
       month: "long",
       day: "numeric",
     });
-  };
-
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "উচ্চ":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "মাধ্যম":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "নিম্ন":
-        return "bg-green-100 text-green-700 border-green-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
   };
 
   return (
@@ -268,7 +245,9 @@ const Dashboard = () => {
                   <div className="text-2xl font-bold text-green-600">
                     {weatherData ? Math.round(weatherData.today?.temp) : "--"}°C
                   </div>
-                  <div className="text-sm text-gray-600">{weatherData?.city}</div>
+                  <div className="text-sm text-gray-600">
+                    {weatherData?.city}
+                  </div>
                 </div>
                 <div className="text-4xl text-gray-500">
                   {weatherData?.weather?.[0]?.main === "Clear" ? (
@@ -330,9 +309,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <p className="text-sm pb-1 ml-1">{act.income}</p>
-                  <div
-                    className={`text-sm px-2 py-1`}
-                  >
+                  <div className={`text-sm px-2 py-1`}>
                     {act.changeType === "positive" && (
                       <FaArrowUp className="inline mr-1" />
                     )}
@@ -343,7 +320,9 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-              <h3 className="font-bold text-gray-600 mb-1">{act.title} <span className="text-sm font-normal">/ মণ</span></h3>
+              <h3 className="font-bold text-gray-600 mb-1">
+                {act.title} <span className="text-sm font-normal">/ মণ</span>
+              </h3>
               <p className="text-2xl font-bold text-gray-800">{act.value}</p>
             </div>
           ))}
@@ -361,62 +340,15 @@ const Dashboard = () => {
                   আজকের কাজ
                 </h2>
                 <Link
-                  href="/dashboard/agri-calendar"
+                  href="/dashboard/my-farm"
                   className="text-green-600 hover:text-green-700 text-sm font-medium"
                 >
                   সব দেখুন →
                 </Link>
               </div>
               <div className="space-y-4">
-                {todaysTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className={`border rounded-lg p-4 transition-all duration-200 ${
-                      task.status === "completed"
-                        ? "bg-green-50 border-green-200 opacity-75"
-                        : "bg-white border-gray-200 hover:border-green-300"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3
-                          className={`font-medium ${
-                            task.status === "completed"
-                              ? "line-through text-green-700"
-                              : "text-gray-800"
-                          }`}
-                        >
-                          {task.task}
-                        </h3>
-                        <div className="flex items-center space-x-4 mt-2">
-                          <span className="text-sm text-gray-600">
-                            <FaClock className="inline mr-1" />
-                            {task.time}
-                          </span>
-                          <span className="text-sm text-gray-600">
-                            <FaLeaf className="inline mr-1" />
-                            {task.crop}
-                          </span>
-                          <span
-                            className={`text-xs px-2 py-1 rounded-full border ${getPriorityColor(
-                              task.priority
-                            )}`}
-                          >
-                            {task.priority}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        className={`ml-4 p-2 rounded-full transition-colors ${
-                          task.status === "completed"
-                            ? "bg-green-500 text-white"
-                            : "bg-gray-100 text-gray-600 hover:bg-green-100 hover:text-green-600"
-                        }`}
-                      >
-                        <FaCheck className="text-sm" />
-                      </button>
-                    </div>
-                  </div>
+                {farmTasks.map((task) => (
+                  <TodayFarmTaskCard key={task._id} task={task} />
                 ))}
               </div>
             </div>
@@ -462,7 +394,7 @@ const Dashboard = () => {
                 <div>
                   <div className="text-center mb-4">
                     <div className="text-3xl mb-2">
-                      {weatherData.today?.weather=== "Clear" ? (
+                      {weatherData.today?.weather === "Clear" ? (
                         <IoIosSunny className="text-yellow-500 mx-auto" />
                       ) : (
                         <IoIosRainy className="text-gray-500 mx-auto" />
