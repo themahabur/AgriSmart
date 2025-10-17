@@ -73,34 +73,6 @@ const Dashboard = () => {
     },
   ];
 
-  // Today's Tasks
-  const todaysTasks = [
-    {
-      id: 1,
-      task: "ধানের ক্ষেতে সেচ দেওয়া",
-      priority: "উচ্চ",
-      status: "pending",
-      time: "সকাল ৮:০০",
-      crop: "ধান",
-    },
-    {
-      id: 2,
-      task: "সবজি ক্ষেতে কীটনাশক স্প্রে",
-      priority: "মাধ্যম",
-      status: "completed",
-      time: "সকাল ১০:০০",
-      crop: "সবজি",
-    },
-    {
-      id: 3,
-      task: "গরুর খাবার প্রস্তুতি",
-      priority: "উচ্চ",
-      status: "pending",
-      time: "দুপুর ২:০০",
-      crop: "পশুপালন",
-    },
-  ];
-
   // Quick Access Tools
   const quickTools = [
     {
@@ -215,11 +187,11 @@ const Dashboard = () => {
     const farmTask = async () => {
       try {
         const response = await fetch(
-          "https://agri-smart-server.vercel.app/api/farm-tasks/user@example.com"
+          `https://agri-smart-server.vercel.app/api/farm-tasks/${session?.user?.email}`
         );
         const data = await response.json();
         setFarmTasks(data.tasks);
-        console.log("Today's farm tasks:", data.tasks);
+        // console.log("Today's farm tasks:", data.tasks);
       } catch (error) {
         console.error("Farm tasks fetch error:", error);
       }
@@ -376,7 +348,7 @@ const Dashboard = () => {
               </div>
               <div className="space-y-4">
                 {farmTasks.map((task) => (
-                  <TodayFarmTaskCard key={task.id} task={task} />
+                  <TodayFarmTaskCard key={task._id} task={task} />
                 ))}
               </div>
             </div>
