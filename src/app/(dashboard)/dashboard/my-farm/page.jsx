@@ -20,6 +20,7 @@ const MyFarmPage = () => {
   const [showAddFormModal, setShowAddFormModal] = useState(false);
   const [lastSubmittedFarm, setLastSubmittedFarm] = useState(null);
   const [showSubmittedData, setShowSubmittedData] = useState(false);
+  const [selectedFarmId, setSelectedFarmId] = useState("");
   const { data: session } = useSession();
 
   // console.log(session.user.email);
@@ -103,6 +104,13 @@ const MyFarmPage = () => {
 
     fetchFarms();
   }, []);
+
+  // Dropdown filtered farms
+  const displayedFarms = selectedFarmId
+    ? farms.filter(
+        (farm) => farm._id === selectedFarmId || farm.id === selectedFarmId
+      )
+    : farms;
 
   // Add farm
   const handleAddFarm = async (farmData) => {
@@ -400,17 +408,34 @@ const MyFarmPage = () => {
           </div>
         </div>
       )}
-
       {/* Farms Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <WeatherSoilCards weatherData={weatherData} soilData={soilData} />
-          <div className="bg-white rounded-xl border border-gray-200 shadow-lg">
-            <div className="p-4 border-b border-gray-200">
+          <div className="bg-white rounded-xl border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
                 <FaTractor className="text-green-600 mr-2" />
                 আমার ফার্মসমূহ ({farms.length}টি)
               </h2>
+              {/* Farm Selection Dropdown */}
+              <div className="mb-4">
+                <select
+                  value={selectedFarmId}
+                  onChange={(e) => setSelectedFarmId(e.target.value)}
+                  className="border border-gray-300 rounded-md p-2 text-gray-700"
+                >
+                  <option value="">সকল ফার্ম দেখান</option>
+                  {farms.map((farm) => (
+                    <option
+                      key={farm._id || farm.id}
+                      value={farm._id || farm.id}
+                    >
+                      {farm.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="p-4">
               {loading ? (
