@@ -4,11 +4,13 @@ import { FaTractor, FaPlus } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
+// const API_BASE_URL = "http://localhost:5000/api";
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
 import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
 import WeatherSoilCards from "../../../components/dashboard/myfarm/WeatherSoilCards";
 import QuickActions from "../../../components/dashboard/myfarm/QuickActions";
+import { useSession } from "next-auth/react";
 
 const MyFarmPage = () => {
   const [farms, setFarms] = useState([]);
@@ -18,6 +20,9 @@ const MyFarmPage = () => {
   const [showAddFormModal, setShowAddFormModal] = useState(false);
   const [lastSubmittedFarm, setLastSubmittedFarm] = useState(null);
   const [showSubmittedData, setShowSubmittedData] = useState(false);
+  const { data: session } = useSession();
+
+  // console.log(session.user.email);
 
   const [activities, setActivities] = useState([
     {
@@ -71,7 +76,9 @@ const MyFarmPage = () => {
     const fetchFarms = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/farms`);
+        const response = await fetch(
+          `${API_BASE_URL}/farms/${session?.user?.email}`
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -103,6 +110,7 @@ const MyFarmPage = () => {
       setLoading(true);
 
       const farmPayload = {
+        userEmail: session?.user?.email,
         name: farmData.name,
         location: farmData.location,
         sizeAcre: parseFloat(farmData.size) || 0,
@@ -125,7 +133,12 @@ const MyFarmPage = () => {
         pestAlert: false,
         organicPractices: farmData.organicPractices,
       };
+      console.log(farmPayload);
+      if (!farmPayload?.userEmail) {
+        throw new Error("User email is missing from session");
+      }
 
+      // Send POST request to add farm
       const response = await fetch(`${API_BASE_URL}/farms`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -279,7 +292,8 @@ const MyFarmPage = () => {
     }
   };
 
-  const handleAddActivity = (activity) => setActivities([...activities, activity]);
+  const handleAddActivity = (activity) =>
+    setActivities([...activities, activity]);
 
   const handleUpdateActivity = (id, updates) => {
     setActivities(
