@@ -17,23 +17,21 @@ const TodayFarmTaskCard = ({ task }) => {
     }
   };
 
-  const handleStatusChange = (e) => {
-    setStatus(e.target.value);
-  };
+ console.log(task.status = "Completed" , 'anbfg');
 
   return (
     <div
       className={`border rounded-lg p-4 transition-all duration-200 ${
-        task.status === "completed"
+        task.status === "Completed"
           ? "bg-green-50 border-green-200 opacity-75"
           : "bg-white border-gray-200 hover:border-green-300"
       }`}
     >
-      <div className="flex items-start justify-between">
+      <div className={`flex items-start justify-between ${status === "Completed" && "opacity-50" }`}>
         <div className="flex-1">
           <h3
             className={`font-medium ${
-              status === "completed"
+              status === "Completed"
                 ? "line-through text-green-700"
                 : "text-gray-800"
             }`}
@@ -60,20 +58,8 @@ const TodayFarmTaskCard = ({ task }) => {
           </div>
         </div>
         <div className="ml-4">
-          <select
-            value={status}
-            onChange={handleStatusChange}
-            className={`p-2 rounded-md text-sm ${
-              status === "completed"
-                ? "bg-green-500 text-white"
-                : status === "pending"
-                ? "bg-yellow-100 text-yellow-700"
-                : "bg-gray-100 text-gray-600"
-            }`}
-          >
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
-          </select>
+          
+          <button onClick={()=> setStatus(task.status = "Completed")} className={`p-2 rounded-sm cursor-pointer ${status === "Completed" ? "bg-green-500 text-white" : "bg-red-200 text-red-700"}`}>{status}</button>
         </div>
       </div>
     </div>
