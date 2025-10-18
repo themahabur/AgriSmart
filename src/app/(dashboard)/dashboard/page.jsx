@@ -27,6 +27,7 @@ import { fetchWeather } from "@/app/lib/fetchWeather";
 import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
 import Image from "next/image";
 
+
 const Dashboard = () => {
   const { data: session } = useSession();
   const [weatherData, setWeatherData] = useState(null);
@@ -282,13 +283,12 @@ const Dashboard = () => {
                   <stat.icon />
                 </div>
                 <div
-                  className={`text-sm px-2 py-1 rounded-full ${
-                    stat.changeType === "positive"
+                  className={`text-sm px-2 py-1 rounded-full ${stat.changeType === "positive"
                       ? "bg-green-100 text-green-700"
                       : stat.changeType === "negative"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
                 >
                   {stat.changeType === "positive" && (
                     <FaArrowUp className="inline mr-1" />

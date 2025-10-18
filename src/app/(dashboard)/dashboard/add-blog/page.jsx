@@ -12,7 +12,7 @@ export default async function Blog() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-amber-50  ">
+    <div className="bg-gradient-to-br from-green-50 to-amber-50 border ">
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 lg:px-8 py-4">
           <h1 className="text-3xl font-bold text-[#127917] font-hind">
