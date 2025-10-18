@@ -24,7 +24,7 @@ import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
-import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/TodayFarmTaskCard";
+import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
 
 const Dashboard = () => {
   const { data: session } = useSession();
