@@ -32,26 +32,6 @@ const Dashboard = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [farmTasks, setFarmTasks] = useState([]);
 
-  // Quick Stats Data
-  const quickStats = [
-    {
-      title: "মোট ফসল",
-      value: "৫টি",
-      icon: FaSeedling,
-      color: "bg-green-500",
-      change: "+২",
-      changeType: "positive",
-    },
-    {
-      title: "আজকের কাজ",
-      value: farmTasks.length.toString(),
-      icon: IoMdCheckmark,
-      color: "bg-blue-500",
-      change: "১ সম্পূর্ণ",
-      changeType: "neutral",
-    },
-    //
-  ];
   const activities = [
     {
       title: "মুশুর ডাল",
@@ -151,6 +131,27 @@ const Dashboard = () => {
     },
   ];
 
+  // Quick Stats Data
+  const quickStats = [
+    {
+      title: "মোট ফসল",
+      value: "৫টি",
+      icon: FaSeedling,
+      color: "bg-green-500",
+      change: "+২",
+      changeType: "positive",
+    },
+    {
+      title: "আজকের কাজ",
+      value: farmTasks?.length.toString(),
+      icon: IoMdCheckmark,
+      color: "bg-blue-500",
+      change: "১ সম্পূর্ণ",
+      changeType: "neutral",
+    },
+    //
+  ];
+
   // Fetch basic weather data
   // useEffect(() => {
   //   const fetchWeatherData = async () => {
@@ -175,7 +176,7 @@ const Dashboard = () => {
       try {
         const data = await fetchWeather("23.8103", "90.4125");
         setWeatherData(data);
-        console.log("Weather data:", data);
+        // console.log("Weather data:", data);
       } catch (err) {
         console.error("Weather fetch error:", err);
       }
@@ -220,6 +221,14 @@ const Dashboard = () => {
       day: "numeric",
     });
   };
+
+  if (!session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">লোড হচ্ছে...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 py-6 px-4 font-hind">
