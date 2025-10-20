@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { FaBell } from "react-icons/fa";
 import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
 
 const DashboardNavbar = ({ onMenuClick, pageTitle = "ড্যাশবোর্ড" }) => {
   const { data: session } = useSession();
@@ -91,7 +92,7 @@ const DashboardNavbar = ({ onMenuClick, pageTitle = "ড্যাশবোর্
                   onClick={() => setShowDropdown(false)}
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
-                  প্রোফাইল দেখুন
+                  <Link href="/dashboard/profile">প্রোফাইল দেখুন</Link>
                 </button>
                 <button
                   onClick={() => {
