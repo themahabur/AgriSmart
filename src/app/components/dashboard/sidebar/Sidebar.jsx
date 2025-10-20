@@ -17,6 +17,7 @@ import {
   FaHome,
   FaRobot,
   FaPenFancy,
+  FaBlog,
 } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 import Logo from "../../shared/logo/Logo";
@@ -28,11 +29,13 @@ const navItems = [
   { href: "/dashboard", icon: FaHome, text: "হোম ড্যাশবোর্ড" },
   { href: "/dashboard/my-farm", icon: FaTractor, text: "আমার ফার্ম" },
   { href: "/dashboard/crop-advice", icon: FaSeedling, text: "ফসল উপদেশ" },
-  { href: "/dashboard/weather", icon: FaCloudSun, text: "আবহাওয়া" },
+  { href: "/dashboard/weather", icon: FaCloudSun, text: "আবহাওয়া" },
   { href: "/dashboard/market-price", icon: FaChartLine, text: "বাজার দাম" },
   { href: "/dashboard/ai-chatbot", icon: FaRobot, text: "এআই চ্যাটবট" },
-  { href: "/dashboard/blog", icon: FaPenFancy, text: "ব্লগ" },
+  { href: "/dashboard/blog", icon: FaBlog, text: "ব্লগ" },
   { href: "/dashboard/add-blog", icon: MdPostAdd, text: "ব্লগ যোগ করুন" },
+ 
+  { href: "/dashboard/blog-manage", icon: FaPenFancy, text: "ব্লগ ম্যানেজ" },
   { href: "/dashboard/news-alerts", icon: FaNewspaper, text: "খবর ও সতর্কতা" },
 
   {
@@ -45,7 +48,7 @@ const navItems = [
   {
     href: "/dashboard/gov-assistance",
     icon: FaLandmark,
-    text: "সরকারি সহায়তা",
+    text: "সরকারি সহায়তা",
   },
   {
     href: "/dashboard/sell-produce",

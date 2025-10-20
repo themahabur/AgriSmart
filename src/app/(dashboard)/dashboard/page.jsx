@@ -25,6 +25,7 @@ import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
 import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
+import Image from "next/image";
 
 
 const Dashboard = () => {
@@ -51,7 +52,7 @@ const Dashboard = () => {
       change: "১ সম্পূর্ণ",
       changeType: "neutral",
     },
-    //
+    
   ];
   const activities = [
     {
@@ -230,12 +231,18 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-green-100 p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 flex items-end">
                   স্বাগতম,{" "}
                   <span className="text-green-600">
                     {session?.user?.name || "কৃষক ভাই"}
                   </span>
-                  ! 🌾
+                  <Image 
+                    src={'/happy-farmer.png'} 
+                    alt="Happy Farmer" 
+                    width={50} 
+                    height={50} 
+                    className="mb-1 ml-2 animate-welcome-pulse" 
+                  />
                 </h1>
                 <p className="text-gray-600">
                   আজ {formatDate(currentTime)} • {formatTime(currentTime)}
@@ -276,13 +283,12 @@ const Dashboard = () => {
                   <stat.icon />
                 </div>
                 <div
-                  className={`text-sm px-2 py-1 rounded-full ${
-                    stat.changeType === "positive"
+                  className={`text-sm px-2 py-1 rounded-full ${stat.changeType === "positive"
                       ? "bg-green-100 text-green-700"
                       : stat.changeType === "negative"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
                 >
                   {stat.changeType === "positive" && (
                     <FaArrowUp className="inline mr-1" />
