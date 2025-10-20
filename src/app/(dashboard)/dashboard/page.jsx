@@ -46,7 +46,7 @@ const Dashboard = () => {
     },
     {
       title: "আজকের কাজ",
-      value: farmTasks.length.toString(),
+      value: farmTasks?.length?.toString(),
       icon: IoMdCheckmark,
       color: "bg-blue-500",
       change: "১ সম্পূর্ণ",
@@ -354,7 +354,7 @@ const Dashboard = () => {
                 </Link>
               </div>
               <div className="space-y-4">
-                {farmTasks.map((task) => (
+                {farmTasks?.map((task) => (
                   <TodayFarmTaskCard key={task._id} task={task} />
                 ))}
               </div>
