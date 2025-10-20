@@ -26,7 +26,7 @@ import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
 import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
 import Image from "next/image";
-
+import { getLocation } from "@/app/lib/getlocation";
 
 const Dashboard = () => {
   const { data: session } = useSession();
@@ -52,7 +52,6 @@ const Dashboard = () => {
       change: "১ সম্পূর্ণ",
       changeType: "neutral",
     },
-    
   ];
   const activities = [
     {
@@ -153,29 +152,18 @@ const Dashboard = () => {
     },
   ];
 
-  // Fetch basic weather data
-  // useEffect(() => {
-  //   const fetchWeatherData = async () => {
-  //     try {
-  //       const lat = "23.8103";
-  //       const lon = "90.4125";
-  //       const apiKey = "eed75703a552ed1ad8db7b42f4f3e024";
-  //       const response = await fetch(
-  //         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=bn`
-  //       );
-  //       const data = await response.json();
-  //       setWeatherData(data);
-  //     } catch (error) {
-  //       console.error("Weather data fetch error:", error);
-  //     }
-  //   };
-
-  //   fetchWeatherData();
-  // }, []);
   useEffect(() => {
     async function loadWeather() {
       try {
-        const data = await fetchWeather("23.8103", "90.4125");
+        const location = await getLocation();
+
+        if (!location) {
+          throw new Error("Unable to get location");
+        }
+
+        const { latitude, longitude } = location;
+
+        const data = await fetchWeather(latitude, longitude);
         setWeatherData(data);
         console.log("Weather data:", data);
       } catch (err) {
@@ -236,12 +224,12 @@ const Dashboard = () => {
                   <span className="text-green-600">
                     {session?.user?.name || "কৃষক ভাই"}
                   </span>
-                  <Image 
-                    src={'/happy-farmer.png'} 
-                    alt="Happy Farmer" 
-                    width={50} 
-                    height={50} 
-                    className="mb-1 ml-2 animate-welcome-pulse" 
+                  <Image
+                    src={"/happy-farmer.png"}
+                    alt="Happy Farmer"
+                    width={50}
+                    height={50}
+                    className="mb-1 ml-2 animate-welcome-pulse"
                   />
                 </h1>
                 <p className="text-gray-600">
@@ -283,12 +271,13 @@ const Dashboard = () => {
                   <stat.icon />
                 </div>
                 <div
-                  className={`text-sm px-2 py-1 rounded-full ${stat.changeType === "positive"
+                  className={`text-sm px-2 py-1 rounded-full ${
+                    stat.changeType === "positive"
                       ? "bg-green-100 text-green-700"
                       : stat.changeType === "negative"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
+                      ? "bg-red-100 text-red-700"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
                 >
                   {stat.changeType === "positive" && (
                     <FaArrowUp className="inline mr-1" />
