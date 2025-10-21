@@ -18,19 +18,6 @@ import {
 
 // Create a separate component for each step to prevent re-rendering the entire form
 const Step1Form = React.memo(({ formData, onFieldChange }) => {
-  const step1Data = {
-    name: formData.name,
-    location: formData.location,
-    size: formData.size,
-    cropType: formData.cropType,
-    cropVariety: formData.cropVariety,
-    plantingDate: formData.plantingDate,
-    cropYield: formData.cropYield,
-    cropCost: formData.cropCost,
-    cropIncome: formData.cropIncome,
-
-  }
-  console.log(step1Data);
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -99,14 +86,6 @@ const Step1Form = React.memo(({ formData, onFieldChange }) => {
 });
 
 const Step2Form = React.memo(({ formData, onFieldChange }) => {
-  const step2Data = {
-    cropType: formData.cropType,
-    cropVariety: formData.cropVariety,
-    plantingDate: formData.plantingDate,
-    cropYield: formData.cropYield,
-    cropCost: formData.cropCost,
-    cropIncome: formData.cropIncome,
-  }
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -120,12 +99,12 @@ const Step2Form = React.memo(({ formData, onFieldChange }) => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             ফসলের প্রকার *
           </label>
-           <input
+          <input
             type="text"
             value={formData.cropType || ""}
             onChange={(e) => onFieldChange("cropType", e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="যেমন: ধান, গম, পটল, পিয়াজ..."
+            placeholder="যেমন: ধান, গম, পটল, পিয়াজ..."
           />
         </div>
 
@@ -395,7 +374,7 @@ const AddFarmModal = ({
     tubeWellDepth: "",
     organicPractices: false,
   });
-// console.log(formData);                  formData here
+
   // Initialize form data
   useEffect(() => {
     if (!isOpen) return;
@@ -594,11 +573,11 @@ const AddFarmModal = ({
           {currentStep === 1 && <Step1Form formData={formData} onFieldChange={handleFieldChange} />}
           {currentStep === 2 && <Step2Form formData={formData} onFieldChange={handleFieldChange} />}
           {currentStep === 3 && <Step3Form formData={formData} onFieldChange={handleFieldChange} />}
-          {currentStep === 4 && <Step4Review
-            formData={formData}
-            editingFarm={editingFarm}
-            showAllData={showAllData}
-            onToggleShowAllData={toggleShowAllData}
+          {currentStep === 4 && <Step4Review 
+            formData={formData} 
+            editingFarm={editingFarm} 
+            showAllData={showAllData} 
+            onToggleShowAllData={toggleShowAllData} 
           />}
 
           <div className="flex justify-between pt-6 mt-6 border-t border-gray-200">
