@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust this path to your NextAuth options file
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"; 
 import { redirect } from "next/navigation";
 import AddBlogForm from "@/app/components/dashboard/blog/userBlog/AddBlogForm";
 
