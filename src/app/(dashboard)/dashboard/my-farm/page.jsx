@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
 // const API_BASE_URL = "http://localhost:5000/api";
+
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
 import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
@@ -22,8 +23,6 @@ const MyFarmPage = () => {
   const [showSubmittedData, setShowSubmittedData] = useState(false);
   const [selectedFarmId, setSelectedFarmId] = useState("");
   const { data: session } = useSession();
-
-  // console.log(session.user.email);
 
   const [activities, setActivities] = useState([
     {
@@ -72,7 +71,7 @@ const MyFarmPage = () => {
     organicMatter: "৩.২%",
   });
 
-  // Fetch farms data
+  // Fetch farms
   useEffect(() => {
     const fetchFarms = async () => {
       try {
@@ -81,9 +80,7 @@ const MyFarmPage = () => {
           `${API_BASE_URL}/farms/${session?.user?.email}`
         );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
         if (data.status && data.data) {
@@ -103,9 +100,9 @@ const MyFarmPage = () => {
     };
 
     fetchFarms();
-  }, []);
+  }, [session?.user?.email]);
 
-  // Dropdown filtered farms
+  // ✅ Filtered farms based on dropdown
   const displayedFarms = selectedFarmId
     ? farms.filter(
         (farm) => farm._id === selectedFarmId || farm.id === selectedFarmId
@@ -141,21 +138,16 @@ const MyFarmPage = () => {
         pestAlert: false,
         organicPractices: farmData.organicPractices,
       };
-      console.log(farmPayload);
-      if (!farmPayload?.userEmail) {
-        throw new Error("User email is missing from session");
-      }
 
-      // Send POST request to add farm
+      if (!farmPayload?.userEmail) throw new Error("User email missing");
+
       const response = await fetch(`${API_BASE_URL}/farms`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(farmPayload),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const newFarm = await response.json();
       const createdFarm = newFarm.data || newFarm;
@@ -168,9 +160,7 @@ const MyFarmPage = () => {
       setEditingFarm(null);
       setError(null);
 
-      setTimeout(() => {
-        setShowSubmittedData(false);
-      }, 10000);
+      setTimeout(() => setShowSubmittedData(false), 10000);
     } catch (err) {
       console.error("Error adding farm:", err);
       setError("ফার্ম যোগ করতে সমস্যা হয়েছে");
@@ -213,9 +203,7 @@ const MyFarmPage = () => {
         body: JSON.stringify(updatePayload),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const updatedFarmResponse = await response.json();
       const updatedFarm = updatedFarmResponse.data || updatedFarmResponse;
@@ -245,7 +233,7 @@ const MyFarmPage = () => {
     setShowAddFormModal(true);
   };
 
-  // ✅ Delete farm (alert replaced with toast)
+  // Delete farm (with toast confirmation)
   const handleDeleteFarm = async (id) => {
     toast(
       (t) => (
@@ -276,7 +264,7 @@ const MyFarmPage = () => {
     );
   };
 
-  // ✅ Actual delete logic
+  // Confirm delete
   const confirmDeleteFarm = async (id) => {
     try {
       setLoading(true);
@@ -284,9 +272,7 @@ const MyFarmPage = () => {
         method: "DELETE",
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       setFarms(farms.filter((farm) => farm.id !== id && farm._id !== id));
       toast.success("ফার্ম সফলভাবে মুছে ফেলা হয়েছে 🗑️");
@@ -300,8 +286,7 @@ const MyFarmPage = () => {
     }
   };
 
-  const handleAddActivity = (activity) =>
-    setActivities([...activities, activity]);
+  const handleAddActivity = (activity) => setActivities([...activities, activity]);
 
   const handleUpdateActivity = (id, updates) => {
     setActivities(
@@ -315,7 +300,6 @@ const MyFarmPage = () => {
     console.log("Quick action clicked:", action);
   };
 
-  // Modal close handler
   const handleCloseModal = () => {
     setShowAddFormModal(false);
     setEditingFarm(null);
@@ -408,6 +392,7 @@ const MyFarmPage = () => {
           </div>
         </div>
       )}
+
       {/* Farms Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
@@ -416,9 +401,8 @@ const MyFarmPage = () => {
             <div className="p-4 border-b border-gray-200 flex justify-between">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
                 <FaTractor className="text-green-600 mr-2" />
-                আমার ফার্মসমূহ ({farms.length}টি)
+                আমার ফার্মসমূহ ({displayedFarms.length}টি)
               </h2>
-              {/* Farm Selection Dropdown */}
               <div className="mb-4">
                 <select
                   value={selectedFarmId}
@@ -427,10 +411,7 @@ const MyFarmPage = () => {
                 >
                   <option value="">সকল ফার্ম দেখান</option>
                   {farms.map((farm) => (
-                    <option
-                      key={farm._id || farm.id}
-                      value={farm._id || farm.id}
-                    >
+                    <option key={farm._id || farm.id} value={farm._id || farm.id}>
                       {farm.name}
                     </option>
                   ))}
@@ -440,7 +421,7 @@ const MyFarmPage = () => {
             <div className="p-4">
               {loading ? (
                 <div className="text-center py-8">লোড হচ্ছে...</div>
-              ) : farms.length === 0 ? (
+              ) : displayedFarms.length === 0 ? (
                 <div className="text-center py-8">
                   <FaTractor className="text-4xl text-gray-400 mx-auto mb-3" />
                   <p className="text-gray-600 mb-4">
@@ -460,7 +441,7 @@ const MyFarmPage = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">
-                  {farms.map((farm, index) => (
+                  {displayedFarms.map((farm, index) => (
                     <FarmCard
                       key={farm.id || farm._id || `farm-${index}`}
                       farm={farm}
