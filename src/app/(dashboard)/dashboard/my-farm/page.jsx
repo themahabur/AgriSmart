@@ -80,7 +80,8 @@ const MyFarmPage = () => {
           `${API_BASE_URL}/farms/${session?.user?.email}`
         );
 
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
         if (data.status && data.data) {
@@ -147,7 +148,8 @@ const MyFarmPage = () => {
         body: JSON.stringify(farmPayload),
       });
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
 
       const newFarm = await response.json();
       const createdFarm = newFarm.data || newFarm;
@@ -203,7 +205,8 @@ const MyFarmPage = () => {
         body: JSON.stringify(updatePayload),
       });
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
 
       const updatedFarmResponse = await response.json();
       const updatedFarm = updatedFarmResponse.data || updatedFarmResponse;
@@ -272,7 +275,8 @@ const MyFarmPage = () => {
         method: "DELETE",
       });
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
 
       setFarms(farms.filter((farm) => farm.id !== id && farm._id !== id));
       toast.success("ফার্ম সফলভাবে মুছে ফেলা হয়েছে 🗑️");
@@ -286,7 +290,8 @@ const MyFarmPage = () => {
     }
   };
 
-  const handleAddActivity = (activity) => setActivities([...activities, activity]);
+  const handleAddActivity = (activity) =>
+    setActivities([...activities, activity]);
 
   const handleUpdateActivity = (id, updates) => {
     setActivities(
@@ -411,7 +416,10 @@ const MyFarmPage = () => {
                 >
                   <option value="">সকল ফার্ম দেখান</option>
                   {farms.map((farm) => (
-                    <option key={farm._id || farm.id} value={farm._id || farm.id}>
+                    <option
+                      key={farm._id || farm.id}
+                      value={farm._id || farm.id}
+                    >
                       {farm.name}
                     </option>
                   ))}
@@ -458,6 +466,7 @@ const MyFarmPage = () => {
 
         <div className="lg:col-span-1 space-y-6">
           <FarmProgress
+            farms={farms}
             activities={activities}
             onAddActivity={handleAddActivity}
             onUpdateActivity={handleUpdateActivity}
