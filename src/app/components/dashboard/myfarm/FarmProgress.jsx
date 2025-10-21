@@ -8,7 +8,7 @@ const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
 
 const priorityMap = { low: "নিম্ন", medium: "মাধ্যমিক", high: "উচ্চ" };
 
-const FarmProgress = () => {
+const FarmProgress = ({ farms = [] }) => {
   const [activities, setActivities] = useState([]);
   const [activeTab, setActiveTab] = useState("activities");
   const [showAddActivityForm, setShowAddActivityForm] = useState(false);
@@ -64,7 +64,7 @@ const FarmProgress = () => {
       email: userEmail,
       title: newActivity.title,
       des: newActivity.description,
-      priority: newActivity.priority, 
+      priority: newActivity.priority,
       status: newActivity.status,
       date: newActivity.date,
       farmName: newActivity.farmName,
@@ -202,7 +202,10 @@ const FarmProgress = () => {
                   placeholder="বিবরণ"
                   value={newActivity.description}
                   onChange={(e) =>
-                    setNewActivity({ ...newActivity, description: e.target.value })
+                    setNewActivity({
+                      ...newActivity,
+                      description: e.target.value,
+                    })
                   }
                   className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
@@ -215,15 +218,25 @@ const FarmProgress = () => {
                   required
                   className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
-                <input
-                  type="text"
-                  placeholder="Farm Name"
+                <select
                   value={newActivity.farmName}
                   onChange={(e) =>
                     setNewActivity({ ...newActivity, farmName: e.target.value })
                   }
+                  required
                   className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
+                >
+                  <option value="">ফার্ম নির্বাচন করুন</option>
+                  {farms.length > 0 ? (
+                    farms.map((farm) => (
+                      <option key={farm._id || farm.id} value={farm.name}>
+                        {farm.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>কোন ফার্ম পাওয়া যায়নি</option>
+                  )}
+                </select>
                 <select
                   value={newActivity.priority}
                   onChange={(e) =>
