@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Adjust this path to your NextAuth options file
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"; 
 import { redirect } from "next/navigation";
 import AddBlogForm from "@/app/components/dashboard/blog/userBlog/AddBlogForm";
 
@@ -12,7 +12,7 @@ export default async function Blog() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-amber-50 border ">
+    <div className="bg-gradient-to-br from-green-50 to-amber-50  ">
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 lg:px-8 py-4">
           <h1 className="text-3xl font-bold text-[#127917] font-hind">
