@@ -106,7 +106,8 @@ const AddBlogForm = ({ user }) => {
   };
 
   return (
-    <div className="container mx-auto px-4 lg:px-8 py-12">
+    // Fixed: Changed py-6 to py-4 and added pb-8 to control bottom spacing better
+    <div className="container mx-auto px-4 lg:px-8 py-4 pb-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-8">
           <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
@@ -244,7 +245,7 @@ const AddBlogForm = ({ user }) => {
 
               <div>
                 <FormInput
-                  label="পড়ার সময় (Read Time)"
+                  label="পড়ার সময় (Read Time)"
                   id="readTime"
                   name="readTime"
                   value={postData.readTime}

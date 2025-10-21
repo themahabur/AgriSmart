@@ -24,7 +24,8 @@ import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
-import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/TodayFarmTaskCard";
+import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
+import Image from "next/image";
 
 const Dashboard = () => {
   const { data: session } = useSession();
@@ -32,6 +33,25 @@ const Dashboard = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [farmTasks, setFarmTasks] = useState([]);
 
+  // Quick Stats Data
+  const quickStats = [
+    {
+      title: "মোট ফসল",
+      value: "৫টি",
+      icon: FaSeedling,
+      color: "bg-green-500",
+      change: "+২",
+      changeType: "positive",
+    },
+    {
+      title: "আজকের কাজ",
+      value: farmTasks?.length?.toString(),
+      icon: IoMdCheckmark,
+      color: "bg-blue-500",
+      change: "১ সম্পূর্ণ",
+      changeType: "neutral",
+    },
+  ];
   const activities = [
     {
       title: "মুশুর ডাল",
@@ -131,27 +151,6 @@ const Dashboard = () => {
     },
   ];
 
-  // Quick Stats Data
-  const quickStats = [
-    {
-      title: "মোট ফসল",
-      value: "৫টি",
-      icon: FaSeedling,
-      color: "bg-green-500",
-      change: "+২",
-      changeType: "positive",
-    },
-    {
-      title: "আজকের কাজ",
-      value: farmTasks?.length.toString(),
-      icon: IoMdCheckmark,
-      color: "bg-blue-500",
-      change: "১ সম্পূর্ণ",
-      changeType: "neutral",
-    },
-    //
-  ];
-
   // Fetch basic weather data
   // useEffect(() => {
   //   const fetchWeatherData = async () => {
@@ -238,12 +237,18 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-green-100 p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 flex items-end">
                   স্বাগতম,{" "}
                   <span className="text-green-600">
                     {session?.user?.name || "কৃষক ভাই"}
                   </span>
-                  ! 🌾
+                  <Image
+                    src={"/happy-farmer.png"}
+                    alt="Happy Farmer"
+                    width={50}
+                    height={50}
+                    className="mb-1 ml-2 animate-welcome-pulse"
+                  />
                 </h1>
                 <p className="text-gray-600">
                   আজ {formatDate(currentTime)} • {formatTime(currentTime)}
@@ -356,7 +361,7 @@ const Dashboard = () => {
                 </Link>
               </div>
               <div className="space-y-4">
-                {farmTasks.map((task) => (
+                {farmTasks?.map((task) => (
                   <TodayFarmTaskCard key={task._id} task={task} />
                 ))}
               </div>
