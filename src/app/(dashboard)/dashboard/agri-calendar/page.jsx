@@ -3,6 +3,7 @@ import FarmCard from "@/app/components/dashboard/calender/FarmCard";
 import WeatherAlert from "@/app/components/dashboard/calender/WeatherAlert";
 import { fetchWeather } from "@/app/lib/fetchWeather";
 import { getLocation } from "@/app/lib/getlocation";
+import { useSession } from "next-auth/react";
 
 import { useEffect, useState } from "react";
 import { 
@@ -32,7 +33,8 @@ const KrishiCalendar = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-
+const { data: session, status } = useSession();
+  const userEmail = session?.user?.email || "";
   // Weather data
   useEffect(() => {
     async function loadWeather() {
@@ -60,7 +62,7 @@ const KrishiCalendar = () => {
     const fetchFarms = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://agri-smart-server.vercel.app/api/farms/abcd.sakib50@gmail.com');
+        const response = await fetch(`https://agri-smart-server.vercel.app/api/farms/${userEmail}`);
         if (!response.ok) {
           throw new Error('Failed to fetch farm data');
         }
