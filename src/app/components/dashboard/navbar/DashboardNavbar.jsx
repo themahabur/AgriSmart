@@ -4,6 +4,9 @@ import Image from "next/image";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { FaBell } from "react-icons/fa";
 import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
+import { PiUserCircleDuotone } from "react-icons/pi";
+import { HiLogout } from "react-icons/hi";
 
 const DashboardNavbar = ({ onMenuClick, pageTitle = "ড্যাশবোর্ড" }) => {
   const { data: session } = useSession();
@@ -83,27 +86,29 @@ const DashboardNavbar = ({ onMenuClick, pageTitle = "ড্যাশবোর্
             </button>
 
             {showDropdown && (
-              <div
-                className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-2 z-30"
-                role="menu"
-              >
-                <button
-                  onClick={() => setShowDropdown(false)}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  প্রোফাইল দেখুন
-                </button>
-                <button
-                  onClick={() => {
-                    setShowDropdown(false);
-                    signOut({ callbackUrl: "/" });
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                >
-                  লগ আউট
-                </button>
-              </div>
-            )}
+  <div
+    className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-2 z-30"
+    role="menu"
+  >
+    <button
+      onClick={() => setShowDropdown(false)}
+      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+    >
+      <PiUserCircleDuotone className="w-4 h-4 mr-2" />
+      <Link href="/dashboard/profile">প্রোফাইল দেখুন</Link>
+    </button>
+    <button
+      onClick={() => {
+        setShowDropdown(false);
+        signOut({ callbackUrl: "/" });
+      }}
+      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
+    >
+      <HiLogout className="w-4 h-4 mr-2" />
+      লগ আউট
+    </button>
+  </div>
+)}
           </div>
         </div>
       </div>

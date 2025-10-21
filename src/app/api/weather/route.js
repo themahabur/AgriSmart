@@ -13,20 +13,45 @@ export async function GET(req) {
       );
     }
 
-    const apiKey = process.env.apiKey;
-    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=bn`;
+    const GOOGLE_KEY = process.env.GOOGLE_API_KEY;
 
-    const res = await fetch(apiUrl);
-    const data = await res.json();
+    // 🟢 1️⃣ Get weather data
+    const weatherUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${GOOGLE_KEY}&location.latitude=${lat}&location.longitude=${lon}`;
+    const weatherRes = await fetch(weatherUrl);
+    const weatherData = await weatherRes.json();
 
-    if (!res.ok) {
+    if (!weatherRes.ok) {
       return NextResponse.json(
-        { error: data.message || "Failed to fetch weather" },
-        { status: res.status }
+        { error: weatherData.message || "Failed to fetch weather" },
+        { status: weatherRes.status }
       );
     }
 
-    return NextResponse.json(data);
+    // 🟢 2️⃣ Get place name from Geocoding API
+    const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+    const geoRes = await fetch(geoUrl);
+    const geoData = await geoRes.json();
+
+    
+
+    const place = geoData.address?.county || "Unknown Location";
+
+    // 🟢 3️⃣ Combine both responses
+    const condition = weatherData.temperature || {};
+    const response = {
+      geoData,
+      place,
+      temperature: condition.degrees,
+      unit: condition.unit || "C",
+      humidity: weatherData.relativeHumidity,
+      windSpeed: weatherData.wind?.speed?.value,
+      pressure: weatherData.airPressure?.meanSeaLevelMillibars,
+      feelsLikeTemperature: weatherData.feelsLikeTemperature?.degrees,
+      description: weatherData.weatherCondition.description.text || "N/A",
+      time: condition.observationTime?.value || new Date().toISOString(),
+    };
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error("Weather API Error:", error);
     return NextResponse.json(

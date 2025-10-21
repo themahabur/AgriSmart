@@ -5,6 +5,7 @@ import Sidebar from "../components/dashboard/sidebar/Sidebar";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import DashboardNavbar from "../components/dashboard/navbar/DashboardNavbar";
+import Loading from "../components/loading/Loading";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -19,11 +20,13 @@ export default function DashboardLayout({ children }) {
   // }, [status, router, pathname]);
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return  <Loading/>;
   }
 
   return (
     <div className="flex h-screen bg-gray-50 font-hind">
+
+
       {/* Sidebar Component */}
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setSidebarOpen} />
 

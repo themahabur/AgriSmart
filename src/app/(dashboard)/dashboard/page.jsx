@@ -26,6 +26,7 @@ import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
 import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
 import Image from "next/image";
+import { getLocation } from "@/app/lib/getlocation";
 
 const Dashboard = () => {
   const { data: session } = useSession();
@@ -151,29 +152,18 @@ const Dashboard = () => {
     },
   ];
 
-  // Fetch basic weather data
-  // useEffect(() => {
-  //   const fetchWeatherData = async () => {
-  //     try {
-  //       const lat = "23.8103";
-  //       const lon = "90.4125";
-  //       const apiKey = "eed75703a552ed1ad8db7b42f4f3e024";
-  //       const response = await fetch(
-  //         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=bn`
-  //       );
-  //       const data = await response.json();
-  //       setWeatherData(data);
-  //     } catch (error) {
-  //       console.error("Weather data fetch error:", error);
-  //     }
-  //   };
-
-  //   fetchWeatherData();
-  // }, []);
   useEffect(() => {
     async function loadWeather() {
       try {
-        const data = await fetchWeather("23.8103", "90.4125");
+        const location = await getLocation();
+
+        if (!location) {
+          throw new Error("Unable to get location");
+        }
+
+        const { latitude, longitude } = location;
+
+        const data = await fetchWeather(latitude, longitude);
         setWeatherData(data);
         // console.log("Weather data:", data);
       } catch (err) {
