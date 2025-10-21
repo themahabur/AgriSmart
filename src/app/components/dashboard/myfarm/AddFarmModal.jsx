@@ -21,7 +21,7 @@ const AddFarmModal = ({
   onClose,
   onAddFarm,
   onUpdateFarm,
-  editingFarm = null
+  editingFarm = null,
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showAllData, setShowAllData] = useState(false);
@@ -682,9 +682,3 @@ const AddFarmModal = ({
 };
 
 export default AddFarmModal;
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 27fb79c31bfa304573f80c5a30e381b171a9aabd
