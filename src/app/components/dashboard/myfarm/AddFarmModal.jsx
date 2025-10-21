@@ -120,21 +120,13 @@ const Step2Form = React.memo(({ formData, onFieldChange }) => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             ফসলের প্রকার *
           </label>
-          <select
+           <input
+            type="text"
             value={formData.cropType || ""}
             onChange={(e) => onFieldChange("cropType", e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            required
-          >
-            <option value="">ফসল নির্বাচন করুন</option>
-            <option value="ধান">ধান</option>
-            <option value="গম">গম</option>
-            <option value="ভুট্টা">ভুট্টা</option>
-            <option value="সবজি">সবজি</option>
-            <option value="ফল">ফল</option>
-            <option value="ডাল">ডাল</option>
-            <option value="অন্যান্য">অন্যান্য</option>
-          </select>
+            placeholder="যেমন: ধান, গম, পটল, পিয়াজ..."
+          />
         </div>
 
         <div>
