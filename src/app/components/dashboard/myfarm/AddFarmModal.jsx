@@ -682,9 +682,6 @@ const AddFarmModal = ({
 };
 
 export default AddFarmModal;
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> 27fb79c31bfa304573f80c5a30e381b171a9aabd

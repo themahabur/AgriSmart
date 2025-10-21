@@ -91,7 +91,7 @@ const FarmCard = ({ farm, cropData, getCropIcon }) => {
         অনুগ্রহ করে সংক্ষিপ্ত, ব্যবহারযোগ্য এবং বাংলায় পরামর্শ দিন। আজকের তারিখের উপর ভিত্তি করে সঠিক পরামর্শ দিন।
       `;
 
-      const response = await fetch('/api/ai-advice', {
+      const response = await fetch('/api/ask-ai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
