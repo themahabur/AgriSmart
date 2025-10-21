@@ -92,7 +92,7 @@ const WeatherPage = () => {
       }
 
       const { latitude, longitude } = location;
-
+console.log("📍 User Location:", latitude, longitude);
       // 🌦️ Fetch weather using lat/lon
       const data = await fetchWeather(latitude, longitude);
 
