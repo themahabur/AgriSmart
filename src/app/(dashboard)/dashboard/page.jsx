@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import {
   FaTractor,
@@ -25,34 +25,15 @@ import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
 import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
-import Image from "next/image";
 import { getLocation } from "@/app/lib/getlocation";
+import WelcomeHeader from "@/app/components/dashboard/userDashboard/WelcomeHeader";
+import QuickStat from "@/app/components/dashboard/userDashboard/QuickStat";
 
 const Dashboard = () => {
   const { data: session } = useSession();
   const [weatherData, setWeatherData] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [farmTasks, setFarmTasks] = useState([]);
 
-  // Quick Stats Data
-  const quickStats = [
-    {
-      title: "মোট ফসল",
-      value: "৫টি",
-      icon: FaSeedling,
-      color: "bg-green-500",
-      change: "+২",
-      changeType: "positive",
-    },
-    {
-      title: "আজকের কাজ",
-      value: farmTasks?.length?.toString(),
-      icon: IoMdCheckmark,
-      color: "bg-blue-500",
-      change: "১ সম্পূর্ণ",
-      changeType: "neutral",
-    },
-  ];
   const activities = [
     {
       title: "মুশুর ডাল",
@@ -165,7 +146,7 @@ const Dashboard = () => {
 
         const data = await fetchWeather(latitude, longitude);
         setWeatherData(data);
-        console.log("Weather data:", data);
+        // console.log("Weather data:", data);
       } catch (err) {
         console.error("Weather fetch error:", err);
       }
@@ -189,12 +170,6 @@ const Dashboard = () => {
     farmTask();
   }, []);
 
-  // Update current time
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
-    return () => clearInterval(timer);
-  }, []);
-
   const formatTime = (date) => {
     return date.toLocaleTimeString("bn-BD", {
       hour: "2-digit",
@@ -211,87 +186,30 @@ const Dashboard = () => {
     });
   };
 
+  if (!session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">লোড হচ্ছে...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 py-6 px-4 font-hind">
       <div className="container mx-auto max-w-7xl">
         {/* Welcome Header */}
         <div className="mb-8">
-          <div className="bg-white rounded-xl shadow-sm border border-green-100 p-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 flex items-end">
-                  স্বাগতম,{" "}
-                  <span className="text-green-600">
-                    {session?.user?.name || "কৃষক ভাই"}
-                  </span>
-                  <Image
-                    src={"/happy-farmer.png"}
-                    alt="Happy Farmer"
-                    width={50}
-                    height={50}
-                    className="mb-1 ml-2 animate-welcome-pulse"
-                  />
-                </h1>
-                <p className="text-gray-600">
-                  আজ {formatDate(currentTime)} • {formatTime(currentTime)}
-                </p>
-              </div>
-              <div className="mt-4 md:mt-0 flex items-center space-x-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">
-                    {weatherData ? Math.round(weatherData.today?.temp) : "--"}°C
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    {weatherData?.city}
-                  </div>
-                </div>
-                <div className="text-4xl text-gray-500">
-                  {weatherData?.weather?.[0]?.main === "Clear" ? (
-                    <IoIosSunny />
-                  ) : (
-                    <IoIosRainy />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+          <WelcomeHeader
+            formatDate={formatDate}
+            weatherData={weatherData}
+            formatTime={formatTime}
+          />
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {quickStats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-300"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div
-                  className={`${stat.color} p-3 rounded-lg text-white text-xl`}
-                >
-                  <stat.icon />
-                </div>
-                <div
-                  className={`text-sm px-2 py-1 rounded-full ${
-                    stat.changeType === "positive"
-                      ? "bg-green-100 text-green-700"
-                      : stat.changeType === "negative"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {stat.changeType === "positive" && (
-                    <FaArrowUp className="inline mr-1" />
-                  )}
-                  {stat.changeType === "negative" && (
-                    <FaArrowDown className="inline mr-1" />
-                  )}
-                  {stat.change}
-                </div>
-              </div>
-              <h3 className="text-sm text-gray-600 mb-1">{stat.title}</h3>
-              <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
-            </div>
-          ))}
+          <QuickStat />
+
           {activities.map((act, index) => (
             <div
               key={index}

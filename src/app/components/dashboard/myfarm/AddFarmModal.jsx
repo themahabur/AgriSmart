@@ -1,14 +1,9 @@
 "use client";
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import {
-  FaArrowRight,
-  FaArrowLeft,
-  FaTimes
-} from "react-icons/fa";
+import { FaArrowRight, FaArrowLeft, FaTimes } from "react-icons/fa";
 
 const Step1Form = React.memo(({ formData, onFieldChange }) => {
-
   return (
     <div className="space-y-4 p-4">
       <div className="text-center mb-6">
@@ -83,7 +78,9 @@ const Step2Form = React.memo(({ formData, onFieldChange }) => {
     <div className="space-y-4 p-4">
       <div className="text-center mb-6">
         <h3 className="text-xl font-semibold text-gray-800">ফসলের বিবরণ</h3>
-        <p className="text-gray-600 text-sm mt-1">ফসল সম্পর্কিত তথ্য প্রদান করুন</p>
+        <p className="text-gray-600 text-sm mt-1">
+          ফসল সম্পর্কিত তথ্য প্রদান করুন
+        </p>
       </div>
 
       <div className="space-y-4">
@@ -134,7 +131,9 @@ const Step3Form = React.memo(({ formData, onFieldChange }) => {
   return (
     <div className="space-y-4 p-4">
       <div className="text-center mb-6">
-        <h3 className="text-xl font-semibold text-gray-800">মাটি ও সেচ ব্যবস্থা</h3>
+        <h3 className="text-xl font-semibold text-gray-800">
+          মাটি ও সেচ ব্যবস্থা
+        </h3>
         <p className="text-gray-600 text-sm mt-1">মাটির গুণাগুণ ও সেচের তথ্য</p>
       </div>
 
@@ -208,7 +207,9 @@ const Step3Form = React.memo(({ formData, onFieldChange }) => {
           <input
             type="checkbox"
             checked={formData.organicPractices || false}
-            onChange={(e) => onFieldChange("organicPractices", e.target.checked)}
+            onChange={(e) =>
+              onFieldChange("organicPractices", e.target.checked)
+            }
             className="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
           />
           <label className="ml-2 block text-sm text-gray-700">
@@ -225,7 +226,9 @@ const Step4Form = React.memo(({ formData, onFieldChange }) => {
     <div className="space-y-4 p-4">
       <div className="text-center mb-6">
         <h3 className="text-xl font-semibold text-gray-800">প্লট তথ্য</h3>
-        <p className="text-gray-600 text-sm mt-1">প্লট সম্পর্কিত তথ্য যোগ করুন</p>
+        <p className="text-gray-600 text-sm mt-1">
+          প্লট সম্পর্কিত তথ্য যোগ করুন
+        </p>
       </div>
 
       <div className="space-y-4">
@@ -292,7 +295,9 @@ const Step5Form = React.memo(({ formData, onFieldChange }) => {
     <div className="space-y-4 p-4">
       <div className="text-center mb-6">
         <h3 className="text-xl font-semibold text-gray-800">আর্থিক তথ্য</h3>
-        <p className="text-gray-600 text-sm mt-1">খরচ ও বিক্রয় সম্পর্কিত তথ্য</p>
+        <p className="text-gray-600 text-sm mt-1">
+          খরচ ও বিক্রয় সম্পর্কিত তথ্য
+        </p>
       </div>
 
       <div className="space-y-4">
@@ -365,47 +370,105 @@ const Step6Review = React.memo(({ formData, editingFarm }) => {
         <div className="bg-gray-50 rounded-lg p-4">
           <h4 className="font-medium text-gray-800 mb-2">সাধারণ তথ্য</h4>
           <div className="space-y-1 text-sm">
-            <p><span className="font-medium">নাম:</span> {formData.name}</p>
-            <p><span className="font-medium">অবস্থান:</span> {formData.location}</p>
-            <p><span className="font-medium">আকার:</span> {formData.size} {formData.sizeUnit}</p>
+            <p>
+              <span className="font-medium">নাম:</span> {formData.name}
+            </p>
+            <p>
+              <span className="font-medium">অবস্থান:</span> {formData.location}
+            </p>
+            <p>
+              <span className="font-medium">আকার:</span> {formData.size}{" "}
+              {formData.sizeUnit}
+            </p>
           </div>
         </div>
 
         <div className="bg-gray-50 rounded-lg p-4">
           <h4 className="font-medium text-gray-800 mb-2">ফসল বিবরণ</h4>
           <div className="space-y-1 text-sm">
-            <p><span className="font-medium">প্রকার:</span> {formData.cropType}</p>
-            <p><span className="font-medium">জাত:</span> {formData.cropVariety || "নির্ধারিত নয়"}</p>
-            <p><span className="font-medium">রোপণ তারিখ:</span> {formData.plantingDate || "নির্ধারিত নয়"}</p>
+            <p>
+              <span className="font-medium">প্রকার:</span> {formData.cropType}
+            </p>
+            <p>
+              <span className="font-medium">জাত:</span>{" "}
+              {formData.cropVariety || "নির্ধারিত নয়"}
+            </p>
+            <p>
+              <span className="font-medium">রোপণ তারিখ:</span>{" "}
+              {formData.plantingDate || "নির্ধারিত নয়"}
+            </p>
           </div>
         </div>
 
         <div className="bg-gray-50 rounded-lg p-4">
           <h4 className="font-medium text-gray-800 mb-2">মাটি ও সেচ</h4>
           <div className="space-y-1 text-sm">
-            <p><span className="font-medium">মাটির প্রকার:</span> {formData.soilType || "নির্ধারিত নয়"}</p>
-            <p><span className="font-medium">pH মান:</span> {formData.soilPH || "নির্ধারিত নয়"}</p>
-            <p><span className="font-medium">সেচের উৎস:</span> {formData.irrigationSource || "নির্ধারিত নয়"}</p>
-            <p><span className="font-medium">নলকূপ গভীরতা:</span> {formData.tubeWellDepth ? `${formData.tubeWellDepth} ফুট` : "প্রযোজ্য নয়"}</p>
-            <p><span className="font-medium">অর্গানিক চাষ:</span> {formData.organicPractices ? "হ্যাঁ" : "না"}</p>
+            <p>
+              <span className="font-medium">মাটির প্রকার:</span>{" "}
+              {formData.soilType || "নির্ধারিত নয়"}
+            </p>
+            <p>
+              <span className="font-medium">pH মান:</span>{" "}
+              {formData.soilPH || "নির্ধারিত নয়"}
+            </p>
+            <p>
+              <span className="font-medium">সেচের উৎস:</span>{" "}
+              {formData.irrigationSource || "নির্ধারিত নয়"}
+            </p>
+            <p>
+              <span className="font-medium">নলকূপ গভীরতা:</span>{" "}
+              {formData.tubeWellDepth
+                ? `${formData.tubeWellDepth} ফুট`
+                : "প্রযোজ্য নয়"}
+            </p>
+            <p>
+              <span className="font-medium">অর্গানিক চাষ:</span>{" "}
+              {formData.organicPractices ? "হ্যাঁ" : "না"}
+            </p>
           </div>
         </div>
 
         <div className="bg-gray-50 rounded-lg p-4">
           <h4 className="font-medium text-gray-800 mb-2">প্লট তথ্য</h4>
           <div className="space-y-1 text-sm">
-            <p><span className="font-medium">প্লটের নাম:</span> {formData.plotName || "নির্ধারিত নয়"}</p>
-            <p><span className="font-medium">প্লটের আকার:</span> {formData.plotSize ? `${formData.plotSize} ${formData.plotSizeUnit}` : "নির্ধারিত নয়"}</p>
-            <p><span className="font-medium">অবস্থা:</span> {formData.cropStatus || "নির্ধারিত নয়"}</p>
+            <p>
+              <span className="font-medium">প্লটের নাম:</span>{" "}
+              {formData.plotName || "নির্ধারিত নয়"}
+            </p>
+            <p>
+              <span className="font-medium">প্লটের আকার:</span>{" "}
+              {formData.plotSize
+                ? `${formData.plotSize} ${formData.plotSizeUnit}`
+                : "নির্ধারিত নয়"}
+            </p>
+            <p>
+              <span className="font-medium">অবস্থা:</span>{" "}
+              {formData.cropStatus || "নির্ধারিত নয়"}
+            </p>
           </div>
         </div>
 
         <div className="bg-gray-50 rounded-lg p-4">
           <h4 className="font-medium text-gray-800 mb-2">আর্থিক তথ্য</h4>
           <div className="space-y-1 text-sm">
-            <p><span className="font-medium">মোট খরচ:</span> {formData.totalCost ? `${formData.totalCost} টাকা` : "নির্ধারিত নয়"}</p>
-            <p><span className="font-medium">বিক্রয়:</span> {formData.salesAmount ? `${formData.salesAmount} টাকা` : "নির্ধারিত নয়"}</p>
-            <p><span className="font-medium">উৎপাদন:</span> {formData.yield ? `${formData.yield} ${formData.yieldUnit}` : "নির্ধারিত নয়"}</p>
+            <p>
+              <span className="font-medium">মোট খরচ:</span>{" "}
+              {formData.totalCost
+                ? `${formData.totalCost} টাকা`
+                : "নির্ধারিত নয়"}
+            </p>
+            <p>
+              <span className="font-medium">বিক্রয়:</span>{" "}
+              {formData.salesAmount
+                ? `${formData.salesAmount} টাকা`
+                : "নির্ধারিত নয়"}
+            </p>
+            <p>
+              <span className="font-medium">উৎপাদন:</span>{" "}
+              {formData.yield
+                ? `${formData.yield} ${formData.yieldUnit}`
+                : "নির্ধারিত নয়"}
+            </p>
           </div>
         </div>
       </div>
@@ -418,7 +481,7 @@ const AddFarmModal = ({
   onClose,
   onAddFarm,
   onUpdateFarm,
-  editingFarm = null
+  editingFarm = null,
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -441,7 +504,7 @@ const AddFarmModal = ({
     totalCost: "",
     salesAmount: "",
     yield: "",
-    yieldUnit: "মন"
+    yieldUnit: "মন",
   });
 
   const { data: session } = useSession();
@@ -470,7 +533,7 @@ const AddFarmModal = ({
         totalCost: "",
         salesAmount: "",
         yield: "",
-        yieldUnit: "মন"
+        yieldUnit: "মন",
       });
     } else {
       setFormData({
@@ -493,7 +556,7 @@ const AddFarmModal = ({
         totalCost: "",
         salesAmount: "",
         yield: "",
-        yieldUnit: "মন"
+        yieldUnit: "মন",
       });
     }
 
@@ -501,57 +564,79 @@ const AddFarmModal = ({
   }, [isOpen, editingFarm]);
 
   const handleFieldChange = useCallback((field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   }, []);
 
-  const steps = useMemo(() => [
-    { number: 1, title: "সাধারণ তথ্য" },
-    { number: 2, title: "ফসল বিবরণ" },
-    { number: 3, title: "মাটি ও সেচ" },
-    { number: 4, title: "প্লট তথ্য" },
-    { number: 5, title: "আর্থিক তথ্য" },
-    { number: 6, title: "পর্যালোচনা" },
-  ], []);
+  const steps = useMemo(
+    () => [
+      { number: 1, title: "সাধারণ তথ্য" },
+      { number: 2, title: "ফসল বিবরণ" },
+      { number: 3, title: "মাটি ও সেচ" },
+      { number: 4, title: "প্লট তথ্য" },
+      { number: 5, title: "আর্থিক তথ্য" },
+      { number: 6, title: "পর্যালোচনা" },
+    ],
+    []
+  );
 
-  const ProgressBar = useMemo(() => () => (
-    <div className="mb-6 px-4">
-      <div className="flex justify-between items-center">
-        {steps.map((step, index) => (
-          <div key={step.number} className="flex flex-col items-center flex-1">
-            <div className="flex items-center w-full">
-              {index > 0 && (
-                <div
-                  className={`flex-1 h-1 ${currentStep >= step.number ? "bg-gray-600" : "bg-gray-300"} transition-all duration-300`}
-                />
-              )}
+  const ProgressBar = useMemo(
+    () => () =>
+      (
+        <div className="mb-6 px-4">
+          <div className="flex justify-between items-center">
+            {steps.map((step, index) => (
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center border ${
-                  currentStep >= step.number
-                    ? "bg-gray-600 border-gray-600 text-white"
-                    : "bg-white border-gray-300 text-gray-500"
-                } transition-all duration-300 text-sm`}
+                key={step.number}
+                className="flex flex-col items-center flex-1"
               >
-                {step.number}
+                <div className="flex items-center w-full">
+                  {index > 0 && (
+                    <div
+                      className={`flex-1 h-1 ${
+                        currentStep >= step.number
+                          ? "bg-gray-600"
+                          : "bg-gray-300"
+                      } transition-all duration-300`}
+                    />
+                  )}
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center border ${
+                      currentStep >= step.number
+                        ? "bg-gray-600 border-gray-600 text-white"
+                        : "bg-white border-gray-300 text-gray-500"
+                    } transition-all duration-300 text-sm`}
+                  >
+                    {step.number}
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div
+                      className={`flex-1 h-1 ${
+                        currentStep > step.number
+                          ? "bg-gray-600"
+                          : "bg-gray-300"
+                      } transition-all duration-300`}
+                    />
+                  )}
+                </div>
+                <span
+                  className={`text-xs mt-2 text-center ${
+                    currentStep >= step.number
+                      ? "text-gray-800"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {step.title}
+                </span>
               </div>
-              {index < steps.length - 1 && (
-                <div
-                  className={`flex-1 h-1 ${currentStep > step.number ? "bg-gray-600" : "bg-gray-300"} transition-all duration-300`}
-                />
-              )}
-            </div>
-            <span
-              className={`text-xs mt-2 text-center ${currentStep >= step.number ? "text-gray-800" : "text-gray-500"}`}
-            >
-              {step.title}
-            </span>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
-  ), [currentStep, steps]);
+        </div>
+      ),
+    [currentStep, steps]
+  );
 
   const handleNext = () => {
     if (currentStep < 6) {
@@ -566,10 +651,8 @@ const AddFarmModal = ({
   };
 
   const handleSubmit = async (e) => {
-     
     e.preventDefault();
     if (currentStep === 6) {
-
       const userEmail = session?.user?.email;
 
       try {
@@ -582,20 +665,22 @@ const AddFarmModal = ({
           cropDetails: {
             type: formData.cropType.trim(),
             variety: formData.cropVariety.trim(),
-            plantingDate: formData.plantingDate || null
+            plantingDate: formData.plantingDate || null,
           },
           soilDetails: {
             type: formData.soilType || null,
-            pH: formData.soilPH ? parseFloat(formData.soilPH) : null
+            pH: formData.soilPH ? parseFloat(formData.soilPH) : null,
           },
           irrigation: {
             source: formData.irrigationSource || null,
-            tubeWellDepth: formData.tubeWellDepth ? parseFloat(formData.tubeWellDepth) : null
+            tubeWellDepth: formData.tubeWellDepth
+              ? parseFloat(formData.tubeWellDepth)
+              : null,
           },
           organicPractices: formData.organicPractices || false,
           coordinates: {
             latitude: 24.4365,
-            longitude: 88.9741
+            longitude: 88.9741,
           },
           userEmail: userEmail || "",
         };
@@ -649,7 +734,7 @@ const AddFarmModal = ({
       totalCost: "",
       salesAmount: "",
       yield: "",
-      yieldUnit: "মন"
+      yieldUnit: "মন",
     });
     setCurrentStep(1);
     onClose();
@@ -680,12 +765,39 @@ const AddFarmModal = ({
 
         <form onSubmit={handleSubmit}>
           <div className="p-4">
-            {currentStep === 1 && <Step1Form formData={formData} onFieldChange={handleFieldChange} />}
-            {currentStep === 2 && <Step2Form formData={formData} onFieldChange={handleFieldChange} />}
-            {currentStep === 3 && <Step3Form formData={formData} onFieldChange={handleFieldChange} />}
-            {currentStep === 4 && <Step4Form formData={formData} onFieldChange={handleFieldChange} />}
-            {currentStep === 5 && <Step5Form formData={formData} onFieldChange={handleFieldChange} />}
-            {currentStep === 6 && <Step6Review formData={formData} editingFarm={editingFarm} />}
+            {currentStep === 1 && (
+              <Step1Form
+                formData={formData}
+                onFieldChange={handleFieldChange}
+              />
+            )}
+            {currentStep === 2 && (
+              <Step2Form
+                formData={formData}
+                onFieldChange={handleFieldChange}
+              />
+            )}
+            {currentStep === 3 && (
+              <Step3Form
+                formData={formData}
+                onFieldChange={handleFieldChange}
+              />
+            )}
+            {currentStep === 4 && (
+              <Step4Form
+                formData={formData}
+                onFieldChange={handleFieldChange}
+              />
+            )}
+            {currentStep === 5 && (
+              <Step5Form
+                formData={formData}
+                onFieldChange={handleFieldChange}
+              />
+            )}
+            {currentStep === 6 && (
+              <Step6Review formData={formData} editingFarm={editingFarm} />
+            )}
           </div>
 
           <div className="flex justify-between p-4 border-t border-gray-200">
@@ -708,9 +820,7 @@ const AddFarmModal = ({
               }`}
             >
               {currentStep === 6 ? (
-                <>
-                  {editingFarm ? "আপডেট করুন" : "ফার্ম যুক্ত করুন"}
-                </>
+                <>{editingFarm ? "আপডেট করুন" : "ফার্ম যুক্ত করুন"}</>
               ) : (
                 <>
                   পরবর্তী
