@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import {
   FaTractor,
@@ -27,32 +27,13 @@ import { fetchWeather } from "@/app/lib/fetchWeather";
 import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
 import { getLocation } from "@/app/lib/getlocation";
 import WelcomeHeader from "@/app/components/dashboard/userDashboard/WelcomeHeader";
-import QuickStatsCard from "@/app/components/dashboard/userDashboard/QuickStatsCard";
+import QuickStat from "@/app/components/dashboard/userDashboard/QuickStat";
 
 const Dashboard = () => {
   const { data: session } = useSession();
   const [weatherData, setWeatherData] = useState(null);
   const [farmTasks, setFarmTasks] = useState([]);
 
-  // Quick Stats Data
-  const quickStats = [
-    {
-      title: "মোট ফসল",
-      value: "৫টি",
-      icon: FaSeedling,
-      color: "bg-green-500",
-      change: "+২",
-      changeType: "positive",
-    },
-    {
-      title: "আজকের কাজ",
-      value: farmTasks?.length?.toString(),
-      icon: IoMdCheckmark,
-      color: "bg-blue-500",
-      change: "১ সম্পূর্ণ",
-      changeType: "neutral",
-    },
-  ];
   const activities = [
     {
       title: "মুশুর ডাল",
@@ -227,40 +208,8 @@ const Dashboard = () => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {quickStats.map((stat, index) => (
-            // <div
-            //   key={index}
-            //   className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-300"
-            // >
-            //   <div className="flex items-center justify-between mb-4">
-            //     <div
-            //       className={`${stat.color} p-3 rounded-lg text-white text-xl`}
-            //     >
-            //       <stat.icon />
-            //     </div>
-            //     <div
-            //       className={`text-sm px-2 py-1 rounded-full ${
-            //         stat.changeType === "positive"
-            //           ? "bg-green-100 text-green-700"
-            //           : stat.changeType === "negative"
-            //           ? "bg-red-100 text-red-700"
-            //           : "bg-gray-100 text-gray-700"
-            //       }`}
-            //     >
-            //       {stat.changeType === "positive" && (
-            //         <FaArrowUp className="inline mr-1" />
-            //       )}
-            //       {stat.changeType === "negative" && (
-            //         <FaArrowDown className="inline mr-1" />
-            //       )}
-            //       {stat.change}
-            //     </div>
-            //   </div>
-            //   <h3 className="text-sm text-gray-600 mb-1">{stat.title}</h3>
-            //   <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
-            // </div>
-            <QuickStatsCard key={index} stat={stat} />
-          ))}
+          <QuickStat />
+
           {activities.map((act, index) => (
             <div
               key={index}
