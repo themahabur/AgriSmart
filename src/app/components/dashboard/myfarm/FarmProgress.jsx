@@ -1,12 +1,25 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaTasks, FaCalendarAlt, FaPlus } from "react-icons/fa";
+import {
+  FaTasks,
+  FaCalendarAlt,
+  FaPlus,
+  FaCheck,
+  FaClock,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import AddActivityModal from "./AddActivityModal";
 
 const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
 
 const priorityMap = { low: "নিম্ন", medium: "মাধ্যমিক", high: "উচ্চ" };
+const priorityIcons = {
+  low: FaClock,
+  medium: FaTasks,
+  high: FaExclamationTriangle,
+};
 
 const FarmProgress = ({ farms = [] }) => {
   const [activities, setActivities] = useState([]);
@@ -25,7 +38,8 @@ const FarmProgress = ({ farms = [] }) => {
   const { data: session, status } = useSession();
   const userEmail = session?.user?.email || "";
 
-  // Fetch tasks
+  const [completedTasks, setCompletedTasks] = useState({});
+
   useEffect(() => {
     if (!userEmail) return;
 
@@ -55,7 +69,20 @@ const FarmProgress = ({ farms = [] }) => {
     fetchActivities();
   }, [userEmail]);
 
-  // Add new activity
+  const handleCompleteTask = (taskId) => {
+    setCompletedTasks((prev) => ({
+      ...prev,
+      [taskId]: !prev[taskId],
+    }));
+
+    const task = activities.find((activity) => activity._id === taskId);
+    if (!completedTasks[taskId]) {
+      toast.success(`"${task.title}" কাজটি সম্পন্ন হয়েছে!`);
+    } else {
+      toast.success(`"${task.title}" কাজটি আবার অসম্পন্ন তালিকায় যুক্ত হয়েছে!`);
+    }
+  };
+
   const handleAddActivity = async (e) => {
     e.preventDefault();
     if (!userEmail) return;
@@ -84,11 +111,9 @@ const FarmProgress = ({ farms = [] }) => {
       }
 
       const addedTask = await res.json();
-      // Add the task returned by backend
       setActivities((prev) => [...prev, addedTask.task]);
       toast.success("নতুন কাজ যুক্ত হয়েছে!");
 
-      // Reset form
       setShowAddActivityForm(false);
       setNewActivity({
         title: "",
@@ -106,25 +131,51 @@ const FarmProgress = ({ farms = [] }) => {
     }
   };
 
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "high":
+        return "text-red-500";
+      case "medium":
+        return "text-yellow-500";
+      case "low":
+        return "text-blue-500";
+      default:
+        return "text-gray-500";
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "completed":
+        return "text-green-500";
+      case "in-progress":
+        return "text-blue-500";
+      case "pending":
+        return "text-orange-500";
+      default:
+        return "text-gray-500";
+    }
+  };
+
   if (status === "loading") {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-4 text-gray-600 text-sm">
         লগইন তথ্য লোড হচ্ছে...
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200">
+    <div className="bg-gray-50 text-gray-800 rounded-lg max-w-4xl mx-auto">
       {/* Header */}
       <div className="border-b border-gray-200">
-        <div className="flex justify-between items-center p-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center p-4">
           <button
             onClick={() => setActiveTab("activities")}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors w-full sm:w-auto text-center flex items-center justify-center ${
               activeTab === "activities"
-                ? "bg-green-100 text-green-800"
-                : "text-gray-600 hover:text-gray-800"
+                ? "bg-green-800 text-white"
+                : "text-gray-600 hover:text-green-800 hover:bg-gray-200"
             }`}
           >
             <FaTasks className="inline mr-2" /> পরবর্তী কাজসমূহ
@@ -132,9 +183,9 @@ const FarmProgress = ({ farms = [] }) => {
           {activeTab === "activities" && (
             <button
               onClick={() => setShowAddActivityForm(true)}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium flex items-center"
+              className="mt-2 sm:mt-0 bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center w-full sm:w-auto justify-center transition-colors"
             >
-              <FaPlus className="mr-2" /> কাজ যোগ করুন
+              <FaPlus className="mr-2" /> কাজ যোগ
             </button>
           )}
         </div>
@@ -143,132 +194,141 @@ const FarmProgress = ({ farms = [] }) => {
       {/* Activities List */}
       <div className="p-4">
         {loading ? (
-          <div className="text-center py-8">লোড হচ্ছে...</div>
+          <div className="text-center py-8 text-gray-600 text-sm">
+            লোড হচ্ছে...
+          </div>
         ) : activities.length > 0 ? (
-          activities.map((activity) => (
-            <div
-              key={activity._id}
-              className="border-l-4 border-green-500 pl-4 py-3 bg-gray-50 rounded-md mb-4"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-semibold text-gray-800 mb-1">
-                    {activity.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-1">{activity.des}</p>
-                  <div className="flex items-center space-x-4 text-sm">
-                    <span className="flex items-center text-gray-600">
-                      <FaCalendarAlt className="mr-1" /> {activity.date}
-                    </span>
-                    <span className="px-2 py-1 rounded text-xs bg-yellow-100 text-yellow-800 border-yellow-200">
-                      {priorityMap[activity.priority] || "মাধ্যমিক"}
-                    </span>
-                    <span className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-800">
-                      {activity.status}
-                    </span>
+          <div className="grid gap-3">
+            {activities.map((activity) => {
+              const PriorityIcon = priorityIcons[activity.priority];
+              const isCompleted = completedTasks[activity._id];
+
+              return (
+                <div
+                  key={activity._id}
+                  className={`bg-white rounded-lg p-4 border transition-all ${
+                    isCompleted
+                      ? "border-green-500 bg-green-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`text-lg mt-1 ${
+                            isCompleted
+                              ? "text-green-500"
+                              : getPriorityColor(activity.priority)
+                          }`}
+                        >
+                          {isCompleted ? <FaCheck /> : <PriorityIcon />}
+                        </div>
+                        <div className="flex-1">
+                          <h3
+                            className={`font-semibold text-base mb-1 ${
+                              isCompleted
+                                ? "text-green-700 line-through"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {activity.title}
+                          </h3>
+                          <p
+                            className={`text-sm mb-2 ${
+                              isCompleted ? "text-green-600" : "text-gray-600"
+                            }`}
+                          >
+                            {activity.des}
+                          </p>
+
+                          <div className="flex flex-wrap items-center gap-3 text-sm">
+                            <span
+                              className={`flex items-center ${
+                                isCompleted ? "text-green-500" : "text-gray-500"
+                              }`}
+                            >
+                              <FaCalendarAlt className="mr-1.5" />
+                              {activity.date}
+                            </span>
+
+                            {!isCompleted && (
+                              <span
+                                className={`flex items-center ${getPriorityColor(
+                                  activity.priority
+                                )}`}
+                              >
+                                <PriorityIcon className="mr-1.5" />
+                                {priorityMap[activity.priority] || "মাধ্যমিক"}
+                              </span>
+                            )}
+
+                            <span
+                              className={`flex items-center ${
+                                isCompleted
+                                  ? "text-green-500"
+                                  : getStatusColor(activity.status)
+                              }`}
+                            >
+                              <FaClock className="mr-1.5" />
+                              {isCompleted ? "সম্পন্ন" : activity.status}
+                            </span>
+
+                            <span
+                              className={`px-2 py-1 rounded text-xs ${
+                                isCompleted
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-gray-100 text-gray-500"
+                              }`}
+                            >
+                              {activity.farmName}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <button
+                        onClick={() => handleCompleteTask(activity._id)}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto flex items-center justify-center ${
+                          isCompleted
+                            ? "bg-green-500 hover:bg-green-600 text-white"
+                            : "bg-gray-800 hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        <FaCheck className="mr-2" />
+                        {isCompleted ? "সম্পন্ন" : "সম্পন্ন করুন"}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))
+              );
+            })}
+          </div>
         ) : (
           <div className="text-center py-8">
-            <FaTasks className="text-4xl text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-600 mb-4">কোন নির্ধারিত কাজ নেই</p>
+            <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+              <FaTasks className="text-2xl text-gray-400" />
+            </div>
+            <p className="text-gray-500 text-sm">কোন নির্ধারিত কাজ নেই</p>
+            <p className="text-gray-400 text-xs mt-1">
+              নতুন কাজ যোগ করতে উপরের বাটন ক্লিক করুন
+            </p>
           </div>
         )}
       </div>
 
-      {/* Add Activity Modal */}
-      {showAddActivityForm && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
-            <div className="p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
-                নতুন কাজ যোগ করুন
-              </h2>
-              <form onSubmit={handleAddActivity} className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="কাজের নাম *"
-                  value={newActivity.title}
-                  onChange={(e) =>
-                    setNewActivity({ ...newActivity, title: e.target.value })
-                  }
-                  required
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                <textarea
-                  placeholder="বিবরণ"
-                  value={newActivity.description}
-                  onChange={(e) =>
-                    setNewActivity({
-                      ...newActivity,
-                      description: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                <input
-                  type="date"
-                  value={newActivity.date}
-                  onChange={(e) =>
-                    setNewActivity({ ...newActivity, date: e.target.value })
-                  }
-                  required
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                <select
-                  value={newActivity.farmName}
-                  onChange={(e) =>
-                    setNewActivity({ ...newActivity, farmName: e.target.value })
-                  }
-                  required
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  <option value="">ফার্ম নির্বাচন করুন</option>
-                  {farms.length > 0 ? (
-                    farms.map((farm) => (
-                      <option key={farm._id || farm.id} value={farm.name}>
-                        {farm.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option disabled>কোন ফার্ম পাওয়া যায়নি</option>
-                  )}
-                </select>
-                <select
-                  value={newActivity.priority}
-                  onChange={(e) =>
-                    setNewActivity({ ...newActivity, priority: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  <option value="low">নিম্ন</option>
-                  <option value="medium">মাধ্যমিক</option>
-                  <option value="high">উচ্চ</option>
-                </select>
-
-                <div className="flex justify-end space-x-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowAddActivityForm(false)}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
-                  >
-                    বাতিল
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-                  >
-                    যোগ করুন
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Activity Modal */}
+      <AddActivityModal
+        show={showAddActivityForm}
+        onClose={() => setShowAddActivityForm(false)}
+        onSubmit={handleAddActivity}
+        newActivity={newActivity}
+        setNewActivity={setNewActivity}
+        farms={farms}
+        loading={loading}
+      />
     </div>
   );
 };
