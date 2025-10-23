@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaTractor, FaPlus } from "react-icons/fa";
+import { FaTractor, FaPlus, FaChevronDown } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
@@ -103,7 +103,6 @@ const MyFarmPage = () => {
     fetchFarms();
   }, [session?.user?.email]);
 
-  // ✅ Filtered farms based on dropdown
   const displayedFarms = selectedFarmId
     ? farms.filter(
         (farm) => farm._id === selectedFarmId || farm.id === selectedFarmId
@@ -318,8 +317,8 @@ const MyFarmPage = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center">
-            <FaTractor className="text-green-600 mr-3" />
-            আমার ফার্ম পরিচালনা 🚜
+            {/* <FaTractor className="text-green-700 mr-3" /> */}
+            আমার ফার্ম পরিচালনা
           </h1>
           <p className="text-gray-600 mt-2">
             আপনার সব ফার্ম এবং কৃষি কাজের এককেন্দ্রিক পরিচালনা
@@ -330,7 +329,7 @@ const MyFarmPage = () => {
             setEditingFarm(null);
             setShowAddFormModal(true);
           }}
-          className="mt-4 md:mt-0 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors shadow-md disabled:opacity-50"
+          className="mt-4 md:mt-0 bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors shadow-md disabled:opacity-50"
           disabled={loading}
         >
           <FaPlus className="mr-2" />
@@ -349,7 +348,7 @@ const MyFarmPage = () => {
 
       {/* Submitted Data */}
       {showSubmittedData && lastSubmittedFarm && (
-        <div className="mb-6 bg-green-50 border border-green-200 rounded-xl p-6 shadow-lg">
+        <div className="mb-6 bg-green-50 border border-green-200 rounded-xl p-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h2 className="text-xl font-bold text-green-800 mb-4 flex items-center">
@@ -384,7 +383,7 @@ const MyFarmPage = () => {
 
       {/* Error */}
       {error && (
-        <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 shadow-lg">
+        <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
           <div className="flex items-center">
             <div className="text-red-600 mr-3">⚠️</div>
             <p className="text-red-800 font-medium">{error}</p>
@@ -401,18 +400,18 @@ const MyFarmPage = () => {
       {/* Farms Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <WeatherSoilCards weatherData={weatherData} soilData={soilData} />
+          {/* <WeatherSoilCards weatherData={weatherData} soilData={soilData} /> */}
           <div className="bg-white rounded-xl border border-gray-200">
             <div className="p-4 border-b border-gray-200 flex justify-between">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
                 <FaTractor className="text-green-600 mr-2" />
                 আমার ফার্মসমূহ ({displayedFarms.length}টি)
               </h2>
-              <div className="mb-4">
+              <div className="mb-4 relative inline-block">
                 <select
                   value={selectedFarmId}
                   onChange={(e) => setSelectedFarmId(e.target.value)}
-                  className="border border-gray-300 rounded-md p-2 text-gray-700"
+                  className="appearance-none border border-gray-300 rounded-md pl-3 py-2 text-gray-700 pr-8 w-full focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-300 transition-colors cursor-pointer"
                 >
                   <option value="">সকল ফার্ম দেখান</option>
                   {farms.map((farm) => (
@@ -424,6 +423,7 @@ const MyFarmPage = () => {
                     </option>
                   ))}
                 </select>
+                <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
               </div>
             </div>
             <div className="p-4">
