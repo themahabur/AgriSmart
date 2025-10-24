@@ -7,7 +7,6 @@ import React, { useState, useEffect } from 'react';
 const Profile = () => {
   const { data: session, status, update } = useSession();
   
-  // Sample user data - will be replaced with session data
   const [user, setUser] = useState({
     "_id": "",
     "name": "",
@@ -30,35 +29,154 @@ const Profile = () => {
   const [upazilas, setUpazilas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasDatabaseData, setHasDatabaseData] = useState(false);
 
-  // Load user data from session
+  // Function to find location IDs from names
+  const findLocationIds = (divisionName, districtName, upazilaName) => {
+    let divisionId = '';
+    let districtId = '';
+    let upazilaId = '';
+
+    // Find division ID
+    if (divisionName && divisions.length > 0) {
+      const division = divisions.find(div => 
+        div.ban_name === divisionName || 
+        div.name === divisionName ||
+        div.name?.toLowerCase() === divisionName?.toLowerCase()
+      );
+      divisionId = division?.id || divisionName;
+    }
+
+    // Find district ID
+    if (districtName && districts.length > 0) {
+      const district = districts.find(dist => 
+        dist.bn_name === districtName ||
+        dist.name === districtName ||
+        dist.name?.toLowerCase() === districtName?.toLowerCase()
+      );
+      districtId = district?.id || districtName;
+    }
+
+    // Find upazila ID
+    if (upazilaName && upazilas.length > 0) {
+      const upazila = upazilas.find(upz => 
+        upz.bn_name === upazilaName ||
+        upz.name === upazilaName ||
+        upz.name?.toLowerCase() === upazilaName?.toLowerCase()
+      );
+      upazilaId = upazila?.id || upazilaName;
+    }
+
+    return { divisionId, districtId, upazilaId };
+  };
+
+  // Fetch user data from API using email
+  const fetchUserData = async () => {
+    try {
+      const userEmail = session?.user?.email;
+      if (!userEmail) {
+        throw new Error('No user email found');
+      }
+
+      const response = await fetch(`https://agri-smart-server.vercel.app/api/users/me/${userEmail}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.status && result.data) {
+          setHasDatabaseData(true);
+          return result.data;
+        } else {
+          throw new Error('No user data found in database');
+        }
+      } else {
+        throw new Error('Failed to fetch user data from database');
+      }
+    } catch (error) {
+      console.error('Error fetching user data from API:', error);
+      setHasDatabaseData(false);
+      return null;
+    }
+  };
+
+  // Load user data from API or session
   useEffect(() => {
     if (status === 'loading') return;
     
-    if (session?.user) {
-      const userData = {
-        "_id": session.user.id || "",
-        "name": session.user.name || "",
-        "email": session.user.email || "",
-        "division": session.user.division || "3",
-        "district": session.user.district || "23",
-        "upazila": session.user.upazila || "75",
-        "role": session.user.role || "farmer",
-        "accountStatus": session.user.accountStatus || "pending",
-        "avatar": session.user.image || null,
-        "primaryCrops": session.user.primaryCrops || [],
-        "phone": session.user.phone || "+880 1234-567890",
-        "farmSize": session.user.farmSize || "৫ একর"
-      };
-      
-      setUser(userData);
-      setFormData(userData);
-      setLoading(false);
-    } else if (status === 'unauthenticated') {
-      setError('অনুগ্রহ করে লগইন করুন');
-      setLoading(false);
-    }
-  }, [session, status]);
+    const loadUserData = async () => {
+      try {
+        setLoading(true);
+        
+        if (session?.user) {
+          // Try to fetch from API first
+          const apiUserData = await fetchUserData();
+          
+          if (apiUserData) {
+            // Convert location names to IDs after location data is loaded
+            const { divisionId, districtId, upazilaId } = findLocationIds(
+              apiUserData.division,
+              apiUserData.district,
+              apiUserData.upazila
+            );
+
+            // Use API data from database - map the exact API response format
+            const userData = {
+              "_id": apiUserData._id || "",
+              "name": apiUserData.name || session.user.name || session.user.email || "",
+              "email": apiUserData.email || session.user.email || "",
+              "division": divisionId || apiUserData.division || "",
+              "district": districtId || apiUserData.district || "",
+              "upazila": upazilaId || apiUserData.upazila || "",
+              "role": apiUserData.role || "farmer",
+              "accountStatus": apiUserData.accountStatus || "pending",
+              "avatar": apiUserData.avatar || session.user.image || null,
+              "primaryCrops": apiUserData.primaryCrops || [],
+              "phone": apiUserData.phone || "",
+              "farmSize": apiUserData.farmSize?.unit ? apiUserData.farmSize.unit : apiUserData.farmSize || ""
+            };
+            
+            setUser(userData);
+            setFormData(userData);
+            setHasDatabaseData(true);
+          } else {
+            // Fallback to session data only (no database record)
+            const sessionUserData = {
+              "_id": session.user.id || "",
+              "name": session.user.name || session.user.email || "",
+              "email": session.user.email || "",
+              "division": "",
+              "district": "",
+              "upazila": "",
+              "role": "farmer",
+              "accountStatus": "pending",
+              "avatar": session.user.image || null,
+              "primaryCrops": [],
+              "phone": "",
+              "farmSize": ""
+            };
+            
+            setUser(sessionUserData);
+            setFormData(sessionUserData);
+            setHasDatabaseData(false);
+          }
+        } else if (status === 'unauthenticated') {
+          setError('অনুগ্রহ করে লগইন করুন');
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+        setError('ব্যবহারকারী ডেটা লোড করতে সমস্যা হয়েছে');
+        setHasDatabaseData(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, [session, status, divisions, districts, upazilas]); // Added dependencies for location data
 
   // Load location data from JSON files
   useEffect(() => {
@@ -88,6 +206,33 @@ const Profile = () => {
     loadLocationData();
   }, []);
 
+  // Update form data when location data is loaded and user has location names
+  useEffect(() => {
+    if (hasDatabaseData && user.division && divisions.length > 0) {
+      const { divisionId, districtId, upazilaId } = findLocationIds(
+        user.division,
+        user.district,
+        user.upazila
+      );
+
+      if (divisionId !== user.division || districtId !== user.district || upazilaId !== user.upazila) {
+        setFormData(prev => ({
+          ...prev,
+          division: divisionId,
+          district: districtId,
+          upazila: upazilaId
+        }));
+        
+        setUser(prev => ({
+          ...prev,
+          division: divisionId,
+          district: districtId,
+          upazila: upazilaId
+        }));
+      }
+    }
+  }, [divisions, districts, upazilas, hasDatabaseData, user.division, user.district, user.upazila]);
+
   // Filter districts based on selected division
   const getFilteredDistricts = () => {
     if (!formData.division) return [];
@@ -106,17 +251,39 @@ const Profile = () => {
 
   // Get display names for current selections
   const getDivisionName = () => {
-    const division = divisions.find(div => div.id === formData.division);
+    if (!formData.division) return 'নির্বাচন করুন';
+    
+    // Check if it's already a name or needs conversion
+    const division = divisions.find(div => 
+      div.id === formData.division || 
+      div.ban_name === formData.division ||
+      div.name === formData.division
+    );
+    
     return division ? division.ban_name : formData.division;
   };
 
   const getDistrictName = () => {
-    const district = districts.find(dist => dist.id === formData.district);
+    if (!formData.district) return 'নির্বাচন করুন';
+    
+    const district = districts.find(dist => 
+      dist.id === formData.district ||
+      dist.bn_name === formData.district ||
+      dist.name === formData.district
+    );
+    
     return district ? district.bn_name : formData.district;
   };
 
   const getUpazilaName = () => {
-    const upazila = upazilas.find(upz => upz.id === formData.upazila);
+    if (!formData.upazila) return 'নির্বাচন করুন';
+    
+    const upazila = upazilas.find(upz => 
+      upz.id === formData.upazila ||
+      upz.bn_name === formData.upazila ||
+      upz.name === formData.upazila
+    );
+    
     return upazila ? upazila.bn_name : formData.upazila;
   };
 
@@ -140,44 +307,88 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      // Here you would typically make an API call to update the user
-      const response = await fetch('/api/user/profile', {
+      const userEmail = session?.user?.email;
+      if (!userEmail) {
+        throw new Error('No user email available');
+      }
+
+      if (!hasDatabaseData) {
+        throw new Error('ডাটাবেসে ব্যবহারকারীর ডেটা নেই। আপডেট করার জন্য প্রথমে ডাটাবেসে রেকর্ড তৈরি করুন।');
+      }
+
+      // Convert location IDs back to names for API
+      const divisionName = getDivisionName();
+      const districtName = getDistrictName();
+      const upazilaName = getUpazilaName();
+
+      // Prepare update data - don't include email and role (role cannot be changed)
+      const updateData = {
+        name: formData.name,
+        phone: formData.phone,
+        division: divisionName,
+        district: districtName,
+        upazila: upazilaName,
+        farmSize: formData.farmSize,
+        avatar: formData.avatar
+      };
+
+      console.log('Sending update data:', updateData);
+
+      const response = await fetch(`https://agri-smart-server.vercel.app/api/users/me/${userEmail}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updateData),
       });
 
       if (response.ok) {
-        const updatedUser = await response.json();
-        setUser(updatedUser);
-        setEditMode(false);
+        const result = await response.json();
         
-        // Update session if needed
-        await update({
-          ...session,
-          user: {
-            ...session?.user,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            phone: updatedUser.phone,
-            division: updatedUser.division,
-            district: updatedUser.district,
-            upazila: updatedUser.upazila,
-            role: updatedUser.role,
-            farmSize: updatedUser.farmSize,
-            image: updatedUser.avatar
-          }
-        });
-        
-        console.log('Updated user data:', updatedUser);
+        if (result.status && result.data) {
+          const updatedUser = result.data;
+          
+          // Update local state - keep the original role
+          setUser(prev => ({
+            ...prev,
+            name: formData.name,
+            phone: formData.phone,
+            division: formData.division,
+            district: formData.district,
+            upazila: formData.upazila,
+            farmSize: formData.farmSize,
+            avatar: formData.avatar
+          }));
+          
+          setEditMode(false);
+          
+          // Update session with new data - keep original role
+          await update({
+            ...session,
+            user: {
+              ...session?.user,
+              name: formData.name,
+              phone: formData.phone,
+              division: divisionName,
+              district: districtName,
+              upazila: upazilaName,
+              farmSize: formData.farmSize,
+              image: formData.avatar
+            }
+          });
+          
+          console.log('Profile updated successfully:', updatedUser);
+          alert('প্রোফাইল সফলভাবে আপডেট হয়েছে');
+        } else {
+          throw new Error(result.message || 'Update failed');
+        }
       } else {
-        throw new Error('Update failed');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Update failed');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('প্রোফাইল আপডেট করতে সমস্যা হয়েছে');
+      alert(`প্রোফাইল আপডেট করতে সমস্যা হয়েছে: ${error.message}`);
     }
   };
 
@@ -242,6 +453,14 @@ const Profile = () => {
     }
   };
 
+  // Debug: Log current form data
+  useEffect(() => {
+    console.log('Current formData:', formData);
+    console.log('Available divisions:', divisions.length);
+    console.log('Available districts:', districts.length);
+    console.log('Available upazilas:', upazilas.length);
+  }, [formData, divisions, districts, upazilas]);
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50 py-8 font-hind flex items-center justify-center">
@@ -288,8 +507,16 @@ const Profile = () => {
             <div>
               <h1 className="text-3xl font-bold mb-2">কৃষকের প্রোফাইল</h1>
               <p className="text-green-100">আপনার কৃষি তথ্য ও প্রোফাইল ব্যবস্থাপনা করুন</p>
+              {!hasDatabaseData && (
+                <div className="mt-2 bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm inline-flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  ডাটাবেসে রেকর্ড নেই
+                </div>
+              )}
             </div>
-            {!editMode && (
+            {!editMode && hasDatabaseData && (
               <button 
                 className="bg-white text-green-600 hover:bg-green-50 px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
                 onClick={() => setEditMode(true)}
@@ -299,6 +526,11 @@ const Profile = () => {
                 </svg>
                 প্রোফাইল সম্পাদনা
               </button>
+            )}
+            {!hasDatabaseData && (
+              <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-lg text-sm">
+                সম্পাদনা করার জন্য ডাটাবেসে রেকর্ড প্রয়োজন
+              </div>
             )}
           </div>
         </div>
@@ -315,7 +547,7 @@ const Profile = () => {
                     alt="Profile" 
                     className="w-28 h-28 rounded-full border-4 border-green-500 object-cover mx-auto mb-4 shadow-lg"
                   />
-                  {editMode && (
+                  {editMode && hasDatabaseData && (
                     <div className="absolute bottom-1 right-1">
                       <label 
                         htmlFor="avatar-upload" 
@@ -341,6 +573,11 @@ const Profile = () => {
                 <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mt-2 ${getStatusBadgeColor(user.accountStatus)}`}>
                   {user.accountStatus === 'pending' ? 'বিচারাধীন' : user.accountStatus}
                 </div>
+                {!hasDatabaseData && (
+                  <div className="mt-2 text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                    সেশন ডেটা প্রদর্শিত হচ্ছে
+                  </div>
+                )}
               </div>
             </div>
 
@@ -388,7 +625,7 @@ const Profile = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      disabled={!editMode}
+                      disabled={!editMode || !hasDatabaseData}
                       required
                     />
                     
@@ -398,7 +635,7 @@ const Profile = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      disabled={!editMode}
+                      disabled={true}
                       required
                     />
 
@@ -408,22 +645,28 @@ const Profile = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      disabled={!editMode}
+                      disabled={!editMode || !hasDatabaseData}
                     />
 
-                    <SelectField
-                      label="ভূমিকা"
-                      name="role"
-                      value={formData.role}
-                      onChange={handleInputChange}
-                      options={[
-                        { value: 'farmer', label: 'কৃষক' },
-                        { value: 'buyer', label: 'ক্রেতা' },
-                        { value: 'admin', label: 'প্রশাসক' },
-                        { value: 'agent', label: 'এজেন্ট' }
-                      ]}
-                      disabled={!editMode}
-                    />
+                    {/* Role Field - Always Disabled */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        ভূমিকা <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        name="role"
+                        value={formData.role}
+                        onChange={handleInputChange}
+                        disabled={true}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-100 text-gray-600 cursor-not-allowed"
+                      >
+                        <option value="farmer">কৃষক</option>
+                        <option value="buyer">ক্রেতা</option>
+                        <option value="admin">প্রশাসক</option>
+                        <option value="agent">এজেন্ট</option>
+                      </select>
+                      <p className="text-xs text-gray-500">ভূমিকা পরিবর্তন করা যাবে না</p>
+                    </div>
                   </div>
                 </div>
 
@@ -446,7 +689,7 @@ const Profile = () => {
                         value: div.id, 
                         label: div.ban_name 
                       }))}
-                      disabled={!editMode}
+                      disabled={!editMode || !hasDatabaseData}
                     />
                     
                     <SelectField
@@ -458,7 +701,7 @@ const Profile = () => {
                         value: dist.id, 
                         label: dist.bn_name
                       }))}
-                      disabled={!editMode || !formData.division}
+                      disabled={!editMode || !hasDatabaseData || !formData.division}
                     />
 
                     <SelectField
@@ -470,7 +713,7 @@ const Profile = () => {
                         value: upz.id, 
                         label: upz.bn_name
                       }))}
-                      disabled={!editMode || !formData.district}
+                      disabled={!editMode || !hasDatabaseData || !formData.district}
                     />
 
                     <InputField
@@ -478,13 +721,14 @@ const Profile = () => {
                       name="farmSize"
                       value={formData.farmSize}
                       onChange={handleInputChange}
-                      disabled={!editMode}
+                      disabled={!editMode || !hasDatabaseData}
+                      placeholder="জমির পরিমাণ লিখুন"
                     />
                   </div>
                 </div>
 
                 {/* Action Buttons */}
-                {editMode && (
+                {editMode && hasDatabaseData && (
                   <div className="flex flex-wrap gap-4 pt-8 border-t border-gray-100">
                     <button 
                       className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
@@ -504,6 +748,22 @@ const Profile = () => {
                       </svg>
                       বাতিল করুন
                     </button>
+                  </div>
+                )}
+
+                {/* No Database Record Message */}
+                {!hasDatabaseData && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
+                    <svg className="w-12 h-12 text-amber-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    <h4 className="text-lg font-bold text-amber-800 mb-2">ডাটাবেসে রেকর্ড নেই</h4>
+                    <p className="text-amber-700 mb-4">
+                      আপনার প্রোফাইল ডাটাবেসে সংরক্ষিত নেই। সম্পাদনা করার জন্য প্রথমে ডাটাবেসে আপনার রেকর্ড তৈরি করতে হবে।
+                    </p>
+                    <p className="text-sm text-amber-600">
+                      বর্তমানে শুধুমাত্র সেশন ডেটা প্রদর্শিত হচ্ছে।
+                    </p>
                   </div>
                 )}
               </div>
