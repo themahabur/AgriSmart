@@ -157,7 +157,7 @@ console.log(featured);
           >
             <div className="relative overflow-hidden">
               {res.media && isValidImageUrl(res.media) ? (
-                <Image 
+                <img 
                   height={400} 
                   width={600}
                   src={res.media}

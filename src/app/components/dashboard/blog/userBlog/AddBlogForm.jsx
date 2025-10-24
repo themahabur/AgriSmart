@@ -31,7 +31,7 @@ const AddBlogForm = ({ user }) => {
     const { name, value } = e.target;
     setPostData((prev) => ({ ...prev, [name]: value }));
   };
-
+console.log(postData);
   const handleSubmit = async (publishStatus) => {
     setError("");
     setIsSubmitting(true);
@@ -56,15 +56,15 @@ const AddBlogForm = ({ user }) => {
         mediaUrl = result.url;
       } 
       // Handle video URL for video posts
-      else if (postData.type === "video" && media.url) {
-        if (
-          !media.url.includes("youtube.com") &&
-          !media.url.includes("youtu.be")
-        ) {
-          throw new Error("Please enter a valid YouTube URL.");
-        }
-        mediaUrl = media.url;
-      }
+      // else if (postData.type === "video" && media.url) {
+      //   if (
+      //     !media.url.includes("youtube.com") &&
+      //     !media.url.includes("youtu.be")
+      //   ) {
+      //     throw new Error("Please enter a valid YouTube URL.");
+      //   }
+      //   mediaUrl = media.url;
+      // }
 
       const finalPostData = {
         title: postData.title,
@@ -263,8 +263,14 @@ const AddBlogForm = ({ user }) => {
                   <option value="Technology">Technology</option>
                   <option value="Crop Management">Crop Management</option>
                   <option value="Soil Health">Soil Health</option>
+                  <option value="Irrigation">Irrigation</option>
+                  <option value="Pest Control">Pest Control</option>
+                  <option value="Weather">Weather</option>
+                  <option value="Market Insights">Market Insights</option>
+                  <option value="Sustainability">Sustainability</option>
                 </select>
               </div>
+
 
               <div>
                 <FormInput

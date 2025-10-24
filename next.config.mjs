@@ -9,7 +9,7 @@ const nextConfig = {
       'www.ifpri.org',
       'lh3.googleusercontent.com',
       'www.youtube.com',
-      'res.cloudinary.com'  // Add Cloudinary domain
+      'res.cloudinary.com'
     ],
   },
 };
