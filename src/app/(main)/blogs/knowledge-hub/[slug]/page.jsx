@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import { isValidImageUrl } from "@/lib/imageUtils";
 
 export default function BlogDetails() {
   const { slug } = useParams();
@@ -106,12 +108,19 @@ export default function BlogDetails() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
           
           <div className="lg:col-span-8">
-            {blog.media && (
-              <img
-                src={blog.media}
-                alt={blog.title}
-                className="w-full h-96 object-cover rounded-xl mb-8 shadow-md"
-              />
+            {blog.media && isValidImageUrl(blog.media) ? (
+              <div className="relative w-full h-96 rounded-xl mb-8 shadow-md overflow-hidden">
+                <Image
+                  src={blog.media}
+                  alt={blog.title || "Blog post image"}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-96 flex items-center justify-center mb-8">
+                <span className="text-gray-500">No Image Available</span>
+              </div>
             )}
 
             <article className="prose prose-lg max-w-none

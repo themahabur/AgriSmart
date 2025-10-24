@@ -7,5 +7,12 @@ module.exports = {
       "www.ifpri.org",
       "lh3.googleusercontent.com",
     ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.youtube.com',
+     
+      },
+    ],
   },
 };

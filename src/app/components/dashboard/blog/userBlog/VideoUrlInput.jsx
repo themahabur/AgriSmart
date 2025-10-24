@@ -14,7 +14,7 @@ const VideoUrlInput = ({ value, onChange }) => {
           <FiYoutube className="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
         <input
-          type="url"
+          type="text"
           id="youtubeUrl"
           name="youtubeUrl"
           value={value}
