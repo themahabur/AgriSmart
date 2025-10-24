@@ -18,7 +18,7 @@ const TodayFarmTaskCard = ({ task }) => {
     }
   };
 
- console.log(task.status = "Completed" , 'anbfg');
+//  console.log(task.status = "Completed" , 'anbfg');
 
   return (
     <div

@@ -38,6 +38,7 @@ const AddBlogForm = ({ user }) => {
     let mediaUrl = "";
 
     try {
+      // Handle image upload for blog posts
       if (postData.type === "blog" && media.file) {
         const formData = new FormData();
         formData.append("file", media.file);
@@ -45,10 +46,17 @@ const AddBlogForm = ({ user }) => {
           method: "POST",
           body: formData,
         });
-        if (!uploadResponse.ok) throw new Error("Image upload failed!");
+        
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json();
+          throw new Error(errorData.error || "Image upload failed!");
+        }
+        
         const result = await uploadResponse.json();
         mediaUrl = result.url;
-      } else if (postData.type === "video") {
+      } 
+      // Handle video URL for video posts
+      else if (postData.type === "video" && media.url) {
         if (
           !media.url.includes("youtube.com") &&
           !media.url.includes("youtu.be")
@@ -90,16 +98,30 @@ const AddBlogForm = ({ user }) => {
       );
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Server error: ${response.statusText}`);
       }
 
       const data = await response.json();
       console.log("✅ Server Response:", data);
-      toast.success(" Blog submitted successfully!");
+      toast.success("Blog submitted successfully!");
+      
+      // Reset form after successful submission
+      setPostData({
+        title: "",
+        subtitle: "",
+        summary: "",
+        type: "blog",
+        category: "Technology",
+        readTime: "",
+      });
+      setMedia({ file: null, url: "" });
+      setBody("");
+      setTags([]);
     } catch (err) {
-      console.error(err);
+      console.error("Submission error:", err);
       setError(err.message || "An unexpected error occurred.");
-      toast.error(" Blog submitted failed!");
+      toast.error("Blog submission failed!");
     } finally {
       setIsSubmitting(false);
     }
@@ -120,6 +142,7 @@ const AddBlogForm = ({ user }) => {
               name="title"
               value={postData.title}
               onChange={handleChange}
+              required
             />
             <FormInput
               label="উপ শিরোনাম (Subtitle)"
@@ -173,12 +196,12 @@ const AddBlogForm = ({ user }) => {
             </div>
             {postData.type === "blog" ? (
               <ImageUploader
-                onFileSelect={(file) => setMedia({ file, url: "" })}
+                onFileSelect={(file) => setMedia(prev => ({ ...prev, file }))}
               />
             ) : (
               <VideoUrlInput
                 value={media.url}
-                onChange={(e) => setMedia({ file: null, url: e.target.value })}
+                onChange={(e) => setMedia(prev => ({ ...prev, url: e.target.value }))}
               />
             )}
           </div>
@@ -204,7 +227,7 @@ const AddBlogForm = ({ user }) => {
             <div className="space-y-3">
               <button
                 onClick={() => handleSubmit("published")}
-                disabled={isSubmitting}
+                disabled={isSubmitting || !postData.title || !body}
                 className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-bold py-3 px-4 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50"
               >
                 {isSubmitting ? (

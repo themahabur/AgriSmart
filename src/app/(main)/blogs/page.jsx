@@ -1,10 +1,12 @@
 "use client";
 import Loading from "@/app/components/loading/Loading";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaRegClock } from "react-icons/fa";
 import { GoHeart } from "react-icons/go";
 import { IoBookmarkOutline, IoEyeOutline } from "react-icons/io5";
+import { isValidImageUrl } from "@/lib/imageUtils";
 
 export default function Home() {
   const [featured, setFeatured] = useState(null);
@@ -39,7 +41,7 @@ export default function Home() {
 
     fetchData();
   }, []);
-
+console.log(featured);
   if (loading) {
     return (
       <main>
@@ -68,11 +70,18 @@ export default function Home() {
 
       <div className="rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-7 mb-8 bg-gray-50 duration-300">
         <div className="relative h-[400px] md:h-[350px] md:col-span-3">
-          <img
-            src={featured.media}
-            alt={featured.title}
-            className="object-cover md:col-span-3 w-full"
-          />
+          {featured.media && isValidImageUrl(featured.media) ? (
+            <Image
+              src={featured.media}
+              alt={featured.title || "Featured blog image"}
+              fill
+              className="object-cover md:col-span-3"
+            />
+          ) : (
+            <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-full flex items-center justify-center">
+              <span className="text-gray-500">No Image Available</span>
+            </div>
+          )}
         </div>
         <div className="p-6 md:col-span-4 flex flex-col justify-between">
           <div>
@@ -147,11 +156,19 @@ export default function Home() {
             className="group bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-100 hover:border-green-200"
           >
             <div className="relative overflow-hidden">
-              <img
-                src={res.media}
-                alt={res.title}
-                className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+              {res.media && isValidImageUrl(res.media) ? (
+                <Image 
+                  height={400} 
+                  width={600}
+                  src={res.media}
+                  alt={res.title}
+                  className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48 flex items-center justify-center">
+                  <span className="text-gray-500">No Image</span>
+                </div>
+              )}
 
               <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
