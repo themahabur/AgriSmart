@@ -12,7 +12,8 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import AddActivityModal from "./AddActivityModal";
 
-const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
+// const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
+const API_BASE_URL = "http://localhost:5000/api";
 
 const priorityMap = { low: "নিম্ন", medium: "মাধ্যমিক", high: "উচ্চ" };
 const priorityIcons = {
