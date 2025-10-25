@@ -11,8 +11,6 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // console.log("Credentials:", credentials);
-
         const res = await fetch(
           "https://agri-smart-server.vercel.app/api/users/login",
           {
@@ -26,18 +24,17 @@ export const authOptions = {
         );
 
         const data = await res.json();
-        // console.log("API Response:", data);
 
         if (!res.ok || !data.token) {
-          // console.log("Login failed");
           return null;
         }
 
         return {
-          id: "user-id",
-          name: credentials.email,
+          id: data.user?.id || "user-id",
+          name: data.user?.name || credentials.email,
           email: credentials.email,
-          token: data.token,
+          image: data.user?.image || null,
+          accessToken: data.token,
         };
       },
     }),
@@ -49,20 +46,38 @@ export const authOptions = {
   pages: {
     signIn: "/auth/login",
   },
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.accessToken = user.token; // Ensure user.token is defined
+    async jwt({ token, user, account }) {
+      if (user?.accessToken) {
+        token.accessToken = user.accessToken;
       }
+
+      // For Google login — use ID token, not access token
+      if (account?.id_token) {
+        token.accessToken = account.id_token;
+      }
+
       return token;
     },
+
     async session({ session, token }) {
-      session.user = token; // session.user.accessToken হবে
+      // Attach accessToken to session
+      session.accessToken = token.accessToken;
+
+      // Keep user info clean
+      session.user = {
+        name: token.name,
+        email: token.email,
+        image: token.picture,
+      };
+
       return session;
     },
   },
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };
