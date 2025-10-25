@@ -50,6 +50,37 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    // Add this signIn callback - runs when user signs in
+    async signIn({ user, account, profile }) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_API_URL}/api/users/google`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: user.email,
+              name: user.name,
+              image: user.image,
+              googleId: account?.providerAccountId,
+              provider: account?.provider,
+            }),
+          }
+        );
+
+        const data = await response.json();
+        // console.log("✅ User data sent to backend:", data);
+
+        return true; // Allow sign in
+      } catch (error) {
+        console.error("❌ Error sending user data to backend:", error);
+        // return true; // Still allow sign in even if backend fails
+        return false; // Uncomment to block sign in if backend fails
+      }
+    },
+
     async jwt({ token, user, account }) {
       if (user?.accessToken) {
         token.accessToken = user.accessToken;
