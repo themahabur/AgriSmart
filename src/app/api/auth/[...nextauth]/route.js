@@ -77,7 +77,7 @@ export const authOptions = {
       } catch (error) {
         console.error("❌ Error sending user data to backend:", error);
         // return true; // Still allow sign in even if backend fails
-        return false; // Uncomment to block sign in if backend fails
+        return false; //  block sign in if backend fails
       }
     },
 
