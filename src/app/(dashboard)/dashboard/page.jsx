@@ -28,6 +28,7 @@ import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFar
 import { getLocation } from "@/app/lib/getlocation";
 import WelcomeHeader from "@/app/components/dashboard/userDashboard/WelcomeHeader";
 import QuickStat from "@/app/components/dashboard/userDashboard/QuickStat";
+import RecentActivities from "@/app/components/dashboard/userDashboard/RecentActivities";
 
 const Dashboard = () => {
   const { data: session } = useSession();
@@ -133,6 +134,7 @@ const Dashboard = () => {
     },
   ];
 
+  // Fetch weather data based on user's location
   useEffect(() => {
     async function loadWeather() {
       try {
@@ -154,6 +156,7 @@ const Dashboard = () => {
     loadWeather();
   }, []);
 
+  // Fetch today's farm tasks
   useEffect(() => {
     const farmTask = async () => {
       try {
@@ -170,6 +173,7 @@ const Dashboard = () => {
     farmTask();
   }, []);
 
+  // Function to format time in Bengali
   const formatTime = (date) => {
     return date.toLocaleTimeString("bn-BD", {
       hour: "2-digit",
@@ -178,6 +182,7 @@ const Dashboard = () => {
     });
   };
 
+  // Function to format date in Bengali
   const formatDate = (date) => {
     return date.toLocaleDateString("bn-BD", {
       year: "numeric",
@@ -356,7 +361,7 @@ const Dashboard = () => {
             </div>
 
             {/* Recent Activities */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
               <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                 <FaBell className="mr-2 text-orange-600" />
                 সাম্প্রতিক কার্যক্রম
@@ -382,7 +387,11 @@ const Dashboard = () => {
               >
                 সব কার্যক্রম দেখুন →
               </Link>
-            </div>
+            </div> */}
+            {/* <RecentActivities /> */}
+            <Suspense fallback={<div>Loading...</div>}>
+              <RecentActivities />
+            </Suspense>
 
             {/* Agricultural Tips */}
             {/* <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
