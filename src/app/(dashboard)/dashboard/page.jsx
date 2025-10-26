@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   FaTractor,
@@ -99,38 +99,6 @@ const Dashboard = () => {
       icon: FaUsers,
       href: "/dashboard/community",
       color: "from-teal-500 to-green-500",
-    },
-  ];
-
-  // Recent Activities
-  const recentActivities = [
-    {
-      id: 1,
-      activity: "আলু ক্ষেতে সার প্রয়োগ",
-      time: "২ ঘন্টা আগে",
-      type: "farming",
-      icon: FaLeaf,
-    },
-    {
-      id: 2,
-      activity: "ধানের দাম চেক করেছেন",
-      time: "৪ ঘন্টা আগে",
-      type: "market",
-      icon: FaChartLine,
-    },
-    {
-      id: 3,
-      activity: "নতুন ব্লগ পোস্ট পড়েছেন",
-      time: "৬ ঘন্টা আগে",
-      type: "education",
-      icon: FaBookOpen,
-    },
-    {
-      id: 4,
-      activity: "এআই চ্যাটবট ব্যবহার করেছেন",
-      time: "১ দিন আগে",
-      type: "consultation",
-      icon: FaRobot,
     },
   ];
 
@@ -360,38 +328,8 @@ const Dashboard = () => {
               )}
             </div>
 
-            {/* Recent Activities */}
-            {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                <FaBell className="mr-2 text-orange-600" />
-                সাম্প্রতিক কার্যক্রম
-              </h2>
-              <div className="space-y-4">
-                {recentActivities.map((activity) => (
-                  <div key={activity.id} className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                      <activity.icon className="text-green-600 text-sm" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-800 font-medium">
-                        {activity.activity}
-                      </p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                href="/dashboard/community"
-                className="block mt-4 text-center text-green-600 hover:text-green-700 text-sm font-medium"
-              >
-                সব কার্যক্রম দেখুন →
-              </Link>
-            </div> */}
             {/* <RecentActivities /> */}
-            <Suspense fallback={<div>Loading...</div>}>
-              <RecentActivities />
-            </Suspense>
+            <RecentActivities />
 
             {/* Agricultural Tips */}
             {/* <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
