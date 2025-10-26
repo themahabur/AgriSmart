@@ -11,8 +11,10 @@ import {
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import AddActivityModal from "./AddActivityModal";
+import axiosInstance from "@/lib/axios";
 
-const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
+// const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
+const API_BASE_URL = "http://localhost:5000/api";
 
 const priorityMap = { low: "নিম্ন", medium: "মাধ্যমিক", high: "উচ্চ" };
 const priorityIcons = {
@@ -99,22 +101,13 @@ const FarmProgress = ({ farms = [] }) => {
 
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/farm-tasks`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(activityPayload),
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Failed to add activity");
-      }
-
-      const addedTask = await res.json();
+      const ress = await axiosInstance.post("/farm-tasks", activityPayload);
+      const addedTask = ress.data;
       setActivities((prev) => [...prev, addedTask.task]);
       toast.success("নতুন কাজ যুক্ত হয়েছে!");
 
       setShowAddActivityForm(false);
+
       setNewActivity({
         title: "",
         description: "",

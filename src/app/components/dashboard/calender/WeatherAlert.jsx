@@ -23,7 +23,7 @@ const WeatherAlert = () => {
         }
         const { latitude, longitude } = location;
         const data = await fetchWeather(latitude, longitude);
-        setWeatherData(data.today ? data.today : data); 
+        setWeatherData(data.today ? data.today : data);
       } catch (err) {
         console.error("Weather fetch error:", err);
       }
@@ -220,12 +220,12 @@ const WeatherAlert = () => {
 
   const getWeatherIcon = (weather) => {
     const desc = weather.toLowerCase();
-    if (desc.includes('rain')) return '🌧️';
-    if (desc.includes('cloud')) return '☁️';
-    if (desc.includes('clear')) return '☀️';
-    if (desc.includes('sun')) return '☀️';
-    if (desc.includes('wind')) return '💨';
-    return '🌤️';
+    if (desc.includes("rain")) return "🌧️";
+    if (desc.includes("cloud")) return "☁️";
+    if (desc.includes("clear")) return "☀️";
+    if (desc.includes("sun")) return "☀️";
+    if (desc.includes("wind")) return "💨";
+    return "🌤️";
   };
 
   const alert = getWeatherAlert();
@@ -271,7 +271,6 @@ const WeatherAlert = () => {
 
         {/* Location and Time */}
         <div className="flex items-center justify-between text-sm">
-          
           <div className="text-gray-500 font-bangla bg-white px-3 py-1 rounded-full border">
             {weatherData ? (
               <>
@@ -314,13 +313,19 @@ const WeatherAlert = () => {
         {weatherData && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             <div className="bg-white bg-opacity-80 p-3 rounded-lg border text-center shadow-sm">
-              <div className="font-bangla text-gray-600 mb-1">অনুভূত তাপমাত্রা</div>
-              <div className="font-bold text-orange-600 text-lg">{feelsLike}°C</div>
+              <div className="font-bangla text-gray-600 mb-1">
+                অনুভূত তাপমাত্রা
+              </div>
+              <div className="font-bold text-orange-600 text-lg">
+                {feelsLike}°C
+              </div>
               <div className="text-xs text-gray-500 mt-1">গরম অনুভূত হচ্ছে</div>
             </div>
             <div className="bg-white bg-opacity-80 p-3 rounded-lg border text-center shadow-sm">
               <div className="font-bangla text-gray-600 mb-1">বায়ুচাপ</div>
-              <div className="font-bold text-blue-600 text-lg">{pressure} hPa</div>
+              <div className="font-bold text-blue-600 text-lg">
+                {pressure} hPa
+              </div>
               <div className="text-xs text-gray-500 mt-1">স্বাভাবিক চাপ</div>
             </div>
             <div className="bg-white bg-opacity-80 p-3 rounded-lg border text-center shadow-sm">
@@ -333,7 +338,9 @@ const WeatherAlert = () => {
             </div>
             <div className="bg-white bg-opacity-80 p-3 rounded-lg border text-center shadow-sm">
               <div className="font-bangla text-gray-600 mb-1">কৃষি সুযোগ</div>
-              <div className="font-bold text-green-600 text-lg">ফসল পরিচর্যা</div>
+              <div className="font-bold text-green-600 text-lg">
+                ফসল পরিচর্যা
+              </div>
               <div className="text-xs text-gray-500 mt-1">উত্তম সময়</div>
             </div>
           </div>
@@ -344,9 +351,12 @@ const WeatherAlert = () => {
           <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
             <div className="flex items-center justify-between">
               <div className="font-bangla text-blue-800 text-sm">
-                <strong>আবহাওয়া সারাংশ:</strong> {place} এ বর্তমান তাপমাত্রা {temp}°C, 
-                আর্দ্রতা {humidity}%, {weather.toLowerCase().includes('clear') ? 'পরিষ্কার আকাশ' : weather}। 
-                ফসলের পরিচর্যার জন্য উত্তম সময়।
+                <strong>আবহাওয়া সারাংশ:</strong> {place} এ বর্তমান তাপমাত্রা{" "}
+                {temp}°C, আর্দ্রতা {humidity}%,{" "}
+                {weather.toLowerCase().includes("clear")
+                  ? "পরিষ্কার আকাশ"
+                  : weather}
+                । ফসলের পরিচর্যার জন্য উত্তম সময়।
               </div>
             </div>
           </div>

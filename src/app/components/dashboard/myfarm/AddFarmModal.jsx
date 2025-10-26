@@ -685,7 +685,7 @@ const AddFarmModal = ({
           userEmail: userEmail || "",
         };
 
-        console.log("Sending data to backend:", formattedData);
+        // console.log("Sending data to backend:", formattedData);
 
         if (editingFarm) {
           await onUpdateFarm(editingFarm.id || editingFarm._id, formattedData);

@@ -8,6 +8,7 @@ import VideoUrlInput from "./VideoUrlInput";
 import RichTextEditor from "./RichTextEditor";
 import TagInput from "./TagInput";
 import toast from "react-hot-toast";
+import axiosInstance from "@/lib/axios";
 
 const AddBlogForm = ({ user }) => {
   const [postData, setPostData] = useState({
@@ -31,7 +32,7 @@ const AddBlogForm = ({ user }) => {
     const { name, value } = e.target;
     setPostData((prev) => ({ ...prev, [name]: value }));
   };
-console.log(postData);
+  console.log(postData);
   const handleSubmit = async (publishStatus) => {
     setError("");
     setIsSubmitting(true);
@@ -46,15 +47,15 @@ console.log(postData);
           method: "POST",
           body: formData,
         });
-        
+
         if (!uploadResponse.ok) {
           const errorData = await uploadResponse.json();
           throw new Error(errorData.error || "Image upload failed!");
         }
-        
+
         const result = await uploadResponse.json();
         mediaUrl = result.url;
-      } 
+      }
       // Handle video URL for video posts
       // else if (postData.type === "video" && media.url) {
       //   if (
@@ -84,28 +85,13 @@ console.log(postData);
         },
       };
 
-      console.log("📤 Submitting final data:", finalPostData);
-
-      const response = await fetch(
-        "https://agri-smart-server.vercel.app/api/knowledge-hub",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(finalPostData),
-        }
+      const response = await axiosInstance.post(
+        "/knowledge-hub",
+        finalPostData
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Server error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log("✅ Server Response:", data);
       toast.success("Blog submitted successfully!");
-      
+
       // Reset form after successful submission
       setPostData({
         title: "",
@@ -196,12 +182,14 @@ console.log(postData);
             </div>
             {postData.type === "blog" ? (
               <ImageUploader
-                onFileSelect={(file) => setMedia(prev => ({ ...prev, file }))}
+                onFileSelect={(file) => setMedia((prev) => ({ ...prev, file }))}
               />
             ) : (
               <VideoUrlInput
                 value={media.url}
-                onChange={(e) => setMedia(prev => ({ ...prev, url: e.target.value }))}
+                onChange={(e) =>
+                  setMedia((prev) => ({ ...prev, url: e.target.value }))
+                }
               />
             )}
           </div>
@@ -270,7 +258,6 @@ console.log(postData);
                   <option value="Sustainability">Sustainability</option>
                 </select>
               </div>
-
 
               <div>
                 <FormInput

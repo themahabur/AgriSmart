@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { FaTractor, FaPlus, FaChevronDown } from "react-icons/fa";
 import toast from "react-hot-toast";
 
-const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
-// const API_BASE_URL = "http://localhost:5000/api";
+// const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
+const API_BASE_URL = "http://localhost:5000/api";
 
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
@@ -12,6 +12,7 @@ import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
 import WeatherSoilCards from "../../../components/dashboard/myfarm/WeatherSoilCards";
 import QuickActions from "../../../components/dashboard/myfarm/QuickActions";
 import { useSession } from "next-auth/react";
+import axiosInstance from "@/lib/axios";
 
 const MyFarmPage = () => {
   const [farms, setFarms] = useState([]);
@@ -141,19 +142,9 @@ const MyFarmPage = () => {
 
       if (!farmPayload?.userEmail) throw new Error("User email missing");
 
-      const response = await fetch(`${API_BASE_URL}/farms`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(farmPayload),
-      });
-
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-
-      const newFarm = await response.json();
-      const createdFarm = newFarm.data || newFarm;
-
-      setFarms([...farms, createdFarm]);
+      const res = await axiosInstance.post("/farms", farmPayload);
+      const newFarm = res.data.data || res.data;
+      setFarms([newFarm, ...farms]);
       setLastSubmittedFarm(farmData);
       setShowSubmittedData(true);
       toast.success("নতুন ফার্ম সফলভাবে যুক্ত হয়েছে! 🎉");
