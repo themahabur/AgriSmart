@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { FaTractor, FaPlus, FaChevronDown } from "react-icons/fa";
 import toast from "react-hot-toast";
 
-// const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
+// const API_BASE_URL = "http://localhost:5000/api";
 
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
