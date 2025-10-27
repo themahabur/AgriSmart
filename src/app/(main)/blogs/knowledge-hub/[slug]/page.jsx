@@ -4,6 +4,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { isValidImageUrl } from "@/lib/imageUtils";
+import Comments from "@/app/components/dashboard/blog/Comments";
+import { FaBookmark, FaHome, FaShareAlt } from "react-icons/fa";
 
 export default function BlogDetails() {
   const { slug } = useParams();
@@ -52,8 +54,8 @@ export default function BlogDetails() {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">লোডিং হচ্ছে...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">ব্লগ লোড হচ্ছে...</p>
         </div>
       </main>
     );
@@ -62,10 +64,20 @@ export default function BlogDetails() {
   if (!blog) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center p-8">
-          <div className="text-4xl mb-4">📭</div>
-          <h1 className="text-xl font-semibold text-gray-800 mb-2">ব্লগ পোস্টটি খুঁজে পাওয়া যায়নি</h1>
-          <p className="text-gray-600">আপনি যে ব্লগটি খুঁজছেন তা মুছে ফেলা বা সরানো হয়েছে।</p>
+        <div className="text-center p-8 max-w-md">
+          <div className="text-5xl mb-6 text-gray-400">📭</div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            ব্লগ পোস্টটি খুঁজে পাওয়া যায়নি
+          </h1>
+          <p className="text-gray-600 mb-6">
+            আপনি যে ব্লগটি খুঁজছেন তা মুছে ফেলা বা সরানো হয়েছে।
+          </p>
+          <Link
+            href="/blogs"
+            className="inline-block px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
+          >
+            সব ব্লগ দেখুন
+          </Link>
         </div>
       </main>
     );
@@ -73,77 +85,167 @@ export default function BlogDetails() {
 
   return (
     <main className="min-h-screen bg-white">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          {/* Left Sidebar - Fixed */}
+          <div className="lg:col-span-1">
+            <div className="space-y-6 sticky top-26">
+              {/* Author Info */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-3">
+                    <span className="text-lg font-bold text-white">
+                      {(blog.author?.name || "A").charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <h3 className="font-normal text-gray-900 text-lg mb-1">
+                    {blog.author?.name || "Author"}
+                  </h3>
+                  <p className="text-gray-500 text-sm mb-3">লেখক</p>
 
-      <div className="border-b border-gray-200">
-        <div className="container mx-auto px-6 py-8">
-          <div className="text-center">
-            <div className="inline-block px-4 py-2 bg-gray-100 rounded-lg mb-6">
-              <span className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-                {blog.category || "Technology"}
-              </span>
-            </div>
-            
-            <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
-              {blog.title}
-            </h1>
+                  {/* Author Stats */}
+                  <div className="grid grid-cols-2 gap-4 w-full text-center">
+                    <div>
+                      <div className="text-gray-900 font-medium text-sm">
+                        ২৪
+                      </div>
+                      <div className="text-gray-500 text-xs">ব্লগ</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-900 font-medium text-sm">
+                        ১.২K
+                      </div>
+                      <div className="text-gray-500 text-xs">পাঠক</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-            {blog.subtitle && (
-              <p className="text-xl text-gray-600 mb-6 max-w-2xl mx-auto">
-                {blog.subtitle}
-              </p>
-            )}
+              {/* Quick Actions */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
+                  দ্রুত একশন
+                </h3>
+                <div className="space-y-2">
+                  <button className="w-full flex items-center justify-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-gray-300 transition-colors text-gray-700 text-xs">
+                    <FaShareAlt className="w-3 h-3" />
+                    শেয়ার
+                  </button>
 
-            <div className="flex justify-center items-center gap-6 text-gray-500 text-sm">
-              <span>{blog.author?.name || "Anayet"}</span>
-              <span>•</span>
-              <span>{formattedDate(blog.createdAt)}</span>
-              <span>•</span>
-              <span>{blog.readTime || "5"} মিনিট পড়া</span>
+                  <button className="w-full flex items-center justify-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-gray-300 transition-colors text-gray-700 text-xs">
+                    <FaBookmark className="w-3 h-3" />
+                    সেভ
+                  </button>
+
+                  {/* All Blogs with Home Icon */}
+                  <Link href="/blogs" className="block">
+                    <button className="w-full flex items-center justify-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-gray-300 transition-colors text-gray-700 text-xs">
+                      <FaHome className="w-3 h-3" />
+                      ব্লগ হোম
+                    </button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Table of Contents */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
+                  সূচিপত্র
+                </h3>
+                <div className="space-y-1 text-xs text-gray-600">
+                  <div className="flex items-center gap-2 py-1 hover:text-gray-900 cursor-pointer">
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <span>ভূমিকা</span>
+                  </div>
+                  <div className="flex items-center gap-2 py-1 hover:text-gray-900 cursor-pointer">
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <span>মূল আলোচনা</span>
+                  </div>
+                  <div className="flex items-center gap-2 py-1 hover:text-gray-900 cursor-pointer">
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <span>উপসংহার</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
-          
-          <div className="lg:col-span-8">
+          {/* Main Content - Center */}
+          <div className="lg:col-span-2">
+            {/* Header Section */}
+            <div className="mb-8">
+              {/* Category and Metadata */}
+              <div className="flex items-center gap-4 mb-6">
+                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide px-3 py-1 bg-gray-50 rounded-full border border-gray-200">
+                  {blog.category || "Technology"}
+                </span>
+                <span className="text-sm text-gray-400">
+                  {formattedDate(blog.createdAt)}
+                </span>
+                <span className="text-sm text-gray-400">•</span>
+                <span className="text-sm text-gray-400">
+                  {blog.readTime || "5"} মিনিট পড়া
+                </span>
+              </div>
+
+              {/* Title Section */}
+              <div className="space-y-4">
+                <h1 className="text-3xl lg:text-4xl font-light text-gray-900 leading-tight tracking-tight">
+                  {blog.title}
+                </h1>
+
+                {blog.subtitle && (
+                  <p className="text-lg text-gray-600 leading-relaxed">
+                    {blog.subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Featured Image */}
             {blog.media && isValidImageUrl(blog.media) ? (
-              <div className="relative w-full h-96 rounded-xl mb-8 shadow-md overflow-hidden">
+              <div className="relative w-full h-64 lg:h-80 rounded-lg mb-8 overflow-hidden bg-gray-50 border border-gray-200">
                 <Image
                   src={blog.media}
                   alt={blog.title || "Blog post image"}
                   fill
                   className="object-cover"
+                  priority
                 />
               </div>
             ) : (
-              <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-96 flex items-center justify-center mb-8">
-                <span className="text-gray-500">No Image Available</span>
+              <div className="bg-gray-50 border border-gray-200 rounded-lg w-full h-48 flex items-center justify-center mb-8">
+                <span className="text-gray-400 text-sm">No Image</span>
               </div>
             )}
 
-            <article className="prose prose-lg max-w-none
-              prose-headings:text-gray-900
-              prose-p:text-gray-700 prose-p:leading-relaxed
-              prose-a:text-gray-900 prose-a:underline
-              prose-strong:text-gray-900
-              prose-blockquote:border-l-gray-400 prose-blockquote:bg-gray-50
-              prose-ul:text-gray-700 prose-ol:text-gray-700
-              prose-img:rounded-lg prose-img:shadow-sm
-              prose-code:bg-gray-100 prose-code:text-gray-700
-              prose-pre:bg-gray-900 prose-pre:text-gray-100"
+            {/* Article Content */}
+            <article
+              className="prose prose-gray max-w-none
+          prose-headings:text-gray-900 prose-headings:font-light prose-headings:tracking-tight
+          prose-p:text-gray-700 prose-p:leading-loose prose-p:text-[15px]
+          prose-a:text-gray-900 prose-a:border-b prose-a:border-gray-300 prose-a:pb-0.5 hover:prose-a:border-gray-600
+          prose-strong:text-gray-900 prose-strong:font-normal
+          prose-blockquote:border-l-gray-300 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:text-gray-600
+          prose-ul:text-gray-700 prose-ol:text-gray-700
+          prose-img:rounded-lg prose-img:border prose-img:border-gray-200
+          prose-code:bg-gray-100 prose-code:text-gray-700 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-normal
+          prose-pre:bg-gray-50 prose-pre:text-gray-700 prose-pre:border prose-pre:border-gray-200 prose-pre:rounded-lg
+          bg-white rounded-lg"
               dangerouslySetInnerHTML={{ __html: blog.body }}
             ></article>
 
+            {/* Tags Section */}
             {blog.tags && blog.tags.length > 0 && (
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">ট্যাগ সমূহ</h3>
+              <div className="mt-8 pt-6 border-t border-gray-100">
+                <h4 className="text-sm font-normal text-gray-500 uppercase tracking-wide mb-3">
+                  ট্যাগ সমূহ
+                </h4>
                 <div className="flex flex-wrap gap-2">
                   {blog.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg border border-gray-300"
+                      className="px-3 py-1 text-xs font-normal text-gray-500 bg-gray-50 rounded-full border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer"
                     >
                       #{tag}
                     </span>
@@ -151,71 +253,92 @@ export default function BlogDetails() {
                 </div>
               </div>
             )}
+
+            {/* Comments Section */}
+            <div className="mt-8">
+              <Comments blogSlug={slug} />
+            </div>
           </div>
-          <div className="lg:col-span-4">
-            <div className="space-y-8">
-              
-              <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
-                    <span className="text-2xl font-bold text-gray-600">
-                      {(blog.author?.name || "Anayet").charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900 text-lg">{blog.author?.name || "Anayet"}</h3>
-                    <p className="text-gray-600 text-sm">লেখক</p>
-                  </div>
+
+          {/* Right Sidebar - Fixed */}
+          <div className="lg:col-span-1">
+            <div className="space-y-6 sticky top-26">
+              {/* Reading Progress */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-normal text-gray-900 text-sm">
+                    পড়ার অগ্রগতি
+                  </h3>
+                  <span className="text-xs text-gray-500">৪০%</span>
                 </div>
-                <p className="text-gray-700 text-sm">
-                  প্রকাশিত: {formattedDate(blog.createdAt)}
+                <div className="w-full bg-gray-200 rounded-full h-1">
+                  <div
+                    className="bg-gray-600 h-1 rounded-full"
+                    style={{ width: "40%" }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Related Topics */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
+                  সম্পর্কিত টপিক্স
+                </h3>
+                <div className="space-y-2">
+                  {["Web Development", "JavaScript", "React", "Next.js"].map(
+                    (topic, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 py-2 text-xs text-gray-600 hover:text-gray-900 cursor-pointer border-b border-gray-100 last:border-0"
+                      >
+                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                        {topic}
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+
+              {/* Popular Posts */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
+                  জনপ্রিয় ব্লগ
+                </h3>
+                <div className="space-y-3">
+                  {[1, 2, 3].map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-start gap-2 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                    >
+                      <div className="w-8 h-8 bg-gray-200 rounded flex-shrink-0"></div>
+                      <div>
+                        <h4 className="text-xs font-normal text-gray-900 mb-1">
+                          ব্লগ টাইটেল {item}
+                        </h4>
+                        <p className="text-xs text-gray-500">২ দিন আগে</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Newsletter */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-2">
+                  নিউজলেটার
+                </h3>
+                <p className="text-xs text-gray-600 mb-2">
+                  নতুন ব্লগের নোটিফিকেশন
                 </p>
-                {blog.updatedAt && blog.updatedAt !== blog.createdAt && (
-                  <p className="text-gray-700 text-sm mt-1">
-                    আপডেট: {formattedDate(blog.updatedAt)}
-                  </p>
-                )}
-              </div>
-
-              {blog.summary && (
-                <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-                  <h3 className="font-bold text-gray-900 text-lg mb-4">সারসংক্ষেপ</h3>
-                  <p className="text-gray-700 leading-relaxed">{blog.summary}</p>
-                </div>
-              )}
-
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
-                <h3 className="font-bold text-gray-900 text-lg mb-4">দ্রুত তথ্য</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">ধরন</span>
-                    <span className="font-medium text-gray-900">{blog.type || "Article"}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">পড়ার সময়</span>
-                    <span className="font-medium text-gray-900">{blog.readTime || "5"} মিনিট</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-gray-600">বিভাগ</span>
-                    <span className="font-medium text-gray-900">{blog.category || "Technology"}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h3 className="font-bold text-gray-900 text-lg mb-4">নেভিগেশন</h3>
-                <div className="space-y-3">
-                  <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
-                    ← পূর্ববর্তী ব্লগ
+                <div className="space-y-2">
+                  <input
+                    type="email"
+                    placeholder="ইমেইল"
+                    className="w-full p-1 text-xs border border-gray-200 rounded focus:outline-none focus:border-gray-400"
+                  />
+                  <button className="w-full p-1 bg-gray-800 text-white text-xs rounded hover:bg-gray-700 transition-colors">
+                    সাবস্ক্রাইব
                   </button>
-                  <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
-                    পরবর্তী ব্লগ →
-                  </button>
-                 <Link href="/blogs">
-                  <button className="w-full text-left p-3 bg-gray-900 text-white rounded-lg border border-gray-900 hover:bg-gray-800 transition-colors">
-                    সব ব্লগ দেখুন
-                  </button>
-                 </Link>
                 </div>
               </div>
             </div>
