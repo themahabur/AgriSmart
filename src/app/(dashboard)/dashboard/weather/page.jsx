@@ -308,17 +308,17 @@ const WeatherPage = () => {
                       className="bg-gradient-to-br from-gray-50 to-blue-50 hover:from-blue-50 hover:to-cyan-50 transition-all  rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-blue-300 hover:shadow-lg transform "
                     >
                       <p className="font-bold text-gray-700 mb-3 text-sm">
-                        {day.date}
+                        {day.displayDate.day}, {day.displayDate.month}, {day.displayDate.year}
                       </p>
                       <div className="bg-white rounded-xl p-3 mb-3 shadow-inner flex justify-center">
                         {getWeatherIcon(day.icon, 48)}
                       </div>
                       <p className="text-xs capitalize text-gray-600 mb-2 font-medium">
-                        {day.weather}
+                        {day.daytimeForecast.weatherCondition.description.text}
                       </p>
                       <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full py-2 px-3">
                         <span className="text-sm font-bold">
-                          {Math.round(day.temp)}°C
+                          {Math.round(day.maxTemperature.degrees)}°C / {Math.round(day.minTemperature.degrees)}°C
                         </span>
                       </div>
                     </div>

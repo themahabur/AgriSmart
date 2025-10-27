@@ -37,7 +37,7 @@ export const fetchWeather = async (lat, lon) => {
     };
 
     // (Future forecast না থাকলে empty array)
-    const weekly = [];
+    const weekly = data.forecast || [];
 
     return { city, today, weekly };
   } catch (error) {

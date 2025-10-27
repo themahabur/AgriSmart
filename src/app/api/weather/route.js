@@ -20,6 +20,10 @@ export async function GET(req) {
     const weatherRes = await fetch(weatherUrl);
     const weatherData = await weatherRes.json();
 
+    const weatherForecast = await fetch(`https://weather.googleapis.com/v1/forecast/days:lookup?key=AIzaSyCBfKPwasdEN-Yw9wpJcJJytVUGETvKfdA&location.latitude=24.274215&location.longitude=89.014914&days=10&pageSize=10`);
+    const forecastData = await weatherForecast.json();
+   
+
     if (!weatherRes.ok) {
       return NextResponse.json(
         { error: weatherData.message || "Failed to fetch weather" },
@@ -35,12 +39,14 @@ export async function GET(req) {
     
 
     const place = geoData.address?.county || "Unknown Location";
+    const forecast = forecastData.forecastDays || [];
 
     // 🟢 3️⃣ Combine both responses
     const condition = weatherData.temperature || {};
     const response = {
       geoData,
       place,
+      forecast,
       temperature: condition.degrees,
       unit: condition.unit || "C",
       humidity: weatherData.relativeHumidity,
