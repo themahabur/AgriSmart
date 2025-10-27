@@ -13,9 +13,6 @@ import toast from "react-hot-toast";
 import AddActivityModal from "./AddActivityModal";
 import axiosInstance from "@/lib/axios";
 
-// const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
-const API_BASE_URL = "http://localhost:5000/api";
-
 const priorityMap = { low: "নিম্ন", medium: "মাধ্যমিক", high: "উচ্চ" };
 const priorityIcons = {
   low: FaClock,
@@ -48,16 +45,11 @@ const FarmProgress = ({ farms = [] }) => {
     const fetchActivities = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE_URL}/farm-tasks/${userEmail}`);
-        if (!res.ok) {
-          if (res.status === 404) {
-            setActivities([]);
-            return;
-          }
-          const text = await res.text();
-          throw new Error(`Failed to fetch tasks: ${text}`);
-        }
-        const data = await res.json();
+
+        const res = await axiosInstance.get(`/farm-tasks/${userEmail}`);
+
+        const data = res.data;
+
         setActivities(data.tasks || []);
       } catch (err) {
         console.error("Fetch error:", err);
