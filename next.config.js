@@ -10,8 +10,11 @@ module.exports = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'www.youtube.com',
-     
+        hostname: '**',
+      },
+      {
+        protocol: 'http', 
+        hostname: '**',
       },
     ],
   },

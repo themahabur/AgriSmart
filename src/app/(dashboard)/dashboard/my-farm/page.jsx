@@ -9,7 +9,6 @@ const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
 import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
-import WeatherSoilCards from "../../../components/dashboard/myfarm/WeatherSoilCards";
 import QuickActions from "../../../components/dashboard/myfarm/QuickActions";
 import { useSession } from "next-auth/react";
 
@@ -53,23 +52,6 @@ const MyFarmPage = () => {
       category: "harvest",
     },
   ]);
-
-  const [weatherData] = useState({
-    temperature: "২৮°C",
-    humidity: "৬৫%",
-    condition: "সূর্যোজ্জ্বল",
-    windSpeed: "১২ কিমি/ঘণ্টা",
-    forecast: "গত ২ দিনের মধ্যে বৃষ্টির সম্ভাবনা নেই",
-    icon: "☀️",
-  });
-
-  const [soilData] = useState({
-    pH: "৬.৫",
-    moisture: "৬০%",
-    nutrients: "মাধ্যমিক",
-    temperature: "২৫°C",
-    organicMatter: "৩.২%",
-  });
 
   // Fetch farms
   useEffect(() => {
@@ -278,7 +260,7 @@ const MyFarmPage = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
 
       setFarms(farms.filter((farm) => farm.id !== id && farm._id !== id));
-      toast.success("ফার্ম সফলভাবে মুছে ফেলা হয়েছে 🗑️");
+      toast.success("ফার্ম সফলভাবে মুছে ফেলা হয়েছে");
       setError(null);
     } catch (err) {
       console.error("Error deleting farm:", err);
@@ -317,7 +299,6 @@ const MyFarmPage = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center">
-            {/* <FaTractor className="text-green-700 mr-3" /> */}
             আমার ফার্ম পরিচালনা
           </h1>
           <p className="text-gray-600 mt-2">
@@ -400,7 +381,6 @@ const MyFarmPage = () => {
       {/* Farms Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          {/* <WeatherSoilCards weatherData={weatherData} soilData={soilData} /> */}
           <div className="bg-white rounded-xl border border-gray-200">
             <div className="p-4 border-b border-gray-200 flex justify-between">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
