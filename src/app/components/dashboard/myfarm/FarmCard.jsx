@@ -78,7 +78,7 @@ const FarmCard = ({ farm, onEdit, onDelete }) => {
             {farm.pestAlert && (
               <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center">
                 <FaExclamationTriangle className="mr-1" />
-                সতর্কতা
+                সতর্কতা xxx
               </span>
             )}
             {farm.organicPractices && (

@@ -289,7 +289,7 @@ const MyFarmPage = () => {
   };
 
   return (
-    <div className="flex flex-col font-hind p-4 sm:p-6 md:p-8 bg-white min-h-screen">
+    <div className="flex flex-col font-hind p-4 sm:p-6 md:p-8 md:pb-0 bg-white min-h-[85vh]">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
@@ -423,7 +423,7 @@ const MyFarmPage = () => {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:max-h-[calc(100vh-354px)] md:overflow-y-auto">
                   {displayedFarms.map((farm, index) => (
                     <FarmCard
                       key={farm.id || farm._id || `farm-${index}`}
@@ -439,7 +439,7 @@ const MyFarmPage = () => {
           </div>
         </div>
 
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-1 space-y-6 md:max-h-[calc(100vh-228px)] md:overflow-y-auto">
           <FarmProgress
             farms={farms}
             activities={activities}

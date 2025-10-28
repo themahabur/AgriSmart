@@ -31,7 +31,7 @@ const FarmProgress = ({ farms = [] }) => {
     date: "",
     priority: "medium",
     farmName: "",
-    status: "pending",
+
   });
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -155,7 +155,7 @@ const FarmProgress = ({ farms = [] }) => {
         date: "",
         priority: "medium",
         farmName: "",
-        status: "pending",
+        // status: "pending",
       });
     } catch (err) {
       console.error("Add activity error:", err);
@@ -249,26 +249,41 @@ const FarmProgress = ({ farms = [] }) => {
                     : "border-gray-200 hover:border-gray-300"
                     }`}
                 >
-                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
-                    <div className="flex-1">
+                  <div className="">
+                    <div className="">
                       <div className="flex items-start gap-3">
-                        <div
+                        {/* <div
                           className={`text-lg mt-1 ${isCompleted
                             ? "text-green-500"
                             : getPriorityColor(activity.priority)
                             }`}
                         >
                           {isCompleted ? <FaCheck /> : <PriorityIcon />}
-                        </div>
-                        <div className="flex-1">
-                          <h3
-                            className={`font-semibold text-base mb-1 ${isCompleted
-                              ? "text-green-700 line-through"
-                              : "text-gray-800"
-                              }`}
-                          >
-                            {activity.title}
-                          </h3>
+                        </div> */}
+                        <div >
+                          <div className="flex justify-between">
+                            <h3
+                              className={`font-semibold text-base mb-1 ${isCompleted
+                                ? "text-green-700 line-through"
+                                : "text-gray-800"
+                                }`}
+                            >
+                              {activity.title}
+                            </h3>
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                              <button
+                                onClick={() => handleCompleteTask(activity)}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto flex items-center justify-center ${isCompleted
+                                  ? "bg-gray-300 text-gray-700 cursor-not-allowed"
+                                  : "bg-green-600 hover:bg-green-700 text-white"
+                                  }`}
+                                disabled={isCompleted}
+                              >
+                                <FaCheck className="mr-2" />
+                                {isCompleted ? "সম্পন্ন" : "সম্পন্ন করুন"}
+                              </button>
+                            </div>
+                          </div>
                           <p
                             className={`text-sm mb-2 ${isCompleted ? "text-green-600" : "text-gray-600"
                               }`}
@@ -319,19 +334,7 @@ const FarmProgress = ({ farms = [] }) => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <button
-                        onClick={() => handleCompleteTask(activity)}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto flex items-center justify-center ${isCompleted
-                          ? "bg-gray-300 text-gray-700 cursor-not-allowed"
-                          : "bg-green-600 hover:bg-green-700 text-white"
-                          }`}
-                        disabled={isCompleted}
-                      >
-                        <FaCheck className="mr-2" />
-                        {isCompleted ? "সম্পন্ন" : "সম্পন্ন করুন"}
-                      </button>
-                    </div>
+
                   </div>
                 </div>
               );
@@ -349,11 +352,11 @@ const FarmProgress = ({ farms = [] }) => {
           </div>
         )}
       </div>
-      
+
       {/* Show More/Less Button - only show if there are more than 3 activities */}
       {activities.length > 3 && (
-        <button 
-          onClick={() => setShowMore(!showMore)} 
+        <button
+          onClick={() => setShowMore(!showMore)}
           className="p-2 w-full cursor-pointer flex items-center justify-center gap-1 transition-all duration-700 ease-in-out"
         >
           {showMore ? (
@@ -367,7 +370,7 @@ const FarmProgress = ({ farms = [] }) => {
           )}
         </button>
       )}
-      
+
       {/* Activity Modal */}
       <AddActivityModal
         show={showAddActivityForm}
