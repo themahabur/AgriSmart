@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { FaTimes, FaCircle, FaPaperPlane } from "react-icons/fa";
-import { useChat } from "./ChatProvider";
+
 import { useSession } from "next-auth/react";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
+import { useChat } from "./chatProvider/ChatProvider";
 
 const ChatWindow = ({ expert, onClose }) => {
   const { socket, connected } = useChat();

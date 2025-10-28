@@ -9,9 +9,9 @@ import {
   FaClock,
 } from "react-icons/fa";
 import Image from "next/image";
+import { useChat } from "./chatProvider/ChatProvider";
 import ChatButton from "./ChatButton";
 import ChatWindow from "./ChatWindow";
-import { useChat } from "./ChatProvider";
 
 const ExpertCard = ({ expert }) => {
   const { isUserOnline } = useChat();
