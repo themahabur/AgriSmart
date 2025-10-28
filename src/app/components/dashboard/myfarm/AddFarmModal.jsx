@@ -685,8 +685,6 @@ const AddFarmModal = ({
           userEmail: userEmail || "",
         };
 
-        // console.log("Sending data to backend:", formattedData);
-
         if (editingFarm) {
           await onUpdateFarm(editingFarm.id || editingFarm._id, formattedData);
         } else {
@@ -695,7 +693,10 @@ const AddFarmModal = ({
         handleClose();
       } catch (error) {
         console.error("Submit error:", error);
-        alert("ডেটা সেভ করতে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।");
+        const errorMessage = error.response?.data?.message || 
+                           error.message || 
+                           "ডেটা সেভ করতে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
+        alert(errorMessage);
       }
     } else {
       handleNext();
