@@ -252,14 +252,7 @@ const FarmProgress = ({ farms = [] }) => {
                   <div className="">
                     <div className="">
                       <div className="flex items-start gap-3">
-                        {/* <div
-                          className={`text-lg mt-1 ${isCompleted
-                            ? "text-green-500"
-                            : getPriorityColor(activity.priority)
-                            }`}
-                        >
-                          {isCompleted ? <FaCheck /> : <PriorityIcon />}
-                        </div> */}
+                        
                         <div >
                           <div className="flex justify-between">
                             <h3
@@ -297,7 +290,8 @@ const FarmProgress = ({ farms = [] }) => {
                                 }`}
                             >
                               <FaCalendarAlt className="mr-1.5" />
-                              {activity.date}
+                              {activity.date ? new Date(activity.date).toLocaleDateString("bn-BD") : "তারিখ নির্ধারণ করুন"}
+
                             </span>
 
                             {!isCompleted && (
