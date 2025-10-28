@@ -1,7 +1,8 @@
-'use client';
-import axios from 'axios';
-import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+"use client";
+import axiosInstance from "@/lib/axios";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   FaUsers,
   FaSearch,
@@ -12,7 +13,7 @@ import {
   FaShare,
   FaBookmark,
   FaEllipsisH,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 const CommunityPage = () => {
   const { data: session } = useSession();
@@ -21,28 +22,27 @@ const CommunityPage = () => {
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // State for new post form
   const [showPostForm, setShowPostForm] = useState(false);
   const [newPostData, setNewPostData] = useState({
-    title: '',
-    description: '',
-    image: '',
+    title: "",
+    description: "",
+    image: "",
     tags: [],
   });
 
   // State for filters
-  const [activeFilter, setActiveFilter] = useState('সব');
+  const [activeFilter, setActiveFilter] = useState("সব");
 
   // Fetch all posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:5000/api/community/'
-        );
-        setPosts(response.data.data);
+        const res = await axiosInstance.get("/community");
+        console.log(res.data.data);
+        setPosts(res.data.data);
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -53,44 +53,66 @@ const CommunityPage = () => {
   }, []);
 
   // Handle new post submission
-  const handleSubmitPost = async e => {
+  const handleSubmitPost = async (e) => {
     e.preventDefault();
 
-    const user = {
-      name: 'John Doe',
-      location: 'Dhaka',
-      avatar: 'https://example.com/avatar.jpg',
+    const postPayload = {
+      title: newPostData.title,
+      description: newPostData.description,
+      image: newPostData.image,
+      tags: newPostData.tags,
+      user: {
+        name: session?.user?.name || "অজানা ব্যবহারকারী",
+        email: session?.user?.email,
+        avatar: session?.user?.image || "/default-avatar.png",
+      },
     };
 
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/community/create',
-        {
-          title: newPostData.title,
-          description: newPostData.description,
-          image: newPostData.image,
-          tags: newPostData.tags,
-          user: user,
-        }
-      );
+      const res = await axiosInstance.post("/community/create", postPayload);
 
-      if (response.data.success) {
+      if (res.data.success) {
         // Add new post at the top
-        setPosts([response.data.data, ...posts]);
-        setNewPostData({ title: '', description: '', image: '', tags: [] });
+        setPosts([res.data.data, ...posts]);
+        setNewPostData({ title: "", description: "", image: "", tags: [] });
         setShowPostForm(false);
-        alert('Post created successfully!');
+        toast.success("Post created successfully!");
       }
     } catch (err) {
-      console.error(err);
-      alert('Failed to create post: ' + err.message);
+      toast.error("Failed to create post: " + err.message);
     }
   };
 
+  // const handleSubmitPost = async (e) => {
+  //   e.preventDefault();
+  //     const response = await axios.post(
+  //       "http://localhost:5000/api/community/create",
+  //       {
+  //         title: newPostData.title,
+  //         description: newPostData.description,
+  //         image: newPostData.image,
+  //         tags: newPostData.tags,
+  //         user: user,
+  //       }
+  //     );
+
+  //     if (response.data.success) {
+  //       // Add new post at the top
+  //       setPosts([response.data.data, ...posts]);
+  //       setNewPostData({ title: "", description: "", image: "", tags: [] });
+  //       setShowPostForm(false);
+  //       alert("Post created successfully!");
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Failed to create post: " + err.message);
+  //   }
+  // };
+
   // Handle like
-  const handleLike = postId => {
+  const handleLike = (postId) => {
     setPosts(
-      posts.map(post =>
+      posts.map((post) =>
         post._id === postId
           ? {
               ...post,
@@ -103,9 +125,9 @@ const CommunityPage = () => {
   };
 
   // Handle bookmark
-  const handleBookmark = postId => {
+  const handleBookmark = (postId) => {
     setPosts(
-      posts.map(post =>
+      posts.map((post) =>
         post._id === postId
           ? { ...post, isBookmarked: !post.isBookmarked }
           : post
@@ -113,7 +135,7 @@ const CommunityPage = () => {
     );
   };
 
-  const filters = ['সব', 'জনপ্রিয়', 'আলোচিত', 'বিশেষজ্ঞ', 'আমার প্রশ্ন'];
+  const filters = ["সব", "জনপ্রিয়", "আলোচিত", "বিশেষজ্ঞ", "আমার প্রশ্ন"];
 
   if (loading) return <p className="p-4">Loading posts...</p>;
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
@@ -200,7 +222,7 @@ const CommunityPage = () => {
                   type="text"
                   placeholder="আপনার পোস্টের জন্য একটি আকর্ষণীয় শিরোনাম লিখুন..."
                   value={newPostData.title}
-                  onChange={e =>
+                  onChange={(e) =>
                     setNewPostData({ ...newPostData, title: e.target.value })
                   }
                   className="w-full p-4 pl-12 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm transition-all duration-200"
@@ -233,7 +255,7 @@ const CommunityPage = () => {
                 <textarea
                   placeholder="আপনার চিন্তা, অভিজ্ঞতা বা প্রশ্ন এখানে বিস্তারিত লিখুন..."
                   value={newPostData.description}
-                  onChange={e =>
+                  onChange={(e) =>
                     setNewPostData({
                       ...newPostData,
                       description: e.target.value,
@@ -271,7 +293,7 @@ const CommunityPage = () => {
                   type="text"
                   placeholder="https://example.com/image.jpg"
                   value={newPostData.image}
-                  onChange={e =>
+                  onChange={(e) =>
                     setNewPostData({ ...newPostData, image: e.target.value })
                   }
                   className="w-full p-4 pl-12 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm transition-all duration-200"
@@ -344,8 +366,8 @@ const CommunityPage = () => {
                 <input
                   type="text"
                   placeholder="ট্যাগ যোগ করুন (Enter চাপুন)"
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.target.value.trim() !== "") {
                       e.preventDefault();
                       const newTag = e.target.value.trim();
                       if (
@@ -357,7 +379,7 @@ const CommunityPage = () => {
                           tags: [...newPostData.tags, newTag],
                         });
                       }
-                      e.target.value = '';
+                      e.target.value = "";
                     }
                   }}
                   className="w-full p-4 pl-12 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm transition-all duration-200"
@@ -432,14 +454,14 @@ const CommunityPage = () => {
           <div className="flex items-center space-x-2">
             <FaFilter className="text-gray-500" />
             <div className="flex space-x-2 overflow-x-auto">
-              {filters.map(filter => (
+              {filters.map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
                   className={`px-3 py-1.5 text-sm rounded-full whitespace-nowrap ${
                     activeFilter === filter
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
                   {filter}
@@ -453,7 +475,7 @@ const CommunityPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Content - Posts */}
         <div className="lg:col-span-3 space-y-6">
-          {posts.map(post => (
+          {posts.map((post) => (
             <div
               key={post._id}
               className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
@@ -471,7 +493,7 @@ const CommunityPage = () => {
                       {post.user.name}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {post.user.location} •{' '}
+                      {post.user.location} •{" "}
                       {new Date(post.createdAt).toLocaleDateString()}
                     </p>
                   </div>
@@ -510,7 +532,7 @@ const CommunityPage = () => {
                   <button
                     onClick={() => handleLike(post._id)}
                     className={`flex items-center space-x-1 ${
-                      post.isLiked ? 'text-green-600' : 'text-gray-500'
+                      post.isLiked ? "text-green-600" : "text-gray-500"
                     } hover:text-green-600`}
                   >
                     <FaThumbsUp />
@@ -528,7 +550,7 @@ const CommunityPage = () => {
                 <button
                   onClick={() => handleBookmark(post._id)}
                   className={`${
-                    post.isBookmarked ? 'text-green-600' : 'text-gray-500'
+                    post.isBookmarked ? "text-green-600" : "text-gray-500"
                   } hover:text-green-600`}
                 >
                   <FaBookmark />
