@@ -46,7 +46,7 @@ const ExpertCard = ({ expert }) => {
   // RENDER
   // ═══════════════════════════════════════════════════════
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden group">
+    <div className="bg-white rounded-xl border border-gray-100 transition-all duration-300 hover:-translate-y-2 overflow-hidden group">
       {/* ─────────────────────────────────────── */}
       {/* Card Header with Status */}
       {/* ─────────────────────────────────────── */}
