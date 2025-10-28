@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { FaUserTie } from "react-icons/fa";
 
-const ExpertAdvicePage = () => {
+const ExpertAdvice = () => {
   // ═══════════════════════════════════════════════════════
   // STATE MANAGEMENT
   // ═══════════════════════════════════════════════════════
@@ -191,4 +191,4 @@ const ExpertAdvicePage = () => {
   );
 };
 
-export default ExpertAdvicePage;
+export default ExpertAdvice;
