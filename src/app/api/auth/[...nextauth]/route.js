@@ -71,7 +71,10 @@ export const authOptions = {
         );
 
         const data = await response.json();
-        // console.log("✅ User data sent to backend:", data);
+
+        //  Store MongoDB ID and token in user object
+          user.id = data.user._id
+
 
         return true; // Allow sign in
       } catch (error) {
@@ -93,11 +96,11 @@ export const authOptions = {
 
       // Preserve user data in token
       if (user) {
+        console.log("user in session", user);
         token.name = user.name;
         token.email = user.email;
         token.id = user.id;
       }
-
       return token;
     },
 

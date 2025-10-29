@@ -18,91 +18,189 @@ const ChatWindow = ({ expert, onClose }) => {
   const [conversationId, setConversationId] = useState(null);
 
   // Extract user ID from session (handles NextAuth token structure)
-  const currentUserId = session?.user?.id || session?.user?._id || session?.user?.sub || session?.user?.userId;
-  const accessToken = session?.accessToken || session?.user?.token || session?.user?.accessToken;
+  const currentUserId = String(session?.user?.id) ;
+  const accessToken = session?.accessToken ;
 
-  console.log("🔍 Full session object:", session);
-  console.log("🔍 Session user object:", session?.user);
-  console.log("🔍 Session debug:", {
-    session: !!session,
-    userId: currentUserId,
-    accessToken: !!accessToken,
-    expertId: expert?._id,
-    expertName: expert?.name,
-    allUserKeys: session?.user ? Object.keys(session.user) : []
-  });
+
 
   const expectedConvId = useMemo(() => {
     if (!currentUserId || !expert?._id) return null;
     return [currentUserId, expert._id].sort().join("_");
   }, [currentUserId, expert?._id]);
 
-  // ═══════════════════════════════════════════════════════
-  // Initialize conversation
-  // ═══════════════════════════════════════════════════════
-  useEffect(() => {
-    console.log("🔄 Initializing conversation:", {
-      socket: !!socket,
-      currentUserId,
-      expertId: expert?._id
+
+
+// ═══════════════════════════════════════════════════════
+// Fetch message history from REST API
+// ═══════════════════════════════════════════════════════
+const fetchMessageHistory = async () => {
+  if (!expectedConvId || !accessToken) {
+    console.log("❌ Cannot fetch history: missing conversationId or token");
+    return;
+  }
+
+  try {
+    console.log("📚 Fetching message history for:", expectedConvId);
+
+    const response = await axiosInstance.get("/messages", {
+      params: { conversationId: expectedConvId },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
 
-    if (!socket || !expectedConvId) {
-      console.log("❌ Missing required data for conversation init");
-      return;
+    if (response.data.status && response.data.data) {
+      console.log("✅ Loaded messages:", response.data.data);
+
+      // Transform DB messages to match socket message format
+      const formattedMessages = response.data.data.map((msg) => ({
+        id: msg._id,
+        conversationId: msg.conversationId,
+        senderId: String(msg.senderId),
+        recipientId: String(msg.recipientId),
+        message: msg.message,
+        timestamp: msg.createdAt || msg.timestamp,
+        read: msg.isRead,
+        senderName: String(msg.senderId) === String(currentUserId) ? "You" : expert.name,
+        dbSaved: true, // 🔥 Mark as from database
+      }));
+
+      // 🔍 Debug first message
+      if (formattedMessages.length > 0) {
+        console.log("🔍 First message after formatting:", {
+          senderId: formattedMessages[0].senderId,
+          senderIdType: typeof formattedMessages[0].senderId,
+          currentUserId: currentUserId,
+          currentUserIdType: typeof currentUserId,
+          match: formattedMessages[0].senderId === String(currentUserId)
+        });
+      }
+
+      setMessages(formattedMessages);
     }
+  } catch (error) {
+    console.error("❌ Error fetching message history:", error);
+  }
+};
 
-    // Generate conversation ID
-    console.log("💬 Generated conversation ID:", expectedConvId);
-    setConversationId(expectedConvId);
+// ═══════════════════════════════════════════════════════
+// Initialize conversation
+// ═══════════════════════════════════════════════════════
+useEffect(() => {
+  console.log("🔄 Initializing conversation:", {
+    socket: !!socket,
+    currentUserId,
+    expertId: expert?._id,
+    accessToken: !!accessToken
+  });
 
-    // Join conversation room
+  if (!expectedConvId) {
+    console.log("❌ Missing required data for conversation init");
+    return;
+  }
+
+  // Generate conversation ID
+  console.log("💬 Generated conversation ID:", expectedConvId);
+  setConversationId(expectedConvId);
+
+  // 🔥 FETCH MESSAGE HISTORY FROM DATABASE
+  fetchMessageHistory();
+
+  // Join conversation room (only if socket is connected)
+  if (socket) {
     socket.emit("join-conversation", { otherUserId: expert._id });
     console.log("🚪 Joined conversation room");
-
-    // No persistence: skip history load
 
     // Listen for new messages
     socket.on("receive-message", handleReceiveMessage);
     socket.on("message-sent", handleMessageSent);
     socket.on("user-typing", handleTypingIndicator);
-    socket.on("new-message", (msg) => {
-      if (msg?.conversationId === expectedConvId) {
-        setMessages((prev) => [...prev, msg]);
-      }
-    });
+    socket.on("new-message", handleNewMessage);
+  }
 
-    return () => {
+  return () => {
+    if (socket) {
       socket.off("receive-message", handleReceiveMessage);
       socket.off("message-sent", handleMessageSent);
       socket.off("user-typing", handleTypingIndicator);
-      socket.off("new-message");
-    };
-  }, [socket, expectedConvId, expert._id]);
-
-  // No history loading in socket-only mode
-
-  // ═══════════════════════════════════════════════════════
-  // Handle receiving message
-  // ═══════════════════════════════════════════════════════
-  const handleReceiveMessage = (messageData) => {
-    console.log("📥 receive-message:", messageData, "expectedConvId:", expectedConvId, "currentUserId:", currentUserId, "expertId:", expert?._id);
-    setMessages((prev) => [...prev, messageData]);
-
-    if (socket && messageData.conversationId) {
-      socket.emit("mark-read", {
-        conversationId: messageData.conversationId,
-        messageIds: [messageData.id],
-      });
+      socket.off("new-message", handleNewMessage);
     }
   };
+}, [socket, expectedConvId, expert._id, accessToken]);
 
-  // ═══════════════════════════════════════════════════════
-  // Handle message sent confirmation
-  // ═══════════════════════════════════════════════════════
-  const handleMessageSent = (messageData) => {
-    setMessages((prev) => [...prev, messageData]);
-  };
+
+// ═══════════════════════════════════════════════════════
+// Handle receiving message (avoid duplicates)
+// ═══════════════════════════════════════════════════════
+const handleReceiveMessage = (messageData) => {
+  console.log("📥 receive-message:", messageData);
+
+  setMessages((prev) => {
+    // Check if message already exists (by id or timestamp)
+    // const exists = prev.some(
+    //   (msg) => msg.id === messageData.id ||
+    //            (msg.timestamp === messageData.timestamp && msg.senderId === messageData.senderId)
+    // );
+
+    // if (exists) {
+    //   console.log("⚠️ Duplicate message detected, skipping");
+    //   return prev;
+    // }
+
+    return [...prev, messageData];
+  });
+
+  if (socket && messageData.conversationId) {
+    socket.emit("mark-read", {
+      conversationId: messageData.conversationId,
+      messageIds: [messageData.id],
+    });
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+// Handle message sent confirmation (avoid duplicates)
+// ═══════════════════════════════════════════════════════
+const handleMessageSent = (messageData) => {
+
+
+  setMessages((prev) => {
+    // Replace the local optimistic message with the server-confirmed one
+    const filtered = prev.filter(msg =>
+      !msg.id.startsWith('local_') ||
+      msg.message !== messageData.message
+    );
+
+    // Check if server message already exists
+    const exists = filtered.some(msg => msg.id === messageData.id);
+
+    if (exists) {
+      return filtered;
+    }
+
+    return [...filtered, messageData];
+  });
+};
+
+// ═══════════════════════════════════════════════════════
+// Handle new message in conversation room (avoid duplicates)
+// ═══════════════════════════════════════════════════════
+const handleNewMessage = (msg) => {
+
+
+  if (msg?.conversationId !== expectedConvId) {
+    return; // Not for this conversation
+  }
+
+  setMessages((prev) => {
+    const exists = prev.some(m => m.id === msg.id);
+    if (exists) {
+      console.log("⚠️ Message already exists, skipping");
+      return prev;
+    }
+    return [...prev, msg];
+  });
+};
 
   // ═══════════════════════════════════════════════════════
   // Handle typing indicator
@@ -118,52 +216,60 @@ const ChatWindow = ({ expert, onClose }) => {
     }
   };
 
-  // ═══════════════════════════════════════════════════════
-  // Send message
-  // ═══════════════════════════════════════════════════════
-  const handleSendMessage = async (messageText) => {
-    // Generate conversationId if it's null (fallback)
-    let convId = conversationId;
-    if (!convId && currentUserId && expert?._id) {
-      convId = [currentUserId, expert._id].sort().join("_");
-      console.log("🔄 Generated fallback conversation ID:", convId);
-    }
+ // ═══════════════════════════════════════════════════════
+// Send message
+// ═══════════════════════════════════════════════════════
+const handleSendMessage = async (messageText) => {
+  let convId = conversationId;
+  if (!convId && currentUserId && expert?._id) {
+    convId = [currentUserId, expert._id].sort().join("_");
+    console.log("🔄 Generated fallback conversation ID:", convId);
+  }
 
-    if (!socket || !messageText.trim() || !convId) {
-      console.log("❌ Cannot send message:", {
-        socket: !!socket,
-        messageText,
-        conversationId: convId,
-        currentUserId,
-        expertId: expert?._id
-      });
-      return;
-    }
-
-    console.log("📤 Sending message:", { messageText, recipientId: expert._id, conversationId: convId });
-
-    // Optimistically add to local UI
-    const localMessage = {
-      id: `local_${Date.now()}`,
+  if (!socket || !messageText.trim() || !convId) {
+    console.log("❌ Cannot send message:", {
+      socket: !!socket,
+      messageText,
       conversationId: convId,
-      senderId: currentUserId,
-      recipientId: expert._id,
-      message: messageText,
-      timestamp: new Date().toISOString(),
-      read: false,
-    };
-    setMessages((prev) => [...prev, localMessage]);
-
-    // Send via Socket.IO for real-time delivery
-    socket.emit("send-message", {
-      recipientId: expert._id,
-      recipientEmail: expert.email,
-      message: messageText,
-      conversationId: convId,
+      currentUserId,
+      expertId: expert?._id
     });
+    return;
+  }
 
-    console.log("📡 Message sent via socket");
+  console.log("📤 Sending message:", {
+    messageText,
+    recipientId: expert._id,
+    conversationId: convId
+  });
+
+  // Create unique temporary ID
+  const tempId = `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+  // Optimistically add to local UI
+  const localMessage = {
+    id: tempId,
+    conversationId: convId,
+    senderId: currentUserId,
+    recipientId: expert._id,
+    message: messageText,
+    timestamp: new Date().toISOString(),
+    read: false,
+    pending: true, // Mark as pending
   };
+
+  setMessages((prev) => [...prev, localMessage]);
+
+  // Send via Socket.IO for real-time delivery + DB save
+  socket.emit("send-message", {
+    recipientId: expert._id,
+    recipientEmail: expert.email,
+    message: messageText,
+    conversationId: convId,
+  });
+
+  console.log("📡 Message sent via socket");
+};
 
   // ═══════════════════════════════════════════════════════
   // Handle typing
@@ -179,9 +285,7 @@ const ChatWindow = ({ expert, onClose }) => {
     }
   };
 
-  // ═══════════════════════════════════════════════════════
-  // RENDER
-  // ═══════════════════════════════════════════════════════
+
   return (
     <div className="fixed bottom-4 right-4 w-full max-w-md h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col z-50 animate-slideIn">
       {/* ─────────────────────────────────────── */}
@@ -233,6 +337,7 @@ const ChatWindow = ({ expert, onClose }) => {
         isTyping={isTyping}
         expertName={expert.name}
         otherUserId={expert._id}
+
       />
 
       {/* ─────────────────────────────────────── */}

@@ -13,7 +13,7 @@ export function ChatProvider({ children }) {
   const [onlineUsersById, setOnlineUsersById] = useState(new Set());
   const [onlineUsersByEmail, setOnlineUsersByEmail] = useState(new Set());
 
-  //   console.log("Session in ChatProvider:", session.accessToken);
+    console.log("Session in ChatProvider:", session.accessToken);
 
   // ═══════════════════════════════════════════════════════
   // Initialize Socket.IO when user is authenticated

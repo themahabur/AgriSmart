@@ -2,13 +2,22 @@
 
 import React, { useEffect, useRef } from "react";
 
-const MessageList = ({ messages, currentUserId, isTyping, expertName, otherUserId }) => {
+const MessageList = ({ messages, currentUserId, isTyping, expertName, otherUserId, }) => {
   const messagesEndRef = useRef(null);
+
+  console.log("🔍 Messages:", messages);
 
   // Auto-scroll to bottom when new message arrives
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
+
+  // 🔥 Helper function to normalize IDs for comparison
+  const normalizeId = (id) => {
+    if (!id) return "";
+    // Convert to string and trim
+    return String(id).trim();
+  };
 
   return (
     <div className="flex-1 overflow-y-auto p-4 bg-gradient-to-br from-green-50/30 to-amber-50/30 scrollbar-thin">
@@ -25,14 +34,33 @@ const MessageList = ({ messages, currentUserId, isTyping, expertName, otherUserI
       ) : (
         <div className="space-y-4">
           {messages.map((msg, index) => {
-            // Align strictly by sender vs current user id
-            const isSentByMe = msg.senderId === currentUserId;
+            // 🔥 Normalize IDs before comparison
+            const normalizedSenderId = normalizeId(msg?.senderId);
+            const normalizedCurrentUserId =  normalizeId(currentUserId);
+            const isSentByMe = normalizedSenderId === normalizedCurrentUserId;
+
+
+
+            console.log("msg", msg);
+console.log("currentUserId", currentUserId);
+            console.log("isSentByMe", isSentByMe);
+            // 🔍 Debug logging (remove in production)
+            if (index === 0) {
+              console.log("🔍 ID Comparison Debug:", {
+                msgSenderId: msg.senderId,
+                currentUserId: currentUserId,
+                normalizedSenderId,
+                normalizedCurrentUserId,
+                isSentByMe,
+                match: normalizedSenderId === normalizedCurrentUserId
+              });
+            }
 
             return (
               <div
-                key={index++}
+                key={msg.id || index}
                 className={`flex ${
-                  isSentByMe ? "justify-end" : "justify-start"
+                  !isSentByMe ? "justify-start":"justify-end"
                 } animate-slideIn`}
               >
                 <div
@@ -59,10 +87,22 @@ const MessageList = ({ messages, currentUserId, isTyping, expertName, otherUserI
                       isSentByMe ? "text-right" : "text-left"
                     }`}
                   >
-                    {new Date(msg.timestamp).toLocaleTimeString("bn-BD", {
+                    { msg.timestamp ?
+                      new Date(msg.timestamp).toLocaleTimeString("bn-BD", {
                       hour: "2-digit",
                       minute: "2-digit",
-                    })}
+                    }) : new Date(msg.createdAt).toLocaleTimeString("bn-BD", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                    }
+                    {/* 🔍 Debug badge (remove in production) */}
+                    {msg.pending && (
+                      <span className="ml-2 text-yellow-500">⏳</span>
+                    )}
+                    {msg.dbSaved && (
+                      <span className="ml-2 text-green-500">✓</span>
+                    )}
                   </p>
                 </div>
               </div>
