@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { FaTimes, FaCircle, FaPaperPlane } from "react-icons/fa";
 
 import { useSession } from "next-auth/react";
@@ -10,7 +10,7 @@ import { useChat } from "./chatProvider/ChatProvider";
 import axiosInstance from "@/lib/axios";
 
 const ChatWindow = ({ expert, onClose }) => {
-  const { socket, connected } = useChat();
+  const { socket, connected, isUserOnline } = useChat();
   const { data: session } = useSession();
 
   const [messages, setMessages] = useState([]);
@@ -32,6 +32,11 @@ const ChatWindow = ({ expert, onClose }) => {
     allUserKeys: session?.user ? Object.keys(session.user) : []
   });
 
+  const expectedConvId = useMemo(() => {
+    if (!currentUserId || !expert?._id) return null;
+    return [currentUserId, expert._id].sort().join("_");
+  }, [currentUserId, expert?._id]);
+
   // ═══════════════════════════════════════════════════════
   // Initialize conversation
   // ═══════════════════════════════════════════════════════
@@ -42,87 +47,53 @@ const ChatWindow = ({ expert, onClose }) => {
       expertId: expert?._id
     });
 
-    if (!socket || !currentUserId || !expert?._id) {
+    if (!socket || !expectedConvId) {
       console.log("❌ Missing required data for conversation init");
       return;
     }
 
     // Generate conversation ID
-    const convId = [currentUserId, expert._id].sort().join("_");
-    console.log("💬 Generated conversation ID:", convId);
-    setConversationId(convId);
+    console.log("💬 Generated conversation ID:", expectedConvId);
+    setConversationId(expectedConvId);
 
     // Join conversation room
     socket.emit("join-conversation", { otherUserId: expert._id });
     console.log("🚪 Joined conversation room");
 
-    // Load chat history from REST API
-    loadChatHistory(convId);
+    // No persistence: skip history load
 
     // Listen for new messages
     socket.on("receive-message", handleReceiveMessage);
     socket.on("message-sent", handleMessageSent);
     socket.on("user-typing", handleTypingIndicator);
+    socket.on("new-message", (msg) => {
+      if (msg?.conversationId === expectedConvId) {
+        setMessages((prev) => [...prev, msg]);
+      }
+    });
 
     return () => {
       socket.off("receive-message", handleReceiveMessage);
       socket.off("message-sent", handleMessageSent);
       socket.off("user-typing", handleTypingIndicator);
+      socket.off("new-message");
     };
-  }, [socket, currentUserId, expert._id]);
+  }, [socket, expectedConvId, expert._id]);
 
-  // ═══════════════════════════════════════════════════════
-  // Load chat history from REST API
-  // ═══════════════════════════════════════════════════════
-  const loadChatHistory = async (convId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/messages?conversationId=${convId}`,
-        {
-          headers: {
-            Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
-          },
-        }
-      );
-      console.log("🔍🔍🔍🔍 Chat history response:", response);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("🔍🔍🔍🔍 Chat data:", data);
-        const serverMessages = Array.isArray(data?.data?.messages)
-          ? data.data.messages
-          : Array.isArray(data?.data)
-          ? data.data
-          : [];
-
-        const normalized = serverMessages.map((m) => ({
-          ...m,
-          timestamp: m.timestamp || m.createdAt || new Date().toISOString(),
-          read: m.read ?? m.isRead ?? false,
-        }));
-
-        setMessages(normalized);
-      }
-    } catch (error) {
-      console.error("Error loading chat history:", error);
-    }
-  };
+  // No history loading in socket-only mode
 
   // ═══════════════════════════════════════════════════════
   // Handle receiving message
   // ═══════════════════════════════════════════════════════
   const handleReceiveMessage = (messageData) => {
-    // Only add if it's from the current conversation
-    if (messageData.senderId === expert._id) {
-      setMessages((prev) => [...prev, messageData]);
+    console.log("📥 receive-message:", messageData, "expectedConvId:", expectedConvId, "currentUserId:", currentUserId, "expertId:", expert?._id);
+    setMessages((prev) => [...prev, messageData]);
 
-      // Mark as read
-      if (socket) {
-        socket.emit("mark-read", {
-          conversationId: messageData.conversationId,
-          messageIds: [messageData.id],
-        });
-      }
+    if (socket && messageData.conversationId) {
+      socket.emit("mark-read", {
+        conversationId: messageData.conversationId,
+        messageIds: [messageData.id],
+      });
     }
   };
 
@@ -171,21 +142,22 @@ const ChatWindow = ({ expert, onClose }) => {
 
     console.log("📤 Sending message:", { messageText, recipientId: expert._id, conversationId: convId });
 
-    // 1. Save to database via REST API
-    try {
-      const res = await axiosInstance.post(`/messages`, {
-        recipientId: expert._id,
-        message: messageText,
-        conversationId: convId,
-      });
-      console.log("✅ Message saved to database", res);
-    } catch (error) {
-      console.error("❌ Error saving message:", error);
-    }
+    // Optimistically add to local UI
+    const localMessage = {
+      id: `local_${Date.now()}`,
+      conversationId: convId,
+      senderId: currentUserId,
+      recipientId: expert._id,
+      message: messageText,
+      timestamp: new Date().toISOString(),
+      read: false,
+    };
+    setMessages((prev) => [...prev, localMessage]);
 
-    // 2. Send via Socket.IO for real-time delivery
+    // Send via Socket.IO for real-time delivery
     socket.emit("send-message", {
       recipientId: expert._id,
+      recipientEmail: expert.email,
       message: messageText,
       conversationId: convId,
     });
@@ -200,6 +172,8 @@ const ChatWindow = ({ expert, onClose }) => {
     if (socket) {
       socket.emit("typing", {
         recipientId: expert._id,
+        recipientEmail: expert.email,
+        conversationId,
         isTyping: isTypingNow,
       });
     }
@@ -220,7 +194,7 @@ const ChatWindow = ({ expert, onClose }) => {
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-green-600 font-bold border-2 border-white">
               {expert.name?.charAt(0) || "ব"}
             </div>
-            {connected && (
+            {isUserOnline(expert._id, expert.email) && (
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-green-600"></div>
             )}
           </div>
@@ -235,7 +209,7 @@ const ChatWindow = ({ expert, onClose }) => {
                 }`}
               />
               <span className="text-xs text-green-50 font-hind">
-                {connected ? "অনলাইন" : "অফলাইন"}
+                {isUserOnline(expert._id, expert.email) ? "অনলাইন" : "অফলাইন"}
               </span>
             </div>
           </div>

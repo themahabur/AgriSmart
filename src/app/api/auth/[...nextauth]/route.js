@@ -30,9 +30,9 @@ export const authOptions = {
         }
 
         return {
-          id: data.user?.id || "user-id",
+          id: data.user?._id || data.user?.id,
           name: data.user?.name || credentials.email,
-          email: credentials.email,
+          email: data.user?.email || credentials.email,
           image: data.user?.image || null,
           accessToken: data.token,
         };
