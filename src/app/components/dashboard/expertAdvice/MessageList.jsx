@@ -25,8 +25,8 @@ const MessageList = ({ messages, currentUserId, isTyping, expertName, otherUserI
       ) : (
         <div className="space-y-4">
           {messages.map((msg, index) => {
-            // Align by comparing sender with the other participant when available
-            const isSentByMe = otherUserId ? msg.senderId !== otherUserId : msg.senderId === currentUserId;
+            // Align strictly by sender vs current user id
+            const isSentByMe = msg.senderId === currentUserId;
 
             return (
               <div
