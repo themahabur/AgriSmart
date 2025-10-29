@@ -91,6 +91,13 @@ export const authOptions = {
         token.accessToken = account.id_token;
       }
 
+      // Preserve user data in token
+      if (user) {
+        token.name = user.name;
+        token.email = user.email;
+        token.id = user.id;
+      }
+
       return token;
     },
 
@@ -98,8 +105,9 @@ export const authOptions = {
       // Attach accessToken to session
       session.accessToken = token.accessToken;
 
-      // Keep user info clean
+      // Keep user info clean and include ID
       session.user = {
+        id: token.sub || token.id, // Use sub (subject) from JWT or id
         name: token.name,
         email: token.email,
         image: token.picture,

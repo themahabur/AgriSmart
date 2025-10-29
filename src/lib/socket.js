@@ -11,7 +11,7 @@ let socket = null;
  */
 export const initSocket = (token) => {
   if (!socket) {
-    socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3050", {
+    socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001", {
       auth: {
         token: token, // JWT token from NextAuth
       },

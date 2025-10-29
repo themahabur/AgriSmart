@@ -10,14 +10,17 @@ export function ChatProvider({ children }) {
   const { data: session } = useSession();
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState(new Set());
+  const [onlineUsersById, setOnlineUsersById] = useState(new Set());
+  const [onlineUsersByEmail, setOnlineUsersByEmail] = useState(new Set());
+
+  //   console.log("Session in ChatProvider:", session.accessToken);
 
   // ═══════════════════════════════════════════════════════
   // Initialize Socket.IO when user is authenticated
   // ═══════════════════════════════════════════════════════
   useEffect(() => {
-    if (session?.user?.token) {
-      const socketInstance = initSocket(session.user.token);
+    if (session?.accessToken) {
+      const socketInstance = initSocket(session.accessToken);
 
       // Connect
       socketInstance.connect();
@@ -30,19 +33,70 @@ export function ChatProvider({ children }) {
 
       socketInstance.on("disconnect", () => {
         setConnected(false);
+        setOnlineUsersById(new Set());
+        setOnlineUsersByEmail(new Set());
       });
 
       // Listen for online/offline status
-      socketInstance.on("user-online", ({ userId }) => {
-        setOnlineUsers((prev) => new Set(prev).add(userId));
+      socketInstance.on("online-status", (payload) => {
+        console.log("📊 Received online-status:", payload);
+        const byIdSet = new Set();
+        const byEmailSet = new Set();
+
+        if (payload?.byId) {
+          Object.entries(payload.byId).forEach(([userId, isOnline]) => {
+            if (isOnline) byIdSet.add(userId);
+          });
+        } else if (payload && typeof payload === "object") {
+          // legacy shape: { userId: true }
+          Object.entries(payload).forEach(([userId, isOnline]) => {
+            if (isOnline) byIdSet.add(userId);
+          });
+        }
+
+        if (payload?.byEmail) {
+          Object.entries(payload.byEmail).forEach(([email, isOnline]) => {
+            if (isOnline) byEmailSet.add(email);
+          });
+        }
+
+        setOnlineUsersById(byIdSet);
+        setOnlineUsersByEmail(byEmailSet);
+        console.log("👥 Online byId:", Array.from(byIdSet));
+        console.log("👥 Online byEmail:", Array.from(byEmailSet));
       });
 
-      socketInstance.on("user-offline", ({ userId }) => {
-        setOnlineUsers((prev) => {
+      // Incremental updates when a user goes online
+      socketInstance.on("user-online", ({ userId, userEmail }) => {
+        console.log("🟢 User came online:", userId, userEmail);
+        setOnlineUsersById((prev) => {
+          const next = new Set(prev);
+          next.add(userId);
+          return next;
+        });
+        if (userEmail) {
+          setOnlineUsersByEmail((prev) => {
+            const next = new Set(prev);
+            next.add(userEmail);
+            return next;
+          });
+        }
+      });
+
+      socketInstance.on("user-offline", ({ userId, userEmail }) => {
+        console.log("🔴 User went offline:", userId, userEmail);
+        setOnlineUsersById((prev) => {
           const newSet = new Set(prev);
           newSet.delete(userId);
           return newSet;
         });
+        if (userEmail) {
+          setOnlineUsersByEmail((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(userEmail);
+            return newSet;
+          });
+        }
       });
 
       setSocket(socketInstance);
@@ -51,6 +105,8 @@ export function ChatProvider({ children }) {
       return () => {
         disconnectSocket();
         setConnected(false);
+        setOnlineUsersById(new Set());
+        setOnlineUsersByEmail(new Set());
       };
     }
   }, [session]);
@@ -61,8 +117,11 @@ export function ChatProvider({ children }) {
   const value = {
     socket,
     connected,
-    onlineUsers,
-    isUserOnline: (userId) => onlineUsers.has(userId),
+    onlineUsersById,
+    onlineUsersByEmail,
+    isUserOnline: (userId, email) =>
+      (userId ? onlineUsersById.has(userId) : false) ||
+      (email ? onlineUsersByEmail.has(email) : false),
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

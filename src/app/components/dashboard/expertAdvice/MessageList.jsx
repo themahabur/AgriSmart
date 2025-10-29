@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 
-const MessageList = ({ messages, currentUserId, isTyping, expertName }) => {
+const MessageList = ({ messages, currentUserId, isTyping, expertName, otherUserId }) => {
   const messagesEndRef = useRef(null);
 
   // Auto-scroll to bottom when new message arrives
@@ -25,11 +25,12 @@ const MessageList = ({ messages, currentUserId, isTyping, expertName }) => {
       ) : (
         <div className="space-y-4">
           {messages.map((msg, index) => {
-            const isSentByMe = msg.senderId === currentUserId;
+            // Align by comparing sender with the other participant when available
+            const isSentByMe = otherUserId ? msg.senderId !== otherUserId : msg.senderId === currentUserId;
 
             return (
               <div
-                key={msg.id || index}
+                key={index++}
                 className={`flex ${
                   isSentByMe ? "justify-end" : "justify-start"
                 } animate-slideIn`}

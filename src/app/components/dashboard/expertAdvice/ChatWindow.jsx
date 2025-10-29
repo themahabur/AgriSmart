@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 import { useChat } from "./chatProvider/ChatProvider";
+import axiosInstance from "@/lib/axios";
 
 const ChatWindow = ({ expert, onClose }) => {
   const { socket, connected } = useChat();
@@ -16,20 +17,44 @@ const ChatWindow = ({ expert, onClose }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [conversationId, setConversationId] = useState(null);
 
-  const currentUserId = session?.user?.id || session?.user?._id;
+  // Extract user ID from session (handles NextAuth token structure)
+  const currentUserId = session?.user?.id || session?.user?._id || session?.user?.sub || session?.user?.userId;
+  const accessToken = session?.accessToken || session?.user?.token || session?.user?.accessToken;
+
+  console.log("🔍 Full session object:", session);
+  console.log("🔍 Session user object:", session?.user);
+  console.log("🔍 Session debug:", {
+    session: !!session,
+    userId: currentUserId,
+    accessToken: !!accessToken,
+    expertId: expert?._id,
+    expertName: expert?.name,
+    allUserKeys: session?.user ? Object.keys(session.user) : []
+  });
 
   // ═══════════════════════════════════════════════════════
   // Initialize conversation
   // ═══════════════════════════════════════════════════════
   useEffect(() => {
-    if (!socket || !currentUserId || !expert._id) return;
+    console.log("🔄 Initializing conversation:", {
+      socket: !!socket,
+      currentUserId,
+      expertId: expert?._id
+    });
+
+    if (!socket || !currentUserId || !expert?._id) {
+      console.log("❌ Missing required data for conversation init");
+      return;
+    }
 
     // Generate conversation ID
     const convId = [currentUserId, expert._id].sort().join("_");
+    console.log("💬 Generated conversation ID:", convId);
     setConversationId(convId);
 
     // Join conversation room
     socket.emit("join-conversation", { otherUserId: expert._id });
+    console.log("🚪 Joined conversation room");
 
     // Load chat history from REST API
     loadChatHistory(convId);
@@ -52,19 +77,31 @@ const ChatWindow = ({ expert, onClose }) => {
   const loadChatHistory = async (convId) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/messages?conversationId=${convId}`,
+        `http://localhost:5000/api/messages?conversationId=${convId}`,
         {
           headers: {
-            Authorization: `Bearer ${session?.user?.token}`,
+            Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
           },
         }
       );
+      console.log("🔍🔍🔍🔍 Chat history response:", response);
 
       if (response.ok) {
         const data = await response.json();
-        if (data.status) {
-          setMessages(data.data.messages || []);
-        }
+        console.log("🔍🔍🔍🔍 Chat data:", data);
+        const serverMessages = Array.isArray(data?.data?.messages)
+          ? data.data.messages
+          : Array.isArray(data?.data)
+          ? data.data
+          : [];
+
+        const normalized = serverMessages.map((m) => ({
+          ...m,
+          timestamp: m.timestamp || m.createdAt || new Date().toISOString(),
+          read: m.read ?? m.isRead ?? false,
+        }));
+
+        setMessages(normalized);
       }
     } catch (error) {
       console.error("Error loading chat history:", error);
@@ -114,39 +151,46 @@ const ChatWindow = ({ expert, onClose }) => {
   // Send message
   // ═══════════════════════════════════════════════════════
   const handleSendMessage = async (messageText) => {
-    if (!socket || !messageText.trim() || !conversationId) return;
+    // Generate conversationId if it's null (fallback)
+    let convId = conversationId;
+    if (!convId && currentUserId && expert?._id) {
+      convId = [currentUserId, expert._id].sort().join("_");
+      console.log("🔄 Generated fallback conversation ID:", convId);
+    }
+
+    if (!socket || !messageText.trim() || !convId) {
+      console.log("❌ Cannot send message:", {
+        socket: !!socket,
+        messageText,
+        conversationId: convId,
+        currentUserId,
+        expertId: expert?._id
+      });
+      return;
+    }
+
+    console.log("📤 Sending message:", { messageText, recipientId: expert._id, conversationId: convId });
 
     // 1. Save to database via REST API
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/messages`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user?.token}`,
-          },
-          body: JSON.stringify({
-            recipientId: expert._id,
-            message: messageText,
-            conversationId: conversationId,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        console.error("Failed to save message to database");
-      }
+      const res = await axiosInstance.post(`/messages`, {
+        recipientId: expert._id,
+        message: messageText,
+        conversationId: convId,
+      });
+      console.log("✅ Message saved to database", res);
     } catch (error) {
-      console.error("Error saving message:", error);
+      console.error("❌ Error saving message:", error);
     }
 
     // 2. Send via Socket.IO for real-time delivery
     socket.emit("send-message", {
       recipientId: expert._id,
       message: messageText,
-      conversationId: conversationId,
+      conversationId: convId,
     });
+
+    console.log("📡 Message sent via socket");
   };
 
   // ═══════════════════════════════════════════════════════
@@ -214,6 +258,7 @@ const ChatWindow = ({ expert, onClose }) => {
         currentUserId={currentUserId}
         isTyping={isTyping}
         expertName={expert.name}
+        otherUserId={expert._id}
       />
 
       {/* ─────────────────────────────────────── */}

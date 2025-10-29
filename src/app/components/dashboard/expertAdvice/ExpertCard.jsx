@@ -17,8 +17,9 @@ const ExpertCard = ({ expert }) => {
   const { isUserOnline } = useChat();
   const [showChat, setShowChat] = useState(false);
 
-  // Check if expert is online
-  const isOnline = isUserOnline(expert._id);
+  // Check if expert is online by id or email
+  const isOnline = isUserOnline(expert._id, expert.email);
+  console.log(`👤 Expert ${expert.name} (${expert._id}) is online:`, isOnline);
 
   // Get initials for avatar
   const getInitials = (name) => {
