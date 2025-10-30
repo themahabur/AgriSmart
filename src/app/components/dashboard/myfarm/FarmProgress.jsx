@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import AddActivityModal from "./AddActivityModal";
 import axiosInstance from "@/lib/axios";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { Slice } from "@tiptap/pm/model";
 
 const priorityMap = { low: "নিম্ন", medium: "মাধ্যমিক", high: "উচ্চ" };
 const priorityIcons = {
@@ -31,7 +32,6 @@ const FarmProgress = ({ farms = [] }) => {
     date: "",
     priority: "medium",
     farmName: "",
-
   });
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -135,7 +135,7 @@ const FarmProgress = ({ farms = [] }) => {
       title: newActivity.title,
       des: newActivity.description,
       priority: newActivity.priority,
-      // status: newActivity.status || "pending",
+      status: newActivity.status,
       date: newActivity.date,
       farmName: newActivity.farmName,
     };
@@ -155,7 +155,7 @@ const FarmProgress = ({ farms = [] }) => {
         date: "",
         priority: "medium",
         farmName: "",
-        // status: "pending",
+        status: "pending",
       });
     } catch (err) {
       console.error("Add activity error:", err);
@@ -229,14 +229,14 @@ const FarmProgress = ({ farms = [] }) => {
       </div>
 
       {/* Activities List */}
-      <div className="p-2  md:max-h-[40vh] overflow-y-auto scrollbar-hide">
+      <div className="p-4">
         {loading ? (
           <div className="text-center py-8 text-gray-600 text-sm">
             লোড হচ্ছে...
           </div>
         ) : activities.length > 0 ? (
           <div className="grid gap-3">
-            {activities.map((activity) => {
+            {activities.reverse().showMore === false ? Slice(0,1) : activities.map((activity) => {
               const PriorityIcon = priorityIcons[activity.priority];
               // Check if task is completed using the Set
               const isCompleted = completedTaskIds.has(activity._id);
@@ -244,24 +244,82 @@ const FarmProgress = ({ farms = [] }) => {
               return (
                 <div
                   key={activity._id}
-                  className={`bg-white rounded-lg p-4 border w-full transition-all ${isCompleted
+                  className={`bg-white rounded-lg p-4 border transition-all ${isCompleted
                     ? "border-green-500 bg-green-50"
                     : "border-gray-200 hover:border-gray-300"
                     }`}
                 >
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`text-lg mt-1 ${isCompleted
+                            ? "text-green-500"
+                            : getPriorityColor(activity.priority)
+                            }`}
+                        >
+                          {isCompleted ? <FaCheck /> : <PriorityIcon />}
+                        </div>
+                        <div className="flex-1">
+                          <h3
+                            className={`font-semibold text-base mb-1 ${isCompleted
+                              ? "text-green-700 line-through"
+                              : "text-gray-800"
+                              }`}
+                          >
+                            {activity.title}
+                          </h3>
+                          <p
+                            className={`text-sm mb-2 ${isCompleted ? "text-green-600" : "text-gray-600"
+                              }`}
+                          >
+                            {activity.des}
+                          </p>
 
+                          <div className="flex flex-wrap items-center gap-3 text-sm">
+                            <span
+                              className={`flex items-center ${isCompleted ? "text-green-500" : "text-gray-500"
+                                }`}
+                            >
+                              <FaCalendarAlt className="mr-1.5" />
+                              {activity.date}
+                            </span>
 
+                            {!isCompleted && (
+                              <span
+                                className={`flex items-center ${getPriorityColor(
+                                  activity.priority
+                                )}`}
+                              >
+                                <PriorityIcon className="mr-1.5" />
+                                {priorityMap[activity.priority] || "মাধ্যমিক"}
+                              </span>
+                            )}
 
-                  <div className="flex justify-between gap-2">
-                    <h3
-                      className={`font-semibold text-base mb-1  ${isCompleted
-                        ? "text-green-700 line-through"
-                        : "text-gray-800"
-                        }`}
-                    >
-                      {activity.title}
-                    </h3>
-                    <div className="flex items-center gap-2 w-fit sm:w-auto ">
+                            <span
+                              className={`flex items-center ${isCompleted
+                                ? "text-green-900"
+                                : getStatusColor(activity.status)
+                                }`}
+                            >
+                              <FaClock className="mr-1.5" />
+                              {isCompleted ? "সম্পন্ন" : activity.status}
+                            </span>
+
+                            <span
+                              className={`px-2 py-1 rounded text-xs ${isCompleted
+                                ? "bg-green-100 text-green-700"
+                                : "bg-gray-100 text-gray-500"
+                                }`}
+                            >
+                              {activity.farmName}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
                       <button
                         onClick={() => handleCompleteTask(activity)}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto flex items-center justify-center ${isCompleted
@@ -275,59 +333,11 @@ const FarmProgress = ({ farms = [] }) => {
                       </button>
                     </div>
                   </div>
-                  <p
-                    className={`text-sm mb-2 ${isCompleted ? "text-green-600" : "text-gray-600"
-                      }`}
-                  >
-                    {activity.des}
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-3 text-sm">
-                    <span
-                      className={`flex items-center ${isCompleted ? "text-green-500" : "text-gray-500"
-                        }`}
-                    >
-                      <FaCalendarAlt className="mr-1.5" />
-                      {activity.date ? new Date(activity.date).toLocaleDateString("bn-BD") : "তারিখ নির্ধারণ করুন"}
-
-                    </span>
-
-                    {!isCompleted && (
-                      <span
-                        className={`flex items-center ${getPriorityColor(
-                          activity.priority
-                        )}`}
-                      >
-                        <PriorityIcon className="mr-1.5" />
-                        {priorityMap[activity.priority] || "মাধ্যমিক"}
-                      </span>
-                    )}
-
-                    <span
-                      className={`flex items-center ${isCompleted
-                        ? "text-green-900"
-                        : getStatusColor(activity.status)
-                        }`}
-                    >
-                      <FaClock className="mr-1.5" />
-                      {isCompleted ? "সম্পন্ন" : activity.status}
-                    </span>
-
-                    <span
-                      className={`px-2 py-1 rounded text-xs ${isCompleted
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-100 text-gray-500"
-                        }`}
-                    >
-                      {activity.farmName}
-                    </span>
-                  </div>
                 </div>
-
-
               );
             })}
           </div>
+
         ) : (
           <div className="text-center py-8">
             <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
@@ -340,9 +350,13 @@ const FarmProgress = ({ farms = [] }) => {
           </div>
         )}
       </div>
-
-
-
+      <button onClick={() => setShowMore(!showMore)} className="p-2 w-full cursor-pointer flex items-center justify-center gap-1 transition-all duration-700 ease-in-out ">
+        {showMore ? <>
+          <IoIosArrowDown /> আরো দেখুন
+        </> : <>
+          <IoIosArrowUp /> বন্ধ করুন
+        </>}
+      </button>
       {/* Activity Modal */}
       <AddActivityModal
         show={showAddActivityForm}
