@@ -1,9 +1,27 @@
-
+import axiosInstance from "@/lib/axios";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { FaClock, FaLeaf } from "react-icons/fa";
 
 const TodayFarmTaskCard = ({ task }) => {
   const [status, setStatus] = useState(task.status);
+
+  const handleTaskStatusChange = async (data) => {
+    try {
+      const response = await axiosInstance.put(`/farm-tasks/${data._id}`, {
+        ...data,
+        status: "completed",
+      });
+
+      if (response.status === 200) {
+        setStatus((task.status = "Completed"));
+        toast.success("Task status updated successfully");
+      }
+    } catch (error) {
+      toast.error("Failed to update task status");
+      console.error("Error updating task status:", error);
+    }
+  };
 
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -18,7 +36,7 @@ const TodayFarmTaskCard = ({ task }) => {
     }
   };
 
-//  console.log(task.status = "Completed" , 'anbfg');
+  //  console.log(task.status = "Completed" , 'anbfg');
 
   return (
     <div
@@ -28,7 +46,11 @@ const TodayFarmTaskCard = ({ task }) => {
           : "bg-white border-gray-200 hover:border-green-300"
       }`}
     >
-      <div className={`flex items-start justify-between ${status === "Completed" && "opacity-50" }`}>
+      <div
+        className={`flex items-start justify-between ${
+          status === "Completed" && "opacity-50"
+        }`}
+      >
         <div className="flex-1">
           <h3
             className={`font-medium ${
@@ -59,8 +81,16 @@ const TodayFarmTaskCard = ({ task }) => {
           </div>
         </div>
         <div className="ml-4">
-          
-          <button onClick={()=> setStatus(task.status = "Completed")} className={`p-2 rounded-sm cursor-pointer ${status === "Completed" ? "bg-green-500 text-white" : "bg-red-200 text-red-700"}`}>{status}</button>
+          <button
+            onClick={() => handleTaskStatusChange(task)}
+            className={`p-2 rounded-sm cursor-pointer ${
+              status === "Completed"
+                ? "bg-green-500 text-white"
+                : "bg-red-200 text-red-700"
+            }`}
+          >
+            {status === "completed" ? "Complete" : "Completed"}
+          </button>
         </div>
       </div>
     </div>
