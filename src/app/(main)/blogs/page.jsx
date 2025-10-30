@@ -186,14 +186,6 @@ export default function Home() {
                   </span>
                 </div>
               )}
-
-              <div className="absolute bottom-1 right-4 transform -translate-y-1/2 flex gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
-                <Link href={`/blogs/knowledge-hub/${res.slug}`}>
-                  <button className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center  shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-110 hover:bg-green-700">
-                    <IoEyeOutline className="text-xl" />
-                  </button>
-                </Link>
-              </div>
             </div>
 
             <div className="p-5">

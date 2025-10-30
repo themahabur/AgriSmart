@@ -26,20 +26,24 @@ const AddBlogForm = ({ user }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const slug = useMemo(() => defaultSlugify(postData.title), [postData.title]);
+  // Auto slugify from title
+  const slug = useMemo(
+    () => (postData.title ? defaultSlugify(postData.title) : ""),
+    [postData.title]
+  );
 
+  // Handle text inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPostData((prev) => ({ ...prev, [name]: value }));
   };
-  console.log(postData);
+
   const handleSubmit = async (publishStatus) => {
     setError("");
     setIsSubmitting(true);
     let mediaUrl = "";
 
     try {
-      // Handle image upload for blog posts
       if (postData.type === "blog" && media.file) {
         const formData = new FormData();
         formData.append("file", media.file);
@@ -56,21 +60,39 @@ const AddBlogForm = ({ user }) => {
         const result = await uploadResponse.json();
         mediaUrl = result.url;
       }
-      // Handle video URL for video posts
-      // else if (postData.type === "video" && media.url) {
-      //   if (
-      //     !media.url.includes("youtube.com") &&
-      //     !media.url.includes("youtu.be")
-      //   ) {
-      //     throw new Error("Please enter a valid YouTube URL.");
-      //   }
-      //   mediaUrl = media.url;
-      // }
+
+      if (postData.type === "video" && media.url) {
+        let videoId = "";
+
+        if (/^[\w-]{11}$/.test(media.url)) {
+          videoId = media.url;
+        }
+        else if (
+          media.url.includes("youtube.com") ||
+          media.url.includes("youtu.be")
+        ) {
+          try {
+            const url = new URL(media.url);
+            if (url.hostname.includes("youtu.be")) {
+              videoId = url.pathname.slice(1); 
+            } else {
+              videoId = url.searchParams.get("v"); 
+            }
+            if (!videoId) throw new Error();
+          } catch {
+            throw new Error("Please enter a valid YouTube video URL or ID.");
+          }
+        } else {
+          throw new Error("Please enter a valid YouTube video URL or ID.");
+        }
+
+        mediaUrl = `https://www.youtube.com/embed/${videoId}`; 
+      }
 
       const finalPostData = {
-        title: postData.title,
-        subtitle: postData.subtitle,
-        summary: postData.summary,
+        title: postData.title.trim(),
+        subtitle: postData.subtitle.trim(),
+        summary: postData.summary.trim(),
         type: postData.type === "blog" ? "article" : "video",
         category: postData.category,
         slug,
@@ -80,19 +102,16 @@ const AddBlogForm = ({ user }) => {
         tags,
         status: publishStatus,
         author: {
-          name: user.name,
-          email: user.email,
+          name: user?.name || "Unknown",
+          email: user?.email || "",
         },
       };
 
-      const response = await axiosInstance.post(
-        "/knowledge-hub",
-        finalPostData
-      );
+      // --- API request
+      await axiosInstance.post("/knowledge-hub", finalPostData);
+      toast.success("✅ Blog submitted successfully!");
 
-      toast.success("Blog submitted successfully!");
-
-      // Reset form after successful submission
+      // --- Reset form
       setPostData({
         title: "",
         subtitle: "",
@@ -107,19 +126,20 @@ const AddBlogForm = ({ user }) => {
     } catch (err) {
       console.error("Submission error:", err);
       setError(err.message || "An unexpected error occurred.");
-      toast.error("Blog submission failed!");
+      toast.error("❌ Blog submission failed!");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    // Fixed: Changed py-6 to py-4 and added pb-8 to control bottom spacing better
-    <div className="container mx-auto px-4 lg:px-8 py-4 pb-8">
+    <div className="container mx-auto px-4 lg:px-8 py-6 pb-12">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* -------- Left Column -------- */}
         <div className="lg:col-span-2 space-y-8">
+          {/* Core Content */}
           <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-            <h3 className="text-xl font-bold font-hind text-gray-900 mb-6 border-b pb-4">
+            <h3 className="text-xl font-bold font-hind text-gray-900 mb-6 border-b pb-3">
               Core Content
             </h3>
             <FormInput
@@ -154,17 +174,19 @@ const AddBlogForm = ({ user }) => {
             />
           </div>
 
+          {/* Post Media */}
           <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
             <h3 className="text-xl font-bold font-hind text-gray-900 mb-6">
               Post Media
             </h3>
+
             <div className="p-1 bg-green-50 rounded-full flex mb-6">
               {["blog", "video"].map((type) => (
                 <label
                   key={type}
                   className={`w-1/2 text-center py-2 rounded-full cursor-pointer transition-all duration-300 ${
                     postData.type === type
-                      ? "bg-white shadow-sm text-green-700 font-semibold"
+                      ? "bg-white shadow text-green-700 font-semibold"
                       : "text-gray-600"
                   }`}
                 >
@@ -180,6 +202,7 @@ const AddBlogForm = ({ user }) => {
                 </label>
               ))}
             </div>
+
             {postData.type === "blog" ? (
               <ImageUploader
                 onFileSelect={(file) => setMedia((prev) => ({ ...prev, file }))}
@@ -194,6 +217,7 @@ const AddBlogForm = ({ user }) => {
             )}
           </div>
 
+          {/* Post Body */}
           <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
             <h3 className="text-xl font-bold font-hind text-gray-900 mb-6">
               Post Body
@@ -202,21 +226,25 @@ const AddBlogForm = ({ user }) => {
           </div>
         </div>
 
+        {/* -------- Right Column -------- */}
         <div className="lg:col-span-1 space-y-8 sticky top-24">
+          {/* Publish Actions */}
           <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
             <h3 className="text-xl font-bold font-hind text-gray-900 mb-4">
               Publish Actions
             </h3>
+
             {error && (
               <p className="text-red-600 bg-red-100 p-3 rounded-lg mb-4 text-sm">
                 {error}
               </p>
             )}
+
             <div className="space-y-3">
               <button
                 onClick={() => handleSubmit("published")}
                 disabled={isSubmitting || !postData.title || !body}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-bold py-3 px-4 rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-bold py-3 px-4 rounded-lg shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <FiLoader className="animate-spin" />
@@ -259,15 +287,13 @@ const AddBlogForm = ({ user }) => {
                 </select>
               </div>
 
-              <div>
-                <FormInput
-                  label="পড়ার সময় (Read Time)"
-                  id="readTime"
-                  name="readTime"
-                  value={postData.readTime}
-                  onChange={handleChange}
-                />
-              </div>
+              <FormInput
+                label="পড়ার সময় (Read Time)"
+                id="readTime"
+                name="readTime"
+                value={postData.readTime}
+                onChange={handleChange}
+              />
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
