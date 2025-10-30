@@ -15,47 +15,71 @@ export async function GET(req) {
 
     const GOOGLE_KEY = process.env.GOOGLE_API_KEY;
 
-    // 🟢 1️⃣ Get weather data
+    if (!GOOGLE_KEY) {
+      return NextResponse.json(
+        { error: "API key not configured" },
+        { status: 500 }
+      );
+    }
+
+    // 1️⃣ Fetch weather data
     const weatherUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${GOOGLE_KEY}&location.latitude=${lat}&location.longitude=${lon}`;
+
     const weatherRes = await fetch(weatherUrl);
-    const weatherData = await weatherRes.json();
+    const weatherText = await weatherRes.text();
 
     if (!weatherRes.ok) {
+      console.error("Weather API Error:", weatherRes.status, weatherText);
       return NextResponse.json(
-        { error: weatherData.message || "Failed to fetch weather" },
+        { error: "Failed to fetch weather data" },
         { status: weatherRes.status }
       );
     }
 
-    // 🟢 2️⃣ Get place name from Geocoding API
+    const weatherData = JSON.parse(weatherText);
+
+    // 2️⃣ Fetch place name from Nominatim
     const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-    const geoRes = await fetch(geoUrl);
-    const geoData = await geoRes.json();
 
-    
+    const geoRes = await fetch(geoUrl, {
+      headers: {
+        "User-Agent": "AgriSmartApp/1.0",
+      },
+    });
 
-    const place = geoData.address?.county || "Unknown Location";
+    const geoText = await geoRes.text();
+    let geoData = {};
 
-    // 🟢 3️⃣ Combine both responses
-    const condition = weatherData.temperature || {};
+    try {
+      geoData = JSON.parse(geoText);
+    } catch (e) {
+      console.error("Geocoding parse error:", e);
+    }
+
+    const place =
+      geoData.address?.town ||
+      geoData.address?.city ||
+      geoData.address?.village ||
+      "Unknown Location";
+
+    // 3️⃣ Format response
     const response = {
-      geoData,
       place,
-      temperature: condition.degrees,
-      unit: condition.unit || "C",
+      temperature: weatherData.temperature?.degrees,
+      unit: weatherData.temperature?.unit || "CELSIUS",
       humidity: weatherData.relativeHumidity,
       windSpeed: weatherData.wind?.speed?.value,
       pressure: weatherData.airPressure?.meanSeaLevelMillibars,
       feelsLikeTemperature: weatherData.feelsLikeTemperature?.degrees,
-      description: weatherData.weatherCondition.description.text || "N/A",
-      time: condition.observationTime?.value || new Date().toISOString(),
+      description: weatherData.weatherCondition?.description?.text || "N/A",
+      time: weatherData.currentTime || new Date().toISOString(),
     };
 
     return NextResponse.json(response);
   } catch (error) {
     console.error("Weather API Error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal Server Error", message: error.message },
       { status: 500 }
     );
   }
