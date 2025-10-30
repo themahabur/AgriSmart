@@ -1,9 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TodayFarmTaskCard from "./todayFarmTaskCard";
 import { FaClock } from "react-icons/fa";
 import Link from "next/link";
+import EmptyFarmTasks from "./EmptyFarmTasks";
+import axiosInstance from "@/lib/axios";
+import { useSession } from "next-auth/react";
+import TodayFarmTaskCardSkeleton from "./TodayFarmTaskCardSkeleton";
 
-const TodayTask = ({ farmTasks }) => {
+const TodayTask = () => {
+  const [farmTasks, setFarmTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { data: session } = useSession();
+
+  // Fetch today's farm tasks
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    const farmTask = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/farm-tasks/${session?.user?.email}`,
+          {
+            params: {
+              status: "in-progress",
+              page: 2,
+              limit: 10,
+            },
+          }
+        );
+        setFarmTasks(res.data.tasks);
+        setLoading(false);
+        // console.log("Today's farm tasks:", res.data.tasks);
+      } catch (error) {
+        console.error("Farm tasks fetch error:", error);
+      }
+    };
+    farmTask();
+  }, []);
+  if (loading) {
+    return <TodayFarmTaskCardSkeleton />;
+  }
+
+  // Check if there are no tasks
+  if (!farmTasks || (farmTasks.length === 0 && !loading)) {
+    return <EmptyFarmTasks />;
+  }
+
   return (
     <div>
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

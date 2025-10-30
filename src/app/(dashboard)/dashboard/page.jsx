@@ -1,30 +1,23 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import {
   FaTractor,
-  FaSeedling,
   FaCloudSun,
   FaChartLine,
   FaRobot,
   FaUsers,
   FaUserTie,
-  FaBell,
-  FaLeaf,
   FaTint,
   FaWind,
   FaArrowUp,
   FaArrowDown,
-  FaCheck,
-  FaClock,
-  FaBookOpen,
 } from "react-icons/fa";
 
 import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
-import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayTask/todayFarmTaskCard";
 import { getLocation } from "@/app/lib/getlocation";
 import WelcomeHeader from "@/app/components/dashboard/userDashboard/WelcomeHeader";
 import QuickStat from "@/app/components/dashboard/userDashboard/QuickStat";
@@ -35,7 +28,6 @@ import axiosInstance from "@/lib/axios";
 const Dashboard = () => {
   const { data: session } = useSession();
   const [weatherData, setWeatherData] = useState(null);
-  const [farmTasks, setFarmTasks] = useState([]);
 
   const activities = [
     {
@@ -126,29 +118,6 @@ const Dashboard = () => {
     loadWeather();
   }, []);
 
-  // Fetch today's farm tasks
-  useEffect(() => {
-    const farmTask = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `/farm-tasks/${session?.user?.email}`,
-          {
-            params: {
-              status: "in-progress",
-              page: 2,
-              limit: 10,
-            },
-          }
-        );
-        setFarmTasks(res.data.tasks);
-        console.log("Today's farm tasks:", res.data.tasks);
-      } catch (error) {
-        console.error("Farm tasks fetch error:", error);
-      }
-    };
-    farmTask();
-  }, []);
-
   // Function to format time in Bengali
   const formatTime = (date) => {
     return date.toLocaleTimeString("bn-BD", {
@@ -228,7 +197,7 @@ const Dashboard = () => {
           {/* Left Column - Today's Tasks & Quick Tools */}
           <div className="lg:col-span-2 space-y-6">
             {/* Today's Tasks */}
-            <TodayTask farmTasks={farmTasks} />
+            <TodayTask />
 
             {/* Quick Access Tools */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
