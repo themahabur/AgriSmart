@@ -1,3 +1,4 @@
+import next from "next";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
@@ -25,7 +26,9 @@ export async function GET(req) {
     // 1️⃣ Fetch weather data
     const weatherUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${GOOGLE_KEY}&location.latitude=${lat}&location.longitude=${lon}`;
 
-    const weatherRes = await fetch(weatherUrl);
+    const weatherRes = await fetch(weatherUrl, {
+      next: { revalidate: 600 },
+    });
     const weatherText = await weatherRes.text();
 
     if (!weatherRes.ok) {
