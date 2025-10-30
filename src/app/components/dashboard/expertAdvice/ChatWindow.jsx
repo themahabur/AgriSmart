@@ -38,9 +38,6 @@ const ChatWindow = ({ expert, onClose }) => {
     try {
       const response = await axiosInstance.get("/messages", {
         params: { conversationId: expectedConvId },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
       });
 
       if (response.data.status && response.data.data) {
