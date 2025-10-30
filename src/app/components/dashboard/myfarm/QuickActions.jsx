@@ -162,36 +162,9 @@ const QuickActions = ({ onActionClick }) => {
       </div>
 
       {/* Actions Grid */}
-      <div className="p-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-3">
-          {see
-            ? quickActions.map((action) => {
-                const IconComponent = action.icon;
-                return (
-                  <Link
-                    key={action.id}
-                    href={action.href}
-                    onClick={() => handleActionClick(action)}
-                  >
-                    <div
-                      className={`flex flex-col items-center justify-center p-4 rounded-lg transition-all duration-200 border cursor-pointer group ${getColorClasses(
-                        action.color
-                      )}`}
-                    >
-                      <IconComponent className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-200" />
-                      <span className="text-sm font-medium text-center leading-tight">
-                        {action.title}
-                      </span>
-                      {action.description && (
-                        <span className="text-xs text-center mt-1 opacity-75 leading-tight">
-                          {action.description}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })
-            : quickActions.slice(0,4).map((action) => {
+      <div className="p-4 max-h-[40vh] overflow-y-auto scrollbar-hide">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-3 ">
+          {quickActions.map((action) => {
                 const IconComponent = action.icon;
                 return (
                   <Link
@@ -218,20 +191,7 @@ const QuickActions = ({ onActionClick }) => {
                 );
               })}
         </div>
-        <button
-          onClick={() => setSee(!see)}
-          className="p-2 w-full cursor-pointer flex items-center justify-center gap-1 transition-all duration-700 ease-in-out "
-        >
-          {see ? (
-            <>
-              <IoIosArrowUp /> বন্ধ করুন
-            </>
-          ) : (
-            <>
-              <IoIosArrowDown /> আরো দেখুন
-            </>
-          )}
-        </button>
+        
       </div>
 
       {/* Quick Stats or Additional Info */}
