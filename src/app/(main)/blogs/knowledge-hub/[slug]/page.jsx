@@ -15,6 +15,7 @@ import {
 import { IoBookmarkOutline } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 import ShareModal from "@/app/components/dashboard/blog/BlogDetails/ShareModal";
+import FeaturedMedia from "@/app/components/dashboard/blog/BlogDetails/FeaturedMedia";
 
 export default function BlogDetails() {
   const { slug } = useParams();
@@ -24,6 +25,9 @@ export default function BlogDetails() {
   const [popularBlogs, setPopularBlogs] = useState([]);
   const [relatedBlogs, setRelatedBlogs] = useState([]);
   const [showShareOptions, setShowShareOptions] = useState(false);
+
+  console.log("Blog Slug:", slug);
+  console.log("Blog:", blog);
 
   useEffect(() => {
     if (!slug) return;
@@ -58,7 +62,7 @@ export default function BlogDetails() {
 
         if (allBlogs?.data?.length) {
           const sortedByPopularity = [...allBlogs.data]
-            .filter((item) => item._id !== blog?._id) 
+            .filter((item) => item._id !== blog?._id)
             .sort((a, b) => (b.likes || 0) - (a.likes || 0));
 
           setPopularBlogs(sortedByPopularity.slice(0, 3));
@@ -154,7 +158,6 @@ export default function BlogDetails() {
       toast.error("কিছু সমস্যা হয়েছে!");
     }
   };
-
 
   const isLiked = blog?.likes > 0;
   const isBookmarked = blog?.bookmarkCount > 0;
@@ -313,22 +316,8 @@ export default function BlogDetails() {
               </div>
             </div>
 
-            {/* Featured Image */}
-            {blog.media && isValidImageUrl(blog.media) ? (
-              <div className="relative w-full h-64 lg:h-80 rounded-lg mb-8 overflow-hidden bg-gray-50 border border-gray-200">
-                <Image
-                  src={blog.media}
-                  alt={blog.title || "Blog post image"}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            ) : (
-              <div className="bg-gray-50 border border-gray-200 rounded-lg w-full h-48 flex items-center justify-center mb-8">
-                <span className="text-gray-400 text-sm">No Image</span>
-              </div>
-            )}
+            {/* Featured Media */}
+            <FeaturedMedia media={blog.media} title={blog.title} />
 
             <div
               onClick={handleLike}
