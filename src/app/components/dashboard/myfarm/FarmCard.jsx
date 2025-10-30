@@ -133,7 +133,7 @@ const FarmCard = ({ farm, onEdit, onDelete }) => {
           {/* Last Update */}
           <div className="text-sm text-gray-500 flex items-center">
             <FaClock className="mr-1" />
-            শেষ আপডেট: {farm.updatedAt ? new Date(farm.updatedAt).toLocaleString("bn-BD") : "সময় সেট করা হয়নি"}
+            শেষ আপডেট: {farm.updatedAt}
           </div>
         </div>
 

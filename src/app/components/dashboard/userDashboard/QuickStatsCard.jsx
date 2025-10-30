@@ -1,9 +1,10 @@
+import Link from "next/link";
 import React from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
 const QuickStatsCard = ({ stat }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-300">
+    <Link href="/dashboard/my-farm" className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-300">
       <div className="flex items-center justify-between mb-4">
         <div className={`${stat.color} p-3 rounded-lg text-white text-xl`}>
           <stat.icon />
@@ -28,7 +29,7 @@ const QuickStatsCard = ({ stat }) => {
       </div>
       <h3 className="text-sm text-gray-600 mb-1">{stat.title}</h3>
       <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
-    </div>
+    </Link>
   );
 };
 
