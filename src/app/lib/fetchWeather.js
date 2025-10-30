@@ -2,7 +2,9 @@ export const fetchWeather = async (lat, lon) => {
   if (!lat || !lon) throw new Error("Latitude and Longitude are required");
 
   try {
-    const res = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
+    const res = await fetch(`/api/weather?lat=${lat}&lon=${lon}`, {
+      next: { revalidate: 1800 },
+    });
     const data = await res.json();
 
     if (!res.ok) {
