@@ -131,7 +131,14 @@ const Dashboard = () => {
     const farmTask = async () => {
       try {
         const res = await axiosInstance.get(
-          `/farm-tasks/${session?.user?.email}`
+          `/farm-tasks/${session?.user?.email}`,
+          {
+            params: {
+              status: "in-progress",
+              page: 2,
+              limit: 10,
+            },
+          }
         );
         setFarmTasks(res.data.tasks);
         console.log("Today's farm tasks:", res.data.tasks);
@@ -221,7 +228,6 @@ const Dashboard = () => {
           {/* Left Column - Today's Tasks & Quick Tools */}
           <div className="lg:col-span-2 space-y-6">
             {/* Today's Tasks */}
-
             <TodayTask farmTasks={farmTasks} />
 
             {/* Quick Access Tools */}
