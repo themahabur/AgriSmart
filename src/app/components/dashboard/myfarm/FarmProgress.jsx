@@ -246,129 +246,87 @@ const FarmProgress = ({ farms = [] }) => {
               return (
                 <div
                   key={activity._id}
-                  className={`bg-white rounded-lg p-4 border transition-all ${isCompleted
+                  className={`bg-white rounded-lg p-4 border w-full transition-all ${isCompleted
                     ? "border-green-500 bg-green-50"
                     : "border-gray-200 hover:border-gray-300"
                     }`}
                 >
-                  <div className="">
-                    <div className="">
-                      <div className="flex items-start gap-3">
-
-                        <div >
-                          <div className="flex justify-between">
-                            <h3
-                              className={`font-semibold text-base mb-1 ${isCompleted
-                                ? "text-green-700 line-through"
-                                : "text-gray-800"
-                                }`}
-                            >
-                              {activity.title}
-                            </h3>
-                            <div className="flex items-center gap-2 w-full sm:w-auto">
-                              <button
-                                onClick={() => handleCompleteTask(activity)}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto flex items-center justify-center ${isCompleted
-                                  ? "bg-gray-300 text-gray-700 cursor-not-allowed"
-                                  : "bg-green-600 hover:bg-green-700 text-white"
-                                  }`}
-                                disabled={isCompleted}
-                              >
-                                <FaCheck className="mr-2" />
-                                {isCompleted ? "সম্পন্ন" : "সম্পন্ন করুন"}
-                              </button>
-                            </div>
-                          </div>
-                          <p
-                            className={`text-sm mb-2 ${isCompleted ? "text-green-600" : "text-gray-600"
-                              }`}
-                            >
-                              <FaCalendarAlt className="mr-1.5" />
-                              {activity.date ? new Date(activity.date).toLocaleDateString("bn-BD") : "তারিখ নির্ধারণ করুন"}
-
-                            </span>
-
-                            {!isCompleted && (
-                              <span
-                                className={`flex items-center ${getPriorityColor(
-                                  activity.priority
-                                )}`}
-                              >
-                                <PriorityIcon className="mr-1.5" />
-                                {priorityMap[activity.priority] || "মাধ্যমিক"}
-                              </span>
-                            )}
-
-                            <span
-                              className={`flex items-center ${isCompleted
-                                ? "text-green-900"
-                                : getStatusColor(activity.status)
-                                }`}
-                              >
-                                {activity.title}
-                              </h3>
-                              <p
-                                className={`text-sm mb-2 ${
-                                  isCompleted
-                                    ? "text-green-600"
-                                    : "text-gray-600"
-                                }`}
-                              >
-                                {activity.des}
-                              </p>
-
-                              <div className="flex flex-wrap items-center gap-3 text-sm">
-                                <span
-                                  className={`flex items-center ${
-                                    isCompleted
-                                      ? "text-green-500"
-                                      : "text-gray-500"
-                                  }`}
-                                >
-                                  <FaCalendarAlt className="mr-1.5" />
-                                  {activity.date}
-                                </span>
-
-                                {!isCompleted && (
-                                  <span
-                                    className={`flex items-center ${getPriorityColor(
-                                      activity.priority
-                                    )}`}
-                                  >
-                                    <PriorityIcon className="mr-1.5" />
-                                    {priorityMap[activity.priority] ||
-                                      "মাধ্যমিক"}
-                                  </span>
-                                )}
-
-                                <span
-                                  className={`flex items-center ${
-                                    isCompleted
-                                      ? "text-green-900"
-                                      : getStatusColor(activity.status)
-                                  }`}
-                                >
-                                  <FaClock className="mr-1.5" />
-                                  {isCompleted ? "সম্পন্ন" : activity.status}
-                                </span>
-
-                                <span
-                                  className={`px-2 py-1 rounded text-xs ${
-                                    isCompleted
-                                      ? "bg-green-100 text-green-700"
-                                      : "bg-gray-100 text-gray-500"
-                                  }`}
-                                >
-                                  {activity.farmName}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
 
 
+
+                  <div className="flex justify-between gap-2">
+                    <h3
+                      className={`font-semibold text-base mb-1  ${isCompleted
+                        ? "text-green-700 line-through"
+                        : "text-gray-800"
+                        }`}
+                    >
+                      {activity.title}
+                    </h3>
+                    <div className="flex items-center gap-2 w-fit sm:w-auto ">
+                      <button
+                        onClick={() => handleCompleteTask(activity)}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto flex items-center justify-center ${isCompleted
+                          ? "bg-gray-300 text-gray-700 cursor-not-allowed"
+                          : "bg-green-600 hover:bg-green-700 text-white"
+                          }`}
+                        disabled={isCompleted}
+                      >
+                        <FaCheck className="mr-2" />
+                        {isCompleted ? "সম্পন্ন" : "সম্পন্ন করুন"}
+                      </button>
+                    </div>
+                  </div>
+                  <p
+                    className={`text-sm mb-2 ${isCompleted ? "text-green-600" : "text-gray-600"
+                      }`}
+                  >
+                    {activity.des}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                    <span
+                      className={`flex items-center ${isCompleted ? "text-green-500" : "text-gray-500"
+                        }`}
+                    >
+                      <FaCalendarAlt className="mr-1.5" />
+                      {activity.date ? new Date(activity.date).toLocaleDateString("bn-BD") : "তারিখ নির্ধারণ করুন"}
+
+                    </span>
+
+                    {!isCompleted && (
+                      <span
+                        className={`flex items-center ${getPriorityColor(
+                          activity.priority
+                        )}`}
+                      >
+                        <PriorityIcon className="mr-1.5" />
+                        {priorityMap[activity.priority] || "মাধ্যমিক"}
+                      </span>
+                    )}
+
+                    <span
+                      className={`flex items-center ${isCompleted
+                        ? "text-green-900"
+                        : getStatusColor(activity.status)
+                        }`}
+                    >
+                      <FaClock className="mr-1.5" />
+                      {isCompleted ? "সম্পন্ন" : activity.status}
+                    </span>
+
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${isCompleted
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-100 text-gray-500"
+                        }`}
+                    >
+                      {activity.farmName}
+                    </span>
                   </div>
                 </div>
+
+
               );
             })}
           </div>
@@ -385,7 +343,7 @@ const FarmProgress = ({ farms = [] }) => {
         )}
       </div>
 
-     
+
 
       {/* Activity Modal */}
       <AddActivityModal
