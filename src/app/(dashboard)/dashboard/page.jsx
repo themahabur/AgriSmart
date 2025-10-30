@@ -24,11 +24,13 @@ import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
-import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
+import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayTask/todayFarmTaskCard";
 import { getLocation } from "@/app/lib/getlocation";
 import WelcomeHeader from "@/app/components/dashboard/userDashboard/WelcomeHeader";
 import QuickStat from "@/app/components/dashboard/userDashboard/QuickStat";
 import RecentActivities from "@/app/components/dashboard/userDashboard/RecentActivities";
+import TodayTask from "@/app/components/dashboard/userDashboard/todayTask/TodayTask";
+import axiosInstance from "@/lib/axios";
 
 const Dashboard = () => {
   const { data: session } = useSession();
@@ -128,12 +130,11 @@ const Dashboard = () => {
   useEffect(() => {
     const farmTask = async () => {
       try {
-        const response = await fetch(
-          `https://agri-smart-server.vercel.app/api/farm-tasks/${session?.user?.email}`
+        const res = await axiosInstance.get(
+          `/farm-tasks/${session?.user?.email}`
         );
-        const data = await response.json();
-        setFarmTasks(data.tasks);
-        // console.log("Today's farm tasks:", data.tasks);
+        setFarmTasks(res.data.tasks);
+        console.log("Today's farm tasks:", res.data.tasks);
       } catch (error) {
         console.error("Farm tasks fetch error:", error);
       }
@@ -220,25 +221,8 @@ const Dashboard = () => {
           {/* Left Column - Today's Tasks & Quick Tools */}
           <div className="lg:col-span-2 space-y-6">
             {/* Today's Tasks */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                  <FaClock className="mr-2 text-green-600" />
-                  আজকের কাজ
-                </h2>
-                <Link
-                  href="/dashboard/my-farm"
-                  className="text-green-600 hover:text-green-700 text-sm font-medium"
-                >
-                  সব দেখুন →
-                </Link>
-              </div>
-              <div className="space-y-4">
-                {farmTasks?.map((task) => (
-                  <TodayFarmTaskCard key={task._id} task={task} />
-                ))}
-              </div>
-            </div>
+
+            <TodayTask farmTasks={farmTasks} />
 
             {/* Quick Access Tools */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
