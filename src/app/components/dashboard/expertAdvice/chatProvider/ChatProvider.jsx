@@ -13,8 +13,6 @@ export function ChatProvider({ children }) {
   const [onlineUsersById, setOnlineUsersById] = useState(new Set());
   const [onlineUsersByEmail, setOnlineUsersByEmail] = useState(new Set());
 
-    console.log("Session in ChatProvider:", session.accessToken);
-
   // ═══════════════════════════════════════════════════════
   // Initialize Socket.IO when user is authenticated
   // ═══════════════════════════════════════════════════════
@@ -27,7 +25,6 @@ export function ChatProvider({ children }) {
 
       // Listen for connection events
       socketInstance.on("connected", (data) => {
-        console.log("✅ Chat connected:", data);
         setConnected(true);
       });
 
@@ -39,7 +36,6 @@ export function ChatProvider({ children }) {
 
       // Listen for online/offline status
       socketInstance.on("online-status", (payload) => {
-        console.log("📊 Received online-status:", payload);
         const byIdSet = new Set();
         const byEmailSet = new Set();
 
@@ -62,8 +58,6 @@ export function ChatProvider({ children }) {
 
         setOnlineUsersById(byIdSet);
         setOnlineUsersByEmail(byEmailSet);
-        console.log("👥 Online byId:", Array.from(byIdSet));
-        console.log("👥 Online byEmail:", Array.from(byEmailSet));
       });
 
       // Incremental updates when a user goes online

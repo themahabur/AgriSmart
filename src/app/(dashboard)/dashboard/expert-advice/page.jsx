@@ -5,6 +5,7 @@ import EmptyState from "@/app/components/dashboard/expertAdvice/EmptyState";
 import ExpertCard from "@/app/components/dashboard/expertAdvice/ExpertCard";
 import LoadingState from "@/app/components/dashboard/expertAdvice/LoadingState";
 import SearchFilter from "@/app/components/dashboard/expertAdvice/SearchFilter";
+import axiosInstance from "@/lib/axios";
 import React, { useState, useEffect } from "react";
 import { FaUserTie } from "react-icons/fa";
 
@@ -28,11 +29,10 @@ const ExpertAdvice = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/all");
-      const data = await response.json();
+      const res = await axiosInstance.get("/users/all");
 
-      if (data.status) {
-        const expertUsers = data.data.users.filter(
+      if (res.status) {
+        const expertUsers = res.data?.data?.users?.filter(
           (user) => user.role === "expert" || user.role === "farmer"
         );
         setExperts(expertUsers);

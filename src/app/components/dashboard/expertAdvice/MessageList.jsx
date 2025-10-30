@@ -2,10 +2,14 @@
 
 import React, { useEffect, useRef } from "react";
 
-const MessageList = ({ messages, currentUserId, isTyping, expertName, otherUserId, }) => {
+const MessageList = ({
+  messages,
+  currentUserId,
+  isTyping,
+  expertName,
+  otherUserId,
+}) => {
   const messagesEndRef = useRef(null);
-
-  console.log("🔍 Messages:", messages);
 
   // Auto-scroll to bottom when new message arrives
   useEffect(() => {
@@ -36,31 +40,14 @@ const MessageList = ({ messages, currentUserId, isTyping, expertName, otherUserI
           {messages.map((msg, index) => {
             // 🔥 Normalize IDs before comparison
             const normalizedSenderId = normalizeId(msg?.senderId);
-            const normalizedCurrentUserId =  normalizeId(currentUserId);
+            const normalizedCurrentUserId = normalizeId(currentUserId);
             const isSentByMe = normalizedSenderId === normalizedCurrentUserId;
-
-
-
-            console.log("msg", msg);
-console.log("currentUserId", currentUserId);
-            console.log("isSentByMe", isSentByMe);
-            // 🔍 Debug logging (remove in production)
-            if (index === 0) {
-              console.log("🔍 ID Comparison Debug:", {
-                msgSenderId: msg.senderId,
-                currentUserId: currentUserId,
-                normalizedSenderId,
-                normalizedCurrentUserId,
-                isSentByMe,
-                match: normalizedSenderId === normalizedCurrentUserId
-              });
-            }
 
             return (
               <div
                 key={msg.id || index}
                 className={`flex ${
-                  !isSentByMe ? "justify-start":"justify-end"
+                  !isSentByMe ? "justify-start" : "justify-end"
                 } animate-slideIn`}
               >
                 <div
@@ -87,15 +74,15 @@ console.log("currentUserId", currentUserId);
                       isSentByMe ? "text-right" : "text-left"
                     }`}
                   >
-                    { msg.timestamp ?
-                      new Date(msg.timestamp).toLocaleTimeString("bn-BD", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }) : new Date(msg.createdAt).toLocaleTimeString("bn-BD", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                    }
+                    {msg.timestamp
+                      ? new Date(msg.timestamp).toLocaleTimeString("bn-BD", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : new Date(msg.createdAt).toLocaleTimeString("bn-BD", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                     {/* 🔍 Debug badge (remove in production) */}
                     {msg.pending && (
                       <span className="ml-2 text-yellow-500">⏳</span>

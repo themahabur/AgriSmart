@@ -23,11 +23,11 @@ export const initSocket = (token) => {
 
     // Connection event listeners
     socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket.id);
+      // console.log("✅ Socket connected:", socket.id);
     });
 
     socket.on("disconnect", (reason) => {
-      console.log("❌ Socket disconnected:", reason);
+      // console.log("❌ Socket disconnected:", reason);
     });
 
     socket.on("connect_error", (error) => {
@@ -55,6 +55,6 @@ export const disconnectSocket = () => {
   if (socket) {
     socket.disconnect();
     socket = null;
-    console.log("🔌 Socket disconnected and cleaned up");
+    // console.log("🔌 Socket disconnected and cleaned up");
   }
 };
