@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import { FaTractor, FaPlus } from "react-icons/fa";
 import toast from "react-hot-toast";
 
-const API_BASE_URL = "https://agri-smart-server.vercel.app/api";
-// const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_SERVER_API_URL || "http://localhost:5000";
+// const API_BASE_URL = "https://agri-smart-server.vercel.app";
+
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
 import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
@@ -21,7 +22,7 @@ const MyFarmPage = () => {
   const [lastSubmittedFarm, setLastSubmittedFarm] = useState(null);
   const [showSubmittedData, setShowSubmittedData] = useState(false);
   const [selectedFarmId, setSelectedFarmId] = useState("");
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   // console.log(session.user.email);
 
@@ -74,9 +75,19 @@ const MyFarmPage = () => {
 
   // Fetch farms data
   useEffect(() => {
+    // Don't fetch if user is not authenticated
+    if (status === "loading") return;
+    
+    if (!session?.user?.email) {
+      setLoading(false);
+      setError("ব্যবহারকারী নথিভুক্ত করা হয়নি। অনুগ্রহ করে লগইন করুন।");
+      return;
+    }
+
     const fetchFarms = async () => {
       try {
         setLoading(true);
+<<<<<<< HEAD
         const response = await fetch(
           `${API_BASE_URL}/farms/${session?.user?.email}`
         );
@@ -88,14 +99,25 @@ const MyFarmPage = () => {
         const data = await response.json();
         if (data.status && data.data) {
           setFarms(data.data.farms || data.data);
+=======
+        setError(null);
+        
+        // Using axiosInstance for better error handling
+        const response = await axiosInstance.get(`/farms/${session.user.email}`);
+        
+        if (response.data.status && response.data.data) {
+          setFarms(response.data.data.farms || response.data.data);
+>>>>>>> d955e40afb28885c890aa4b0a624916df04a203e
         } else {
           setFarms([]);
         }
-        setError(null);
       } catch (err) {
         console.error("Error fetching farms:", err);
-        setError("ফার্ম ডেটা লোড করতে সমস্যা হয়েছে");
-        toast.error("ফার্ম ডেটা লোড করতে সমস্যা হয়েছে");
+        const errorMessage = err.response?.data?.message || 
+                            err.message || 
+                            "ফার্ম ডেটা লোড করতে সমস্যা হয়েছে";
+        setError(errorMessage);
+        toast.error(errorMessage);
         setFarms([]);
       } finally {
         setLoading(false);
@@ -103,7 +125,11 @@ const MyFarmPage = () => {
     };
 
     fetchFarms();
+<<<<<<< HEAD
   }, []);
+=======
+  }, [session?.user?.email, status]);
+>>>>>>> d955e40afb28885c890aa4b0a624916df04a203e
 
   // Dropdown filtered farms
   const displayedFarms = selectedFarmId
@@ -173,8 +199,11 @@ const MyFarmPage = () => {
       }, 10000);
     } catch (err) {
       console.error("Error adding farm:", err);
-      setError("ফার্ম যোগ করতে সমস্যা হয়েছে");
-      toast.error("ফার্ম যোগ করতে সমস্যা হয়েছে");
+      const errorMessage = err.response?.data?.message || 
+                          err.message || 
+                          "ফার্ম যোগ করতে সমস্যা হয়েছে";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -207,18 +236,18 @@ const MyFarmPage = () => {
         organicPractices: updatedData.organicPractices,
       };
 
-      const response = await fetch(`${API_BASE_URL}/farms/${farmId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatePayload),
-      });
+      const response = await axiosInstance.put(`/farms/${farmId}`, updatePayload);
 
+<<<<<<< HEAD
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const updatedFarmResponse = await response.json();
       const updatedFarm = updatedFarmResponse.data || updatedFarmResponse;
+=======
+      const updatedFarm = response.data.data || response.data;
+>>>>>>> d955e40afb28885c890aa4b0a624916df04a203e
 
       setFarms(
         farms.map((farm) =>
@@ -232,8 +261,11 @@ const MyFarmPage = () => {
       setError(null);
     } catch (err) {
       console.error("Error updating farm:", err);
-      setError("ফার্ম আপডেট করতে সমস্যা হয়েছে");
-      toast.error("ফার্ম আপডেট করতে সমস্যা হয়েছে");
+      const errorMessage = err.response?.data?.message || 
+                          err.message || 
+                          "ফার্ম আপডেট করতে সমস্যা হয়েছে";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -280,6 +312,7 @@ const MyFarmPage = () => {
   const confirmDeleteFarm = async (id) => {
     try {
       setLoading(true);
+<<<<<<< HEAD
       const response = await fetch(`${API_BASE_URL}/farms/${id}`, {
         method: "DELETE",
       });
@@ -287,14 +320,20 @@ const MyFarmPage = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+=======
+      await axiosInstance.delete(`/farms/${id}`);
+>>>>>>> d955e40afb28885c890aa4b0a624916df04a203e
 
       setFarms(farms.filter((farm) => farm.id !== id && farm._id !== id));
       toast.success("ফার্ম সফলভাবে মুছে ফেলা হয়েছে 🗑️");
       setError(null);
     } catch (err) {
       console.error("Error deleting farm:", err);
-      setError("ফার্ম ডিলিট করতে সমস্যা হয়েছে");
-      toast.error("ফার্ম ডিলিট করতে সমস্যা হয়েছে");
+      const errorMessage = err.response?.data?.message || 
+                          err.message || 
+                          "ফার্ম ডিলিট করতে সমস্যা হয়েছে";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -324,7 +363,7 @@ const MyFarmPage = () => {
   };
 
   return (
-    <div className="flex flex-col font-hind p-4 sm:p-6 md:p-8 bg-white min-h-screen">
+    <div className="flex flex-col font-hind p-4 sm:p-6 md:p-8 md:pb-0 bg-white min-h-[85vh]">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
@@ -341,8 +380,13 @@ const MyFarmPage = () => {
             setEditingFarm(null);
             setShowAddFormModal(true);
           }}
+<<<<<<< HEAD
           className="mt-4 md:mt-0 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors shadow-md disabled:opacity-50"
           disabled={loading}
+=======
+          className="mt-4 md:mt-0 bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors shadow-md disabled:opacity-50"
+          disabled={loading || !session?.user?.email}
+>>>>>>> d955e40afb28885c890aa4b0a624916df04a203e
         >
           <FaPlus className="mr-2" />
           নতুন ফার্ম যুক্ত করুন
@@ -452,15 +496,20 @@ const MyFarmPage = () => {
                       setShowAddFormModal(true);
                     }}
                     className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center transition-colors disabled:opacity-50"
-                    disabled={loading}
+                    disabled={loading || !session?.user?.email}
                   >
                     <FaPlus className="mr-2" />
                     প্রথম ফার্ম যুক্ত করুন
                   </button>
                 </div>
               ) : (
+<<<<<<< HEAD
                 <div className="grid grid-cols-1 gap-4">
                   {farms.map((farm, index) => (
+=======
+                <div className="grid grid-cols-1 gap-4 md:max-h-[calc(100vh-354px)] md:overflow-y-auto">
+                  {displayedFarms.map((farm, index) => (
+>>>>>>> d955e40afb28885c890aa4b0a624916df04a203e
                     <FarmCard
                       key={farm.id || farm._id || `farm-${index}`}
                       farm={farm}
@@ -475,7 +524,7 @@ const MyFarmPage = () => {
           </div>
         </div>
 
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-1 space-y-6 md:max-h-[calc(100vh-228px)] md:overflow-y-auto">
           <FarmProgress
             activities={activities}
             onAddActivity={handleAddActivity}

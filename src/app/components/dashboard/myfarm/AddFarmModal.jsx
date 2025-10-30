@@ -497,6 +497,35 @@ const AddFarmModal = ({
     e.preventDefault();
     if (currentStep === totalSteps) {
       try {
+        const formattedData = {
+          name: formData.name.trim(),
+          location: formData.location.trim(),
+          sizeAcre: parseFloat(formData.size) || 0,
+          crop: formData.cropType.trim(),
+          status: formData.cropStatus || "পরিকল্পনাধীন",
+          cropDetails: {
+            type: formData.cropType.trim(),
+            variety: formData.cropVariety.trim(),
+            plantingDate: formData.plantingDate || null,
+          },
+          soilDetails: {
+            type: formData.soilType || null,
+            pH: formData.soilPH ? parseFloat(formData.soilPH) : null,
+          },
+          irrigation: {
+            source: formData.irrigationSource || null,
+            tubeWellDepth: formData.tubeWellDepth
+              ? parseFloat(formData.tubeWellDepth)
+              : null,
+          },
+          organicPractices: formData.organicPractices || false,
+          coordinates: {
+            latitude: 24.4365,
+            longitude: 88.9741,
+          },
+          userEmail: userEmail || "",
+        };
+
         if (editingFarm) {
           await onUpdateFarm(editingFarm.id || editingFarm._id, newFarm);
         } else {
@@ -505,6 +534,10 @@ const AddFarmModal = ({
         handleClose();
       } catch (error) {
         console.error("Submit error:", error);
+        const errorMessage = error.response?.data?.message || 
+                           error.message || 
+                           "ডেটা সেভ করতে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
+        alert(errorMessage);
       }
     } else {
       handleNext();
