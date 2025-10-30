@@ -23,6 +23,8 @@ const Profile = () => {
     primaryCrops: [],
     phone: "",
     farmSize: "",
+    totalCrops: "",
+    address: ""
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -84,12 +86,10 @@ const Profile = () => {
         throw new Error("No user email found");
       }
 
-      const response = await axiosInstance(
-        `/api/users/me/${userEmail}`
-      );
+      const response = await axiosInstance.get(`/api/users/me/${userEmail}`);
 
-      if (response.ok) {
-        const result = await response.json();
+      if (response.status === 200) {
+        const result = response.data;
         if (result.status && result.data) {
           setHasDatabaseData(true);
           return result.data;
@@ -146,6 +146,8 @@ const Profile = () => {
               farmSize: apiUserData.farmSize?.unit
                 ? apiUserData.farmSize.unit
                 : apiUserData.farmSize || "",
+              totalCrops: apiUserData.totalCrops || "",
+              address: apiUserData.address || ""
             };
 
             setUser(userData);
@@ -166,6 +168,8 @@ const Profile = () => {
               primaryCrops: [],
               phone: "",
               farmSize: "",
+              totalCrops: "",
+              address: ""
             };
 
             setUser(sessionUserData);
@@ -185,7 +189,7 @@ const Profile = () => {
     };
 
     loadUserData();
-  }, [session, status, divisions, districts, upazilas]); // Added dependencies for location data
+  }, [session, status]); // Removed location data dependencies to prevent infinite loop
 
   // Load location data from JSON files
   useEffect(() => {
@@ -355,23 +359,20 @@ const Profile = () => {
         upazila: upazilaName,
         farmSize: formData.farmSize,
         avatar: formData.avatar,
+        totalCrops: formData.totalCrops,
+        address: formData.address,
+        primaryCrops: formData.primaryCrops
       };
 
       console.log("Sending update data:", updateData);
 
-      const response = await fetch(
-        `https://agri-smart-server.vercel.app/api/users/me/${userEmail}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateData),
-        }
+      const response = await axiosInstance.put(
+        `/api/users/me/${userEmail}`,
+        updateData
       );
 
-      if (response.ok) {
-        const result = await response.json();
+      if (response.status === 200) {
+        const result = response.data;
 
         if (result.status && result.data) {
           const updatedUser = result.data;
@@ -386,6 +387,9 @@ const Profile = () => {
             upazila: formData.upazila,
             farmSize: formData.farmSize,
             avatar: formData.avatar,
+            totalCrops: formData.totalCrops,
+            address: formData.address,
+            primaryCrops: formData.primaryCrops
           }));
 
           setEditMode(false);
@@ -411,7 +415,7 @@ const Profile = () => {
           throw new Error(result.message || "Update failed");
         }
       } else {
-        const errorData = await response.json();
+        const errorData = response.data;
         throw new Error(errorData.message || "Update failed");
       }
     } catch (error) {
@@ -485,7 +489,7 @@ const Profile = () => {
   // Debug: Log current form data
   useEffect(() => {
     console.log("Current formData:", formData);
-    console.log("Available divisions:", user);
+    console.log("Available divisions:", divisions.length);
     console.log("Available districts:", districts.length);
     console.log("Available upazilas:", upazilas.length);
   }, [formData, divisions, districts, upazilas]);
@@ -550,6 +554,12 @@ const Profile = () => {
                   {" "}
                   <FaPenFancy />
                 </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
               </div>
             </div>
             <div>
@@ -699,37 +709,65 @@ const Profile = () => {
 
                 {/* modal */}
                 <div className={`fixed bg-black/60 inset-0 z-50 flex items-center justify-center ${editMode ? "block" : "hidden"}`}>
-                  <div className="bg-white rounded-lg shadow-lg p-6">
+                  <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
                     <h3 className="text-lg font-bold mb-4">প্রোফাইল সম্পাদনা করুন</h3>
-                    <div>
+                    <div className="space-y-4">
                       <InputField
                         label="ফোন নম্বর"
                         name="phone"
-                        value={user.phone}
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                      />
+                      <InputField
+                        label="ঠিকানা"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                      />
+                      <InputField
+                        label="মোট ফসলের পরিমাণ"
+                        name="totalCrops"
+                        value={formData.totalCrops}
                         onChange={handleInputChange}
                       />
                       <SelectField
                         label="বিভাগ"
                         name="division"
-                        value={user.division}
+                        value={formData.division}
                         onChange={handleInputChange}
+                        options={divisions.map(div => ({ value: div.id, label: div.ban_name }))}
                       />
                       <SelectField
                         label="জেলা"
                         name="district"
-                        value={user.district}
+                        value={formData.district}
                         onChange={handleInputChange}
+                        options={getFilteredDistricts().map(dist => ({ value: dist.id, label: dist.bn_name }))}
+                        disabled={!formData.division}
                       />
                       <SelectField
                         label="উপজেলা"
                         name="upazila"
-                        value={user.upazila}
+                        value={formData.upazila}
                         onChange={handleInputChange}
+                        options={getFilteredUpazilas().map(upz => ({ value: upz.id, label: upz.bn_name }))}
+                        disabled={!formData.district}
                       />
                     </div>
-                    <button onClick={() => setEditMode(false)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-                      পরিবর্তন সংরক্ষণ করুন
-                    </button>
+                    <div className="flex justify-end space-x-3 mt-6">
+                      <button 
+                        onClick={handleCancel} 
+                        className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                      >
+                        বাতিল করুন
+                      </button>
+                      <button 
+                        onClick={handleSave} 
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                      >
+                        পরিবর্তন সংরক্ষণ করুন
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
