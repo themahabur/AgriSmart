@@ -78,7 +78,7 @@ const FarmCard = ({ farm, onEdit, onDelete }) => {
             {farm.pestAlert && (
               <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center">
                 <FaExclamationTriangle className="mr-1" />
-                সতর্কতা
+                সতর্কতা xxx
               </span>
             )}
             {farm.organicPractices && (
@@ -133,7 +133,7 @@ const FarmCard = ({ farm, onEdit, onDelete }) => {
           {/* Last Update */}
           <div className="text-sm text-gray-500 flex items-center">
             <FaClock className="mr-1" />
-            শেষ আপডেট: {farm.updatedAt}
+            শেষ আপডেট: {farm.updatedAt ? new Date(farm.updatedAt).toLocaleString("bn-BD") : "সময় সেট করা হয়নি"}
           </div>
         </div>
 
