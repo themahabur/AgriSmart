@@ -32,7 +32,7 @@ const navItems = [
   { href: "/dashboard/weather", icon: FaCloudSun, text: "আবহাওয়া" },
   { href: "/dashboard/market-price", icon: FaChartLine, text: "বাজার দাম" },
   { href: "/dashboard/ai-chatbot", icon: FaRobot, text: "এআই চ্যাটবট" },
-  { href: "/dashboard/blog", icon: FaBlog, text: "ব্লগ" },
+  // { href: "/dashboard/blog", icon: FaBlog, text: "ব্লগ" },
   { href: "/dashboard/add-blog", icon: MdPostAdd, text: "ব্লগ যোগ করুন" },
  
   { href: "/dashboard/blog-manage", icon: FaPenFancy, text: "ব্লগ ম্যানেজ" },
@@ -66,7 +66,7 @@ const navItems = [
     icon: MdNotificationAdd,
     text: "নোটিফিকেশন যুক্ত করুণ",
   },
-  { href: "/dashboard/settings", icon: FaCog, text: "সেটিংস" },
+  // { href: "/dashboard/settings", icon: FaCog, text: "সেটিংস" },
 ];
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
