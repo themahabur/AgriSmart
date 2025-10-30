@@ -41,7 +41,7 @@ export default function Home() {
 
     fetchData();
   }, []);
-console.log(featured);
+  console.log(featured);
   if (loading) {
     return (
       <main>
@@ -121,16 +121,16 @@ console.log(featured);
             {featured.author?.name || "অজানা লেখক"}
           </span>
           <Link href={`/blogs/knowledge-hub/${featured.slug}`}>
-          <button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 w-fit">
-            পুরো আর্টিকেল পড়ুন
-          </button>
+            <button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 w-fit">
+              পুরো আর্টিকেল পড়ুন
+            </button>
           </Link>
         </div>
       </div>
 
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800">সব রিসোর্স</h2>
-         
+
         <button className="text-green-600 font-medium hover:underline flex items-center gap-2 group">
           সব দেখুন
           <svg
@@ -157,8 +157,8 @@ console.log(featured);
           >
             <div className="relative overflow-hidden">
               {res.media && isValidImageUrl(res.media) ? (
-                <img 
-                  height={400} 
+                <img
+                  height={400}
                   width={600}
                   src={res.media}
                   alt={res.title}
@@ -188,14 +188,6 @@ console.log(featured);
               )}
 
               <div className="absolute bottom-1 right-4 transform -translate-y-1/2 flex gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
-                <button className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-110 group/like">
-                  <GoHeart className="text-xl" />
-                </button>
-
-                <button className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:shadow-lg  transition-all duration-200 hover:scale-110 group/save">
-                  <IoBookmarkOutline className="text-xl" />
-                </button>
-
                 <Link href={`/blogs/knowledge-hub/${res.slug}`}>
                   <button className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center  shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-110 hover:bg-green-700">
                     <IoEyeOutline className="text-xl" />
@@ -226,9 +218,10 @@ console.log(featured);
                   {res.readTime || "৫ মিনিট"}
                 </div>
               </div>
-
               <h3 className="font-semibold text-gray-800 mb-3 line-clamp-2 group-hover:text-green-700 transition-colors duration-300">
-                {res.title}
+                <Link href={`/blogs/knowledge-hub/${res.slug}`}>
+                  {res.title}
+                </Link>
               </h3>
 
               <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
