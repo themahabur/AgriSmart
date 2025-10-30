@@ -291,9 +291,9 @@ const MyFarmPage = () => {
   return (
     <div className="flex flex-col font-hind px-1 sm:p-6 md:p-8 md:pb-0 md:max-h-screen bg-white overflow-y-auto scrollbar-hide ">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 ">
+      <div className="flex flex-col md:flex-row justify-center md:justify-between items-center mb-6 ">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center md:text-start">
             আমার ফার্ম পরিচালনা
           </h1>
           <p className="text-gray-600 mt-2">
