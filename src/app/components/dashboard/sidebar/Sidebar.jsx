@@ -45,11 +45,11 @@ const navItems = [
   },
   { href: "/dashboard/soil-health", icon: FaFlask, text: "মাটির স্বাস্থ্য" },
   { href: "/dashboard/irrigation", icon: FaWater, text: "সেচ নির্দেশিকা" },
-  {
-    href: "/dashboard/gov-assistance",
-    icon: FaLandmark,
-    text: "সরকারি সহায়তা",
-  },
+  // {
+  //   href: "/dashboard/gov-assistance",
+  //   icon: FaLandmark,
+  //   text: "সরকারি সহায়তা",
+  // },
   {
     href: "/dashboard/sell-produce",
     icon: FaShoppingCart,
