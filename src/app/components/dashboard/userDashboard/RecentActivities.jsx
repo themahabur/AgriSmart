@@ -7,17 +7,14 @@ import {
   FaFileAlt,
   FaEdit,
   FaTrash,
-  FaPlus,
   FaTractor,
   FaTasks,
   FaCheckCircle,
   FaBookOpen,
   FaPencilAlt,
-  FaSeedling,
   FaTrashAlt,
 } from "react-icons/fa";
-import { MdDelete, MdEdit, MdAddCircle } from "react-icons/md";
-import { IoMdCheckmarkCircle } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
 import axiosInstance from "@/lib/axios";
 
 // Helper function to get icon based on activity type
@@ -202,7 +199,6 @@ const RecentActivities = () => {
           );
         })}
       </div>
-      
     </div>
   );
 };

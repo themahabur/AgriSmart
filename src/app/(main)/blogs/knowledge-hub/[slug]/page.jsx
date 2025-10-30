@@ -5,12 +5,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { isValidImageUrl } from "@/lib/imageUtils";
 import Comments from "@/app/components/dashboard/blog/Comments";
-import { FaBookmark, FaHome, FaShareAlt } from "react-icons/fa";
+import {
+  FaBookmark,
+  FaHome,
+  FaShareAlt,
+  FaHeart,
+  FaRegHeart,
+} from "react-icons/fa";
+import { IoBookmarkOutline } from "react-icons/io5";
+import { toast } from "react-hot-toast";
+import ShareModal from "@/app/components/dashboard/blog/BlogDetails/ShareModal";
 
 export default function BlogDetails() {
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [popularBlogs, setPopularBlogs] = useState([]);
+  const [relatedBlogs, setRelatedBlogs] = useState([]);
+  const [showShareOptions, setShowShareOptions] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
@@ -37,9 +50,118 @@ export default function BlogDetails() {
     fetchBlog();
   }, [slug]);
 
+  useEffect(() => {
+    const fetchSideBlogs = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/knowledge-hub`);
+        const allBlogs = await res.json();
+
+        if (allBlogs?.data?.length) {
+          const sortedByPopularity = [...allBlogs.data]
+            .filter((item) => item._id !== blog?._id) 
+            .sort((a, b) => (b.likes || 0) - (a.likes || 0));
+
+          setPopularBlogs(sortedByPopularity.slice(0, 3));
+
+          if (blog?.tags?.length) {
+            const related = allBlogs.data
+              .filter((item) => item._id !== blog?._id) // বর্তমান ব্লগ বাদ দিন
+              .filter((b) => b.tags?.some((tag) => blog.tags.includes(tag)));
+            setRelatedBlogs(related.slice(0, 3));
+          } else {
+            setRelatedBlogs([]);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching side blogs:", err);
+      }
+    };
+
+    if (blog) {
+      fetchSideBlogs();
+    }
+  }, [blog]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      setScrollProgress(scrollPercent);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleLike = async () => {
+    if (!blog?._id) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/knowledge-hub/${blog._id}/like`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        setBlog((prev) => ({
+          ...prev,
+          likes: data.data?.likes || 0,
+        }));
+
+        toast.success("লাইক করা হয়েছে ❤️");
+      }
+    } catch (error) {
+      console.error("Error liking blog:", error);
+      toast.error("কিছু সমস্যা হয়েছে!");
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!blog?._id) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/knowledge-hub/${blog._id}/bookmark`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        setBlog((prev) => ({
+          ...prev,
+          bookmarkCount: data.data?.bookmarkCount || 0,
+        }));
+
+        toast.success(
+          data.data?.bookmarkCount > 0
+            ? "বুকমার্ক করা হয়েছে 🔖"
+            : "বুকমার্ক তুলে নেওয়া হয়েছে"
+        );
+      }
+    } catch (error) {
+      console.error("Error bookmarking blog:", error);
+      toast.error("কিছু সমস্যা হয়েছে!");
+    }
+  };
+
+
+  const isLiked = blog?.likes > 0;
+  const isBookmarked = blog?.bookmarkCount > 0;
+
   const formattedDate = (dateString) => {
     try {
-      const dateToFormat = dateString ? dateString : new Date().toISOString();
+      const dateToFormat = dateString || new Date().toISOString();
       return new Date(dateToFormat).toLocaleDateString("bn-BD", {
         year: "numeric",
         month: "long",
@@ -87,10 +209,8 @@ export default function BlogDetails() {
     <main className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {/* Left Sidebar - Fixed */}
           <div className="lg:col-span-1">
             <div className="space-y-6 sticky top-26">
-              {/* Author Info */}
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <div className="flex flex-col items-center text-center">
                   <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-3">
@@ -102,39 +222,34 @@ export default function BlogDetails() {
                     {blog.author?.name || "Author"}
                   </h3>
                   <p className="text-gray-500 text-sm mb-3">লেখক</p>
-
-                  {/* Author Stats */}
-                  <div className="grid grid-cols-2 gap-4 w-full text-center">
-                    <div>
-                      <div className="text-gray-900 font-medium text-sm">
-                        ২৪
-                      </div>
-                      <div className="text-gray-500 text-xs">ব্লগ</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-900 font-medium text-sm">
-                        ১.২K
-                      </div>
-                      <div className="text-gray-500 text-xs">পাঠক</div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
-              {/* Quick Actions */}
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
                   দ্রুত একশন
                 </h3>
                 <div className="space-y-2">
-                  <button className="w-full flex items-center justify-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-gray-300 transition-colors text-gray-700 text-xs">
-                    <FaShareAlt className="w-3 h-3" />
-                    শেয়ার
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowShareOptions(true)}
+                      className="w-full flex items-center justify-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-gray-300 transition-colors text-gray-700 text-xs"
+                    >
+                      <FaShareAlt className="w-3 h-3" />
+                      শেয়ার
+                    </button>
+                  </div>
 
-                  <button className="w-full flex items-center justify-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-gray-300 transition-colors text-gray-700 text-xs">
-                    <FaBookmark className="w-3 h-3" />
-                    সেভ
+                  <button
+                    onClick={handleBookmark}
+                    className="w-full flex items-center justify-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-gray-300 transition-colors text-gray-700 text-xs"
+                  >
+                    {isBookmarked ? (
+                      <FaBookmark className="w-3 h-3" />
+                    ) : (
+                      <IoBookmarkOutline className="w-3 h-3" />
+                    )}
+                    {isBookmarked ? "সেভ করা হয়েছে" : "সেভ করুন"}
                   </button>
 
                   {/* All Blogs with Home Icon */}
@@ -147,7 +262,6 @@ export default function BlogDetails() {
                 </div>
               </div>
 
-              {/* Table of Contents */}
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
                   সূচিপত্র
@@ -170,11 +284,8 @@ export default function BlogDetails() {
             </div>
           </div>
 
-          {/* Main Content - Center */}
           <div className="lg:col-span-2">
-            {/* Header Section */}
             <div className="mb-8">
-              {/* Category and Metadata */}
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-xs font-medium text-gray-500 uppercase tracking-wide px-3 py-1 bg-gray-50 rounded-full border border-gray-200">
                   {blog.category || "Technology"}
@@ -219,6 +330,26 @@ export default function BlogDetails() {
               </div>
             )}
 
+            <div
+              onClick={handleLike}
+              className={`inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full cursor-pointer transition-all duration-300 ${
+                isLiked
+                  ? "bg-red-50 border border-red-200 text-red-600"
+                  : "bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200"
+              }`}
+              title={isLiked ? "লাইক করা হয়েছে" : "লাইক করুন"}
+            >
+              {isLiked ? (
+                <FaHeart className="w-4 h-4 text-red-500" />
+              ) : (
+                <FaRegHeart className="w-4 h-4" />
+              )}
+              <span className="text-sm font-medium">{blog?.likes || 0}</span>
+              <span className="text-sm">
+                {isLiked ? "লাইক করা হয়েছে" : "লাইক করুন"}
+              </span>
+            </div>
+
             {/* Article Content */}
             <article
               className="prose prose-gray max-w-none
@@ -260,65 +391,111 @@ export default function BlogDetails() {
             </div>
           </div>
 
-          {/* Right Sidebar - Fixed */}
           <div className="lg:col-span-1">
             <div className="space-y-6 sticky top-26">
-              {/* Reading Progress */}
+              {/* ✅ Reading Progress */}
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-normal text-gray-900 text-sm">
                     পড়ার অগ্রগতি
                   </h3>
-                  <span className="text-xs text-gray-500">৪০%</span>
+                  <span className="text-xs text-gray-500">
+                    {Math.round(scrollProgress)}%
+                  </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-1">
                   <div
-                    className="bg-gray-600 h-1 rounded-full"
-                    style={{ width: "40%" }}
+                    className="bg-gray-600 h-1 rounded-full transition-all duration-300"
+                    style={{ width: `${scrollProgress}%` }}
                   ></div>
                 </div>
               </div>
 
-              {/* Related Topics */}
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
-                  সম্পর্কিত টপিক্স
-                </h3>
-                <div className="space-y-2">
-                  {["Web Development", "JavaScript", "React", "Next.js"].map(
-                    (topic, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 py-2 text-xs text-gray-600 hover:text-gray-900 cursor-pointer border-b border-gray-100 last:border-0"
-                      >
-                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                        {topic}
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* Popular Posts */}
+              {/* ✅ Popular Blogs */}
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
                   জনপ্রিয় ব্লগ
                 </h3>
                 <div className="space-y-3">
-                  {[1, 2, 3].map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-start gap-2 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
-                    >
-                      <div className="w-8 h-8 bg-gray-200 rounded flex-shrink-0"></div>
-                      <div>
-                        <h4 className="text-xs font-normal text-gray-900 mb-1">
-                          ব্লগ টাইটেল {item}
-                        </h4>
-                        <p className="text-xs text-gray-500">২ দিন আগে</p>
-                      </div>
-                    </div>
-                  ))}
+                  {popularBlogs.length > 0 ? (
+                    popularBlogs.map((item) => (
+                      <Link
+                        key={item._id}
+                        href={`/blogs/knowledge-hub/${item.slug}`}
+                        className="flex items-start gap-2 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                      >
+                        {item.media ? (
+                          <img
+                            className="w-8 h-8 object-cover rounded"
+                            src={item.media}
+                            alt="thumbnail"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 bg-gray-300 flex items-center justify-center rounded">
+                            <span className="text-xs text-gray-500">
+                              No Img
+                            </span>
+                          </div>
+                        )}
+                        <div>
+                          <h4 className="text-xs font-normal text-gray-900 mb-1">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-gray-500">
+                            {formattedDate(item.createdAt)}
+                          </p>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <p className="text-xs text-gray-400">
+                      কোন জনপ্রিয় ব্লগ পাওয়া যায়নি
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* ✅ Related Blogs */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="font-normal text-gray-900 text-sm uppercase tracking-wide mb-3">
+                  সম্পর্কিত ব্লগ
+                </h3>
+                <div className="space-y-3">
+                  {relatedBlogs.length > 0 ? (
+                    relatedBlogs.map((item) => (
+                      <Link
+                        key={item._id}
+                        href={`/blogs/knowledge-hub/${item.slug}`}
+                        className="flex items-start gap-2 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                      >
+                        {item.media ? (
+                          <img
+                            className="w-8 h-8 object-cover rounded"
+                            src={item.media}
+                            alt="thumbnail"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 bg-gray-300 flex items-center justify-center rounded">
+                            <span className="text-xs text-gray-500">
+                              No Img
+                            </span>
+                          </div>
+                        )}
+                        <div>
+                          <h4 className="text-xs font-normal text-gray-900 mb-1">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-gray-500">
+                            {formattedDate(item.createdAt)}
+                          </p>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <p className="text-xs text-gray-400 text-center py-2">
+                      কোন সম্পর্কিত ব্লগ পাওয়া যায়নি
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -343,6 +520,10 @@ export default function BlogDetails() {
               </div>
             </div>
           </div>
+
+          {showShareOptions && (
+            <ShareModal blog={blog} setShowShareOptions={setShowShareOptions} />
+          )}
         </div>
       </div>
     </main>

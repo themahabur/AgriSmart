@@ -57,7 +57,7 @@ const FarmProgress = ({ farms = [] }) => {
 
         // Initialize completed tasks from the fetched data
         const completedIds = new Set();
-        (data.tasks || []).forEach(task => {
+        (data.tasks || []).forEach((task) => {
           if (task.status === "completed") {
             completedIds.add(task._id);
           }
@@ -86,7 +86,7 @@ const FarmProgress = ({ farms = [] }) => {
       // Update the task status in the backend
       const updatedTaskData = {
         ...activity,
-        status: newCompletedState ? "completed" : "in-progress"
+        status: newCompletedState ? "completed" : "in-progress",
       };
 
       const res = await axiosInstance.put(
@@ -96,15 +96,15 @@ const FarmProgress = ({ farms = [] }) => {
 
       // Update local state
       if (res.data.task) {
-        setActivities(prevActivities =>
-          prevActivities.map(task =>
+        setActivities((prevActivities) =>
+          prevActivities.map((task) =>
             task._id === taskId ? res.data.task : task
           )
         );
       }
 
       // Update completed tasks set
-      setCompletedTaskIds(prev => {
+      setCompletedTaskIds((prev) => {
         const newSet = new Set(prev);
         if (newCompletedState) {
           newSet.add(taskId);
@@ -118,7 +118,9 @@ const FarmProgress = ({ farms = [] }) => {
       if (newCompletedState) {
         toast.success(`"${activity.title}" কাজটি সম্পন্ন হয়েছে!`);
       } else {
-        toast.success(`"${activity.title}" কাজটি আবার অসম্পন্ন তালিকায় যুক্ত হয়েছে!`);
+        toast.success(
+          `"${activity.title}" কাজটি আবার অসম্পন্ন তালিকায় যুক্ত হয়েছে!`
+        );
       }
     } catch (err) {
       console.error("Update task error:", err);
@@ -135,7 +137,6 @@ const FarmProgress = ({ farms = [] }) => {
       title: newActivity.title,
       des: newActivity.description,
       priority: newActivity.priority,
-      status: newActivity.status,
       date: newActivity.date,
       farmName: newActivity.farmName,
     };
@@ -155,7 +156,6 @@ const FarmProgress = ({ farms = [] }) => {
         date: "",
         priority: "medium",
         farmName: "",
-        status: "pending",
       });
     } catch (err) {
       console.error("Add activity error:", err);
@@ -198,11 +198,12 @@ const FarmProgress = ({ farms = [] }) => {
       </div>
     );
   }
-  if (loading) return (
-    <div className="text-center py-4 text-gray-600 text-sm">
-      ফার্ম কাজ লোড হচ্ছে...
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="text-center py-4 text-gray-600 text-sm">
+        ফার্ম কাজ লোড হচ্ছে...
+      </div>
+    );
   return (
     <div className="bg-gray-50 text-gray-800 rounded-lg max-w-4xl mx-auto">
       {/* Header */}
@@ -210,10 +211,11 @@ const FarmProgress = ({ farms = [] }) => {
         <div className="flex flex-col sm:flex-row justify-between items-center p-4">
           <button
             onClick={() => setActiveTab("activities")}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors w-full sm:w-auto text-center flex items-center justify-center ${activeTab === "activities"
-              ? "bg-green-800 text-white"
-              : "text-gray-600 hover:text-green-800 hover:bg-gray-200"
-              }`}
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors w-full sm:w-auto text-center flex items-center justify-center ${
+              activeTab === "activities"
+                ? "bg-green-800 text-white"
+                : "text-gray-600 hover:text-green-800 hover:bg-gray-200"
+            }`}
           >
             <FaTasks className="inline mr-2" /> পরবর্তী কাজসমূহ
           </button>

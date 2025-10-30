@@ -11,20 +11,18 @@ const Profile = () => {
   const { data: session, status, update } = useSession();
 
   const [user, setUser] = useState({
-    _id: "",
-    name: "",
-    email: "",
-    division: "",
-    district: "",
-    upazila: "",
-    role: "",
-    accountStatus: "pending",
-    avatar: null,
-    primaryCrops: [],
-    phone: "",
-    farmSize: "",
-    totalCrops: "",
-    address: ""
+    "_id": "",
+    "name": "",
+    "email": "",
+    "division": "",
+    "district": "",
+    "upazila": "",
+    "role": "",
+    "accountStatus": "pending",
+    "avatar": null,
+    "primaryCrops": [],
+    "phone": "",
+    "farmSize": ""
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -85,6 +83,9 @@ const Profile = () => {
       if (!userEmail) {
         throw new Error("No user email found");
       }
+
+      const res = await axiosInstance.get(`/users/me`);
+      console.log("User data response:", res.data);
 
       const response = await axiosInstance.get(`/api/users/me/${userEmail}`);
 
@@ -149,7 +150,7 @@ const Profile = () => {
               totalCrops: apiUserData.totalCrops || "",
               address: apiUserData.address || ""
             };
-
+            
             setUser(userData);
             setFormData(userData);
             setHasDatabaseData(true);
@@ -171,7 +172,7 @@ const Profile = () => {
               totalCrops: "",
               address: ""
             };
-
+            
             setUser(sessionUserData);
             setFormData(sessionUserData);
             setHasDatabaseData(false);
@@ -209,6 +210,7 @@ const Profile = () => {
         const upazilasResponse = await fetch("/upazilas.json");
         const upazilasData = await upazilasResponse.json();
         setUpazilas(upazilasData);
+        
       } catch (error) {
         console.error("Error loading location data:", error);
         setError("স্থান ডেটা লোড করতে সমস্যা হয়েছে");
@@ -586,6 +588,22 @@ const Profile = () => {
                 </div>
               )}
             </div>
+            {!editMode && hasDatabaseData && (
+              <button 
+                className="bg-white text-green-600 hover:bg-green-50 px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+                onClick={() => setEditMode(true)}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                প্রোফাইল সম্পাদনা
+              </button>
+            )}
+            {!hasDatabaseData && (
+              <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-lg text-sm">
+                সম্পাদনা করার জন্য ডাটাবেসে রেকর্ড প্রয়োজন
+              </div>
+            )}
           </div>
         </div>
 

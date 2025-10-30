@@ -1,39 +1,33 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import {
   FaTractor,
-  FaSeedling,
   FaCloudSun,
   FaChartLine,
   FaRobot,
   FaUsers,
   FaUserTie,
-  FaBell,
-  FaLeaf,
   FaTint,
   FaWind,
   FaArrowUp,
   FaArrowDown,
-  FaCheck,
-  FaClock,
-  FaBookOpen,
 } from "react-icons/fa";
 
 import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
-import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
 import { getLocation } from "@/app/lib/getlocation";
 import WelcomeHeader from "@/app/components/dashboard/userDashboard/WelcomeHeader";
 import QuickStat from "@/app/components/dashboard/userDashboard/QuickStat";
 import RecentActivities from "@/app/components/dashboard/userDashboard/RecentActivities";
+import TodayTask from "@/app/components/dashboard/userDashboard/todayTask/TodayTask";
+import axiosInstance from "@/lib/axios";
 
 const Dashboard = () => {
   const { data: session } = useSession();
   const [weatherData, setWeatherData] = useState(null);
-  const [farmTasks, setFarmTasks] = useState([]);
 
   const activities = [
     {
@@ -124,23 +118,6 @@ const Dashboard = () => {
     loadWeather();
   }, []);
 
-  // Fetch today's farm tasks
-  useEffect(() => {
-    const farmTask = async () => {
-      try {
-        const response = await fetch(
-          `https://agri-smart-server.vercel.app/api/farm-tasks/${session?.user?.email}`
-        );
-        const data = await response.json();
-        setFarmTasks(data.tasks);
-        // console.log("Today's farm tasks:", data.tasks);
-      } catch (error) {
-        console.error("Farm tasks fetch error:", error);
-      }
-    };
-    farmTask();
-  }, []);
-
   // Function to format time in Bengali
   const formatTime = (date) => {
     return date.toLocaleTimeString("bn-BD", {
@@ -220,25 +197,7 @@ const Dashboard = () => {
           {/* Left Column - Today's Tasks & Quick Tools */}
           <div className="lg:col-span-2 space-y-6">
             {/* Today's Tasks */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                  <FaClock className="mr-2 text-green-600" />
-                  আজকের কাজ
-                </h2>
-                <Link
-                  href="/dashboard/my-farm"
-                  className="text-green-600 hover:text-green-700 text-sm font-medium"
-                >
-                  সব দেখুন →
-                </Link>
-              </div>
-              <div className="space-y-4">
-                {farmTasks?.map((task) => (
-                  <TodayFarmTaskCard key={task._id} task={task} />
-                ))}
-              </div>
-            </div>
+            <TodayTask />
 
             {/* Quick Access Tools */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

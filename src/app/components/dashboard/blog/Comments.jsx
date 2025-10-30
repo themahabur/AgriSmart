@@ -9,8 +9,6 @@ export default function FarmComments({ blogSlug }) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("comments");
-  const [stats, setStats] = useState(null);
-
   const [formData, setFormData] = useState({ comment: "", rating: 0 });
   const [replyData, setReplyData] = useState({});
 
@@ -21,14 +19,9 @@ export default function FarmComments({ blogSlug }) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [commentsRes, statsRes] = await Promise.all([
-          fetch(`${API_BASE}/blog/${blogSlug}`),
-          fetch(`${API_BASE}/stats/${blogSlug}`),
-        ]);
+        const commentsRes = await fetch(`${API_BASE}/blog/${blogSlug}`);
         const commentsResult = await commentsRes.json();
-        const statsResult = await statsRes.json();
         if (commentsResult.success) setComments(commentsResult.data || []);
-        if (statsResult.success) setStats(statsResult.data);
       } catch (err) {
         console.error("Error fetching data:", err);
       } finally {
@@ -58,12 +51,8 @@ export default function FarmComments({ blogSlug }) {
         toast.success("আপনার মন্তব্য সাবমিট হয়েছে!");
         setFormData({ comment: "", rating: 0 });
 
-        const [commentsRes, statsRes] = await Promise.all([
-          fetch(`${API_BASE}/blog/${blogSlug}`),
-          fetch(`${API_BASE}/stats/${blogSlug}`),
-        ]);
+        const commentsRes = await fetch(`${API_BASE}/blog/${blogSlug}`);
         setComments((await commentsRes.json()).data || []);
-        setStats((await statsRes.json()).data);
       } else {
         toast.error(result.message || "কমেন্ট সাবমিট করতে সমস্যা হয়েছে!");
       }
@@ -201,6 +190,7 @@ export default function FarmComments({ blogSlug }) {
     position: 'top-right',
   });
 };
+
   const StarRating = ({ rating, onChange, readonly = false }) => (
     <div className="flex space-x-1">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -230,36 +220,6 @@ export default function FarmComments({ blogSlug }) {
   return (
     <div className="max-w-4xl mx-auto">
       <Toaster position="top-center" />
-
-      {/* Stats Section - Minimal */}
-      {stats && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="text-2xl font-light text-gray-800 mb-1">
-              {stats.totalComments}
-            </div>
-            <div className="text-xs text-gray-600">মোট কমেন্ট</div>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="text-2xl font-light text-green-600 mb-1">
-              {stats.approvedComments}
-            </div>
-            <div className="text-xs text-gray-600">অনুমোদিত</div>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="text-2xl font-light text-amber-600 mb-1">
-              {stats.averageRating ? stats.averageRating.toFixed(1) : "0.0"}
-            </div>
-            <div className="text-xs text-gray-600">গড় রেটিং</div>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="text-2xl font-light text-blue-600 mb-1">
-              {stats.totalReplies}
-            </div>
-            <div className="text-xs text-gray-600">রিপ্লাই</div>
-          </div>
-        </div>
-      )}
 
       {/* Tabs - Simple */}
       <div className="border-b border-gray-200 mb-6">
