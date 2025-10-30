@@ -34,10 +34,11 @@ export const authOptions = {
         }
 
         return {
-          id: "user-id",
-          name: credentials.email,
-          email: credentials.email,
-          token: data.token,
+          id: data.user?._id || data.user?.id,
+          name: data.user?.name || credentials.email,
+          email: data.user?.email || credentials.email,
+          image: data.user?.image || null,
+          accessToken: data.token,
         };
       },
     }),
@@ -50,14 +51,71 @@ export const authOptions = {
     signIn: "/auth/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    // Add this signIn callback - runs when user signs in
+    async signIn({ user, account, profile }) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_API_URL}/api/users/google`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: user.email,
+              name: user.name,
+              image: user.image,
+              googleId: account?.providerAccountId,
+              provider: account?.provider,
+            }),
+          }
+        );
+
+        const data = await response.json();
+
+        //  Store MongoDB ID and token in user object
+          user.id = data.user._id
+
+
+        return true; // Allow sign in
+      } catch (error) {
+        console.error("❌ Error sending user data to backend:", error);
+        // return true; // Still allow sign in even if backend fails
+        return false; //  block sign in if backend fails
+      }
+    },
+
+    async jwt({ token, user, account }) {
+      if (user?.accessToken) {
+        token.accessToken = user.accessToken;
+      }
+
+      // For Google login — use ID token, not access token
+      if (account?.id_token) {
+        token.accessToken = account.id_token;
+      }
+
+      // Preserve user data in token
       if (user) {
-        token.accessToken = user.token; // Ensure user.token is defined
+        console.log("user in session", user);
+        token.name = user.name;
+        token.email = user.email;
+        token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
-      session.user = token; // session.user.accessToken হবে
+      // Attach accessToken to session
+      session.accessToken = token.accessToken;
+
+      // Keep user info clean and include ID
+      session.user = {
+        id: token.sub || token.id, // Use sub (subject) from JWT or id
+        name: token.name,
+        email: token.email,
+        image: token.picture,
+      };
+
       return session;
     },
   },
