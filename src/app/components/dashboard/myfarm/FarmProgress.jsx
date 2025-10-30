@@ -135,7 +135,6 @@ const FarmProgress = ({ farms = [] }) => {
       title: newActivity.title,
       des: newActivity.description,
       priority: newActivity.priority,
-      status: newActivity.status || "pending",
       date: newActivity.date,
       farmName: newActivity.farmName,
     };
