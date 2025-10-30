@@ -1,24 +1,9 @@
-import React, { Suspense } from "react";
+import React from "react";
 import QuickStatsCard from "./QuickStatsCard";
 import { FaSeedling } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
 import { getDashboardCardData } from "../../utils/homeCardUtils";
 import { useSession } from "next-auth/react";
-
-// Create a function to fetch data
-const fetchDashboardData = async (userEmail) => {
-  if (!userEmail) {
-    return { farmCount: 0, taskCount: 0 };
-  }
-  
-  try {
-    const data = await getDashboardCardData(userEmail);
-    return data;
-  } catch (error) {
-    console.error("Error fetching dashboard data:", error);
-    return { farmCount: 0, taskCount: 0 };
-  }
-};
 
 const QuickStat = () => {
   const { data: session } = useSession();
@@ -47,25 +32,27 @@ const QuickStat = () => {
 
   React.useEffect(() => {
     if (userEmail) {
-      fetchDashboardData(userEmail).then(data => {
+      getDashboardCardData(userEmail).then(data => {
         setQuickStats([
           {
             title: "মোট ফসল",
-            value: `${data.farmCount || 0}টি`,
+            value: `${data.farmCount}টি`,
             icon: FaSeedling,
             color: "bg-green-500",
-            change: `+${data.farmCount || 0}`,
+            change: `+${data.farmCount}`,
             changeType: "positive",
           },
           {
             title: "আজকের কাজ",
-            value: `${data.taskCount || 0}টি`,
+            value: `${data.taskCount}টি`,
             icon: IoMdCheckmark,
             color: "bg-blue-500",
-            change: `${data.taskCount || 0} সম্পূর্ণ`,
+            change: `${data.taskCount} সম্পূর্ণ`,
             changeType: "neutral",
           },
         ]);
+      }).catch(error => {
+        console.error("Error fetching dashboard data:", error);
       });
     }
   }, [userEmail]);

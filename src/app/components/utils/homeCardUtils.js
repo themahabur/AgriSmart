@@ -1,11 +1,10 @@
 import axiosInstance from "@/lib/axios";
-import { useSession } from "next-auth/react";
 
 export const getDashboardCardData = async (userEmail) => {
   try {
     if (!userEmail) {
       console.warn("No user email provided");
-      return { farmCount: 0, taskCount: 0 };
+      return { farmCount: "০", taskCount: "০" };
     }
     
     // Fetch farms data
@@ -18,12 +17,17 @@ export const getDashboardCardData = async (userEmail) => {
     const tasksData = tasksResponse.data;
     const taskCount = tasksData?.tasks?.length || 0;
     
+    // Format numbers in Bangla
+    const formatter = new Intl.NumberFormat('bn-BD');
+    const formattedFarmCount = formatter.format(farmCount);
+    const formattedTaskCount = formatter.format(taskCount);
+    
     return {
-      farmCount,
-      taskCount
+      farmCount: formattedFarmCount,
+      taskCount: formattedTaskCount
     };
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
-    return { farmCount: 0, taskCount: 0 };
+    return { farmCount: "০", taskCount: "০" };
   }
 };
