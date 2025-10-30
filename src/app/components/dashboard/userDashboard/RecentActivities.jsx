@@ -7,17 +7,14 @@ import {
   FaFileAlt,
   FaEdit,
   FaTrash,
-  FaPlus,
   FaTractor,
   FaTasks,
   FaCheckCircle,
   FaBookOpen,
   FaPencilAlt,
-  FaSeedling,
   FaTrashAlt,
 } from "react-icons/fa";
-import { MdDelete, MdEdit, MdAddCircle } from "react-icons/md";
-import { IoMdCheckmarkCircle } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
 import axiosInstance from "@/lib/axios";
 
 // Helper function to get icon based on activity type
@@ -172,12 +169,12 @@ const RecentActivities = () => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 ">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
         <FaBell className="mr-2 text-orange-600" />
         সাম্প্রতিক কার্যক্রম
       </h2>
-      <div className="space-y-4 pr-2 md:h-[200px] overflow-y-auto scrollbar-hide">
+      <div className="space-y-4 pr-2 md:h-[185px] overflow-y-auto scrollbar-hide">
         {activities.map((activity) => {
           const IconComponent = getActivityIcon(activity.activityType);
           const bgColor = getActivityColor(activity.activityType);
@@ -202,12 +199,6 @@ const RecentActivities = () => {
           );
         })}
       </div>
-      {/* <Link
-        href="/dashboard/community"
-        className="block mt-4 text-center text-green-600 hover:text-green-700 text-sm font-medium"
-      >
-        সব কার্যক্রম দেখন →
-      </Link> */}
     </div>
   );
 };
