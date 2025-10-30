@@ -33,7 +33,7 @@ export default function App() {
             <p
               className={`text-green-800 text-base md:text-lg font-medium`}
             >
-              <strong>সর্বশেষ আপডেট:</strong> {lastUpdatedDate}
+              <strong>সর্বশেষ আপডেট:</strong> {lastUpdatedDate} 
             </p>
           </div>
 
