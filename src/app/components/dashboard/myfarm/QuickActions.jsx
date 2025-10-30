@@ -162,7 +162,7 @@ const QuickActions = ({ onActionClick }) => {
       </div>
 
       {/* Actions Grid */}
-      <div className="p-4 max-h-[40vh] overflow-y-auto scrollbar-hide">
+      <div className="p-4 max-h-[37vh] overflow-y-auto scrollbar-hide">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-3 ">
           {quickActions.map((action) => {
                 const IconComponent = action.icon;

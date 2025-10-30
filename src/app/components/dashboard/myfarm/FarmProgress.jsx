@@ -34,7 +34,7 @@ const FarmProgress = ({ farms = [] }) => {
     farmName: "",
   });
   const [loading, setLoading] = useState(false);
-  const [showMore, setShowMore] = useState(false);
+  
 
   const { data: session, status } = useSession();
   const userEmail = session?.user?.email || "";
@@ -237,7 +237,7 @@ const FarmProgress = ({ farms = [] }) => {
             লোড হচ্ছে...
           </div>
         ) : activities.length > 0 ? (
-          <div className="grid gap-3">
+          <div className="grid gap-3 max-h-[40vh] overflow-y-auto scrollbar-hide ">
             {activities.reverse().showMore === false ? Slice(0,1) : activities.map((activity) => {
               const PriorityIcon = priorityIcons[activity.priority];
               // Check if task is completed using the Set
@@ -251,7 +251,7 @@ const FarmProgress = ({ farms = [] }) => {
                     : "border-gray-200 hover:border-gray-300"
                     }`}
                 >
-                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3 ">
                     <div className="flex-1">
                       <div className="flex items-start gap-3">
                         <div
@@ -352,13 +352,7 @@ const FarmProgress = ({ farms = [] }) => {
           </div>
         )}
       </div>
-      <button onClick={() => setShowMore(!showMore)} className="p-2 w-full cursor-pointer flex items-center justify-center gap-1 transition-all duration-700 ease-in-out ">
-        {showMore ? <>
-          <IoIosArrowDown /> আরো দেখুন
-        </> : <>
-          <IoIosArrowUp /> বন্ধ করুন
-        </>}
-      </button>
+      
       {/* Activity Modal */}
       <AddActivityModal
         show={showAddActivityForm}
