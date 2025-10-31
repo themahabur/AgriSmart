@@ -1,14 +1,11 @@
-// Your main community page component
-
 "use client";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { FaPlus } from "react-icons/fa";
 import { PostFormModal } from "@/app/components/dashboard/community/PostFormModal";
 import { PostCard } from "@/app/components/dashboard/community/PostCard";
-// import { ClipLoader } from "react-spinners";
+import { FaPlus } from "react-icons/fa";
 
 const CommunityPage = () => {
   const { data: session, status } = useSession();
@@ -16,106 +13,72 @@ const CommunityPage = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch posts
   const fetchPosts = async () => {
-    if (!session) return;
-
     try {
-      setLoading(true);
-      const res = await axiosInstance.get("/community");
-
-      // Get user's bookmarked posts (ideally this is part of the session object or a separate API call)
-      const userBookmarks = session?.user?.bookmarks || [];
-
-      const postsWithUIState = res.data.data.map((post) => ({
-        ...post,
-        // DERIVED STATE: This is calculated on the client, not stored in the DB.
-        isLiked: Array.isArray(post.likes)
-          ? post.likes.includes(session.user.id)
-          : false,
-        isBookmarked: userBookmarks.includes(post._id),
-      }));
-      setPosts(postsWithUIState);
+      const res = await axiosInstance.get("/community"); // API: GET all posts
+      console.log(res);
+      setPosts(res.data.data);
     } catch (err) {
-      toast.error("পোস্ট লোড করা যায়নি।");
-      console.error(err);
+      toast.error("Failed to load posts.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // Only fetch posts when the session has been loaded
     if (status === "authenticated") {
       fetchPosts();
     }
-  }, [status, session]); // Rerun if session status changes
+  }, [status]);
 
-  // Callback to add new post to the top of the list
   const handlePostCreated = (newPost) => {
-    // Manually add the author details if the backend doesn't populate them on create
-    if (!newPost.author && !newPost.user) {
-      newPost.user = {
-        name: session.user.name,
-        avatar: session.user.image,
-      };
-    }
     setPosts([newPost, ...posts]);
-    setIsModalOpen(false); // Close modal on success
+    setIsModalOpen(false);
   };
 
   const handleLike = async (postId) => {
-    // REFINED: Add a guard clause to prevent action if user is not logged in.
-    if (!session?.user?.id) {
-      toast.error("Please log in to like a post.");
-      return;
-    }
-
-    const originalPosts = [...posts];
-
+    // Optimistic update
+    const originalPosts = posts;
     setPosts(
-      posts.map((post) => {
-        if (post._id === postId) {
-          // REFINED: Ensure post.likes is an array to prevent errors with old data.
-          const currentLikes = Array.isArray(post.likes) ? post.likes : [];
-
-          const isLiked = currentLikes.includes(session.user.id);
-
-          const updatedLikes = isLiked
-            ? currentLikes.filter((id) => id !== session.user.id) // This matches your backend `pull`
-            : [...currentLikes, session.user.id]; // This matches your backend `push`
-
-          return {
-            ...post,
-            likes: updatedLikes,
-            // Also update the derived `isLiked` state for immediate UI feedback
-            isLiked: !isLiked,
-          };
+      posts.map((p) => {
+        if (p._id === postId) {
+          const isLiked = p.likes.includes(session.user.id);
+          const newLikes = isLiked
+            ? p.likes.filter((id) => id !== session.user.id)
+            : [...p.likes, session.user.id];
+          return { ...p, likes: newLikes, likeCount: newLikes.length };
         }
-        return post;
+        return p;
       })
     );
 
-    // Backend API call
     try {
-      await axiosInstance.patch(`/community/posts/${postId}/like`);
+      await axiosInstance.patch(`/community/${postId}/like`); // API: PATCH like
     } catch (error) {
-      toast.error("Failed to update like. Please try again.");
+      toast.error("Failed to update like.");
       setPosts(originalPosts); // Revert on failure
     }
   };
 
-  const handleBookmark = async (postId) => {
-    toast.success("Bookmark feature coming soon!");
-    // Implement optimistic update for bookmarks here...
+  const handleDelete = async (postId) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+
+    // Optimistic update
+    const originalPosts = posts;
+    setPosts(posts.filter((p) => p._id !== postId));
+
+    try {
+      await axiosInstance.delete(`/community/${postId}`); // API: DELETE post
+      toast.success("Post deleted successfully.");
+    } catch (error) {
+      toast.error("Failed to delete post.");
+      setPosts(originalPosts); // Revert on failure
+    }
   };
 
   if (loading || status === "loading") {
     return (
-      <div className="flex justify-center items-center h-64">
-        {/* <ClipLoader color="#22c55e" size={50} /> */}
-        <div> loading...</div>
-      </div>
+      <div className="flex justify-center items-center h-64">helloo ....</div>
     );
   }
 
@@ -147,7 +110,7 @@ const CommunityPage = () => {
             key={post._id}
             post={post}
             onLike={handleLike}
-            onBookmark={handleBookmark}
+            onDelete={handleDelete}
           />
         ))}
       </div>

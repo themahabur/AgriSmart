@@ -62,7 +62,6 @@ export const PostFormModal = ({ isOpen, onClose, onPostCreated }) => {
     if (imageFile) {
       const formData = new FormData();
       formData.append("file", imageFile);
-      // formData.append("upload_preset", "agrismart");
       try {
         const uploadRes = await fetch("/api/upload", {
           method: "POST",
@@ -83,13 +82,13 @@ export const PostFormModal = ({ isOpen, onClose, onPostCreated }) => {
 
     const postPayload = {
       title: data.title,
-      description: content,
+      content: content,
       image: imageUrl,
-      user: {
+      author: {
         id: session.user?.id,
-        name: session.user?.name,
-        email: session.user?.email,
-        avatar: session.user?.image,
+        // name: session.user?.name,
+        // email: session.user?.email,
+        // avatar: session.user?.image,
       },
       tags: data.tags
         .split(",")
@@ -98,7 +97,7 @@ export const PostFormModal = ({ isOpen, onClose, onPostCreated }) => {
     };
 
     try {
-      const res = await axiosInstance.post("/community/create", postPayload);
+      const res = await axiosInstance.post("/community", postPayload);
       if (res.data.success) {
         toast.success("পোস্ট সফলভাবে তৈরি হয়েছে!");
         onPostCreated(res.data.data);
