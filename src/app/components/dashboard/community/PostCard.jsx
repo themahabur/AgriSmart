@@ -6,9 +6,11 @@ import {
   FaBookmark,
   FaEllipsisH,
 } from "react-icons/fa";
+import { OptionsMenu } from "./OptionsMenu";
+import { useSession } from "next-auth/react";
 
 // A small utility to safely get nested properties
-const get = (obj, path, defaultValue = null) => {
+const get = (obj, path, defaultValue = null, onDelete) => {
   const travel = (regexp) =>
     String.prototype.split
       .call(path, regexp)
@@ -23,6 +25,7 @@ const get = (obj, path, defaultValue = null) => {
 
 export const PostCard = ({ post, onLike, onBookmark }) => {
   const postContent = post.description;
+  const { data: session } = useSession();
 
   // Safely access author details
   const authorName = get(
@@ -61,8 +64,9 @@ export const PostCard = ({ post, onLike, onBookmark }) => {
               </p>
             </div>
           </div>
-          <button className="text-gray-400 hover:text-gray-600 p-2">
+          <button className="text-gray-400 hover:text-gray-600 p-2 ">
             <FaEllipsisH />
+            <OptionsMenu post={post} session={session} onDelete={onDelete} />
           </button>
         </div>
 
@@ -78,8 +82,6 @@ export const PostCard = ({ post, onLike, onBookmark }) => {
 
           {/*
           IMPORTANT: Rendering HTML from the database.
-          Using dangerouslySetInnerHTML because Tiptap provides HTML.
-          For production, you MUST sanitize this HTML (e.g., with DOMPurify) to prevent XSS attacks.
         */}
           <div
             className="prose prose-sm max-w-none text-gray-700"
