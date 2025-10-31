@@ -4,7 +4,6 @@ import { useParams, useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { ClipLoader } from "react-spinners";
 import { FaThumbsUp, FaComment, FaArrowLeft } from "react-icons/fa";
 import CommentList from "@/app/components/dashboard/community/CommentList";
 import { CommentForm } from "@/app/components/dashboard/community/CommentForm";
@@ -67,7 +66,9 @@ const PostDetailPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <ClipLoader color="#22c55e" size={50} />
+        {/* <ClipLoader color="#22c55e" size={50} />
+         */}{" "}
+        loading...
       </div>
     );
   }

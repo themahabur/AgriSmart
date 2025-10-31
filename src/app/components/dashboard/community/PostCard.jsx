@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   FaComment,
   FaThumbsUp,
@@ -40,88 +41,90 @@ export const PostCard = ({ post, onLike, onBookmark }) => {
     : post.comments || 0;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow font-hind">
-      <div className="p-4 flex items-start justify-between">
-        <div className="flex items-center">
-          <img
-            src={authorAvatar}
-            alt={authorName}
-            className="w-12 h-12 rounded-full object-cover bg-gray-100"
-          />
-          <div className="ml-3">
-            <h3 className="font-semibold text-gray-800">{authorName}</h3>
-            <p className="text-sm text-gray-500">
-              {new Date(post.createdAt).toLocaleDateString("bn-BD", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
+    <Link href={`/dashboard/community/${post._id}`}>
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow font-hind">
+        <div className="p-4 flex items-start justify-between">
+          <div className="flex items-center">
+            <img
+              src={authorAvatar}
+              alt={authorName}
+              className="w-12 h-12 rounded-full object-cover bg-gray-100"
+            />
+            <div className="ml-3">
+              <h3 className="font-semibold text-gray-800">{authorName}</h3>
+              <p className="text-sm text-gray-500">
+                {new Date(post.createdAt).toLocaleDateString("bn-BD", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
           </div>
+          <button className="text-gray-400 hover:text-gray-600 p-2">
+            <FaEllipsisH />
+          </button>
         </div>
-        <button className="text-gray-400 hover:text-gray-600 p-2">
-          <FaEllipsisH />
-        </button>
-      </div>
 
-      <div className="px-5 pb-4">
-        <h4 className="text-lg font-bold text-gray-900 mb-2">{post.title}</h4>
-        {post.image && (
-          <img
-            src={post.image}
-            alt="Post content"
-            className="w-full max-h-80 object-cover rounded-lg mb-4"
-          />
-        )}
+        <div className="px-5 pb-4">
+          <h4 className="text-lg font-bold text-gray-900 mb-2">{post.title}</h4>
+          {post.image && (
+            <img
+              src={post.image}
+              alt="Post content"
+              className="w-full max-h-80 object-cover rounded-lg mb-4"
+            />
+          )}
 
-        {/*
+          {/*
           IMPORTANT: Rendering HTML from the database.
           Using dangerouslySetInnerHTML because Tiptap provides HTML.
           For production, you MUST sanitize this HTML (e.g., with DOMPurify) to prevent XSS attacks.
         */}
-        <div
-          className="prose prose-sm max-w-none text-gray-700"
-          dangerouslySetInnerHTML={{ __html: postContent }}
-        />
+          <div
+            className="prose prose-sm max-w-none text-gray-700"
+            dangerouslySetInnerHTML={{ __html: postContent }}
+          />
 
-        <div className="flex flex-wrap gap-2 mt-4">
-          {post.tags?.map((tag, index) => (
-            <span
-              key={index}
-              className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full"
-            >
-              #{tag}
-            </span>
-          ))}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {post.tags?.map((tag, index) => (
+              <span
+                key={index}
+                className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="px-4 py-3 border-t border-gray-100 flex items-center justify-between">
-        <div className="flex space-x-5 text-gray-500">
+        <div className="px-4 py-3 border-t border-gray-100 flex items-center justify-between">
+          <div className="flex space-x-5 text-gray-500">
+            <button
+              onClick={() => onLike(post._id)}
+              className={`flex items-center space-x-2 hover:text-green-600 transition-colors ${
+                post.isLiked ? "text-green-600 font-semibold" : ""
+              }`}
+            >
+              <FaThumbsUp /> <span>{likeCount}</span>
+            </button>
+            <button className="flex items-center space-x-2 hover:text-green-600 transition-colors">
+              <FaComment /> <span>{commentCount}</span>
+            </button>
+            <button className="flex items-center space-x-2 hover:text-green-600 transition-colors">
+              <FaShare /> <span>শেয়ার</span>
+            </button>
+          </div>
           <button
-            onClick={() => onLike(post._id)}
-            className={`flex items-center space-x-2 hover:text-green-600 transition-colors ${
-              post.isLiked ? "text-green-600 font-semibold" : ""
+            onClick={() => onBookmark(post._id)}
+            className={`hover:text-green-600 transition-colors ${
+              post.isBookmarked ? "text-green-600" : "text-gray-500"
             }`}
           >
-            <FaThumbsUp /> <span>{likeCount}</span>
-          </button>
-          <button className="flex items-center space-x-2 hover:text-green-600 transition-colors">
-            <FaComment /> <span>{commentCount}</span>
-          </button>
-          <button className="flex items-center space-x-2 hover:text-green-600 transition-colors">
-            <FaShare /> <span>শেয়ার</span>
+            <FaBookmark />
           </button>
         </div>
-        <button
-          onClick={() => onBookmark(post._id)}
-          className={`hover:text-green-600 transition-colors ${
-            post.isBookmarked ? "text-green-600" : "text-gray-500"
-          }`}
-        >
-          <FaBookmark />
-        </button>
       </div>
-    </div>
+    </Link>
   );
 };
