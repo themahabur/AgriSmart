@@ -3,6 +3,7 @@ import React from "react";
 import SecondaryBtn from "../shared/buttons/SecondaryBtn";
 import CountUp from "react-countup";
 import Image from "next/image";
+import Link from "next/link";
 
 const CallToAction = () => {
   return (
@@ -42,7 +43,8 @@ const CallToAction = () => {
                 delay={0.8}
                 duration={2}
                 suffix="%"
-              />
+                formattingFn={(num) => num.toLocaleString('bn-BD')} 
+              />{" %"}
             </div>
             <div className="text-gray-700">গড় ফলন বৃদ্ধি</div>
           </div>
@@ -56,7 +58,8 @@ const CallToAction = () => {
                 delay={0.8}
                 duration={2}
                 suffix="K+"
-              />{" "}
+                formattingFn={(num) => num.toLocaleString('bn-BD')}
+              />{" K+"}
             </div>
             <div className="text-gray-700">সক্রিয় কৃষক</div>
           </div>
@@ -71,7 +74,7 @@ const CallToAction = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
           <SecondaryBtn>বিনামূল্যে ট্রায়াল শুরু করুন</SecondaryBtn>
 
-          <button className="group border-2 border-green-600 text-green-600 font-bold py-4 px-8 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 flex items-center justify-center min-w-[200px]">
+          <Link href="/blogs" className="group border-2 border-green-600 text-green-600 font-bold py-4 px-8 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 flex items-center justify-center min-w-[200px]">
             <span>ডেমো দেখুন</span>
             <svg
               className="w-5 h-5 ml-2"
@@ -93,7 +96,7 @@ const CallToAction = () => {
                 d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               ></path>
             </svg>
-          </button>
+          </Link>
         </div>
 
         {/* Additional reassurance text */}
