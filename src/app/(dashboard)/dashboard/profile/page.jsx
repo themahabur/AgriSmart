@@ -373,6 +373,7 @@ const Profile = () => {
         updateData
       );
 
+      console.log(response.data);
       if (response.status === 200) {
         const result = response.data;
 

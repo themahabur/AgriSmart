@@ -57,7 +57,7 @@ export default function BlogDetails() {
   useEffect(() => {
     const fetchSideBlogs = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/knowledge-hub`);
+        const res = await fetch(`https://agri-smart-server.vercel.app/api/knowledge-hub`);
         const allBlogs = await res.json();
 
         if (allBlogs?.data?.length) {

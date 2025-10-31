@@ -61,6 +61,7 @@ const ImageAnalysis = ({ imageUrl, onAnalysisComplete, disabled = false }) => {
     setAnalysis("");
 
     try {
+      // Fixed: Use the local API route instead of hardcoded external URL
       const response = await fetch("/api/analyze-image", {
         method: "POST",
         headers: {
