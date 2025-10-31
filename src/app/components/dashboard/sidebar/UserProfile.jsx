@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const UserProfile = () => {
   const { data: session } = useSession();
@@ -11,7 +12,7 @@ const UserProfile = () => {
   const firstLetter = name.charAt(0); // নামের প্রথম অক্ষর
 
   return (
-    <div className="flex items-center gap-3">
+    <Link href="/dashboard/profile" className="flex items-center gap-3 cursor-pointer">
       {/* Avatar */}
       {image ? (
         <div className="relative w-10 h-10">
@@ -33,11 +34,11 @@ const UserProfile = () => {
       {/* Name & Profile Link */}
       <div>
         <p className="font-semibold text-gray-800">{name}</p>
-        <a href="#" className="text-xs text-gray-500 hover:underline">
+        <p  className="text-xs text-gray-500 hover:underline">
           প্রোফাইল দেখুন
-        </a>
+        </p>
       </div>
-    </div>
+    </Link>
   );
 };
 

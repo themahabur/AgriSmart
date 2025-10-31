@@ -3,36 +3,31 @@ import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import {
   FaTractor,
-  FaSeedling,
   FaCloudSun,
   FaChartLine,
   FaRobot,
   FaUsers,
   FaUserTie,
-  FaBell,
-  FaLeaf,
   FaTint,
   FaWind,
   FaArrowUp,
   FaArrowDown,
-  FaCheck,
-  FaClock,
-  FaBookOpen,
 } from "react-icons/fa";
 
 import { IoIosSunny, IoIosRainy, IoMdCheckmark } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { PiChartLineDownBold, PiChartLineUpBold } from "react-icons/pi";
 import { fetchWeather } from "@/app/lib/fetchWeather";
-import TodayFarmTaskCard from "@/app/components/dashboard/userDashboard/todayFarmTaskCard";
 import { getLocation } from "@/app/lib/getlocation";
 import WelcomeHeader from "@/app/components/dashboard/userDashboard/WelcomeHeader";
 import QuickStat from "@/app/components/dashboard/userDashboard/QuickStat";
+import RecentActivities from "@/app/components/dashboard/userDashboard/RecentActivities";
+import TodayTask from "@/app/components/dashboard/userDashboard/todayTask/TodayTask";
+import axiosInstance from "@/lib/axios";
 
 const Dashboard = () => {
   const { data: session } = useSession();
   const [weatherData, setWeatherData] = useState(null);
-  const [farmTasks, setFarmTasks] = useState([]);
 
   const activities = [
     {
@@ -101,38 +96,7 @@ const Dashboard = () => {
     },
   ];
 
-  // Recent Activities
-  const recentActivities = [
-    {
-      id: 1,
-      activity: "আলু ক্ষেতে সার প্রয়োগ",
-      time: "২ ঘন্টা আগে",
-      type: "farming",
-      icon: FaLeaf,
-    },
-    {
-      id: 2,
-      activity: "ধানের দাম চেক করেছেন",
-      time: "৪ ঘন্টা আগে",
-      type: "market",
-      icon: FaChartLine,
-    },
-    {
-      id: 3,
-      activity: "নতুন ব্লগ পোস্ট পড়েছেন",
-      time: "৬ ঘন্টা আগে",
-      type: "education",
-      icon: FaBookOpen,
-    },
-    {
-      id: 4,
-      activity: "এআই চ্যাটবট ব্যবহার করেছেন",
-      time: "১ দিন আগে",
-      type: "consultation",
-      icon: FaRobot,
-    },
-  ];
-
+  // Fetch weather data based on user's location
   useEffect(() => {
     async function loadWeather() {
       try {
@@ -154,22 +118,7 @@ const Dashboard = () => {
     loadWeather();
   }, []);
 
-  useEffect(() => {
-    const farmTask = async () => {
-      try {
-        const response = await fetch(
-          `https://agri-smart-server.vercel.app/api/farm-tasks/${session?.user?.email}`
-        );
-        const data = await response.json();
-        setFarmTasks(data.tasks);
-        // console.log("Today's farm tasks:", data.tasks);
-      } catch (error) {
-        console.error("Farm tasks fetch error:", error);
-      }
-    };
-    farmTask();
-  }, []);
-
+  // Function to format time in Bengali
   const formatTime = (date) => {
     return date.toLocaleTimeString("bn-BD", {
       hour: "2-digit",
@@ -178,6 +127,7 @@ const Dashboard = () => {
     });
   };
 
+  // Function to format date in Bengali
   const formatDate = (date) => {
     return date.toLocaleDateString("bn-BD", {
       year: "numeric",
@@ -247,25 +197,7 @@ const Dashboard = () => {
           {/* Left Column - Today's Tasks & Quick Tools */}
           <div className="lg:col-span-2 space-y-6">
             {/* Today's Tasks */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                  <FaClock className="mr-2 text-green-600" />
-                  আজকের কাজ
-                </h2>
-                <Link
-                  href="/dashboard/my-farm"
-                  className="text-green-600 hover:text-green-700 text-sm font-medium"
-                >
-                  সব দেখুন →
-                </Link>
-              </div>
-              <div className="space-y-4">
-                {farmTasks?.map((task) => (
-                  <TodayFarmTaskCard key={task._id} task={task} />
-                ))}
-              </div>
-            </div>
+            <TodayTask />
 
             {/* Quick Access Tools */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -355,34 +287,8 @@ const Dashboard = () => {
               )}
             </div>
 
-            {/* Recent Activities */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                <FaBell className="mr-2 text-orange-600" />
-                সাম্প্রতিক কার্যক্রম
-              </h2>
-              <div className="space-y-4">
-                {recentActivities.map((activity) => (
-                  <div key={activity.id} className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                      <activity.icon className="text-green-600 text-sm" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-800 font-medium">
-                        {activity.activity}
-                      </p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                href="/dashboard/community"
-                className="block mt-4 text-center text-green-600 hover:text-green-700 text-sm font-medium"
-              >
-                সব কার্যক্রম দেখুন →
-              </Link>
-            </div>
+            {/* <RecentActivities /> */}
+            <RecentActivities />
 
             {/* Agricultural Tips */}
             {/* <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">

@@ -14,6 +14,8 @@ export async function POST(request) {
     const apiKey = process.env.OPENROUTER_API_KEY;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://agrismart.com";
     const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "AgriSmart";
+    const aiModel =
+      process.env.OPENROUTER_MODEL || "qwen/qwen2.5-vl-32b-instruct:free";
 
     if (!apiKey) {
       return NextResponse.json(
@@ -33,7 +35,7 @@ export async function POST(request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "qwen/qwen2.5-vl-72b-instruct:free",
+          model: aiModel,
           messages: [
             {
               role: "user",
@@ -61,7 +63,7 @@ export async function POST(request) {
       const errorData = await response.text();
       console.error("OpenRouter API error:", errorData);
       return NextResponse.json(
-        { error: "Failed to analyze image" },
+        { error: "Failed to analyze image", message: errorData },
         { status: response.status }
       );
     }
