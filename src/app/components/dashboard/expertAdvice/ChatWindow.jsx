@@ -130,22 +130,17 @@ const ChatWindow = ({ expert, onClose }) => {
   };
 
   // ═══════════════════════════════════════════════════════
-  // Handle message sent confirmation (avoid duplicates)
+  // Handle message sent confirmation
   // ═══════════════════════════════════════════════════════
   const handleMessageSent = (messageData) => {
     setMessages((prev) => {
-      // Replace the local optimistic message with the server-confirmed one
       const filtered = prev.filter(
         (msg) =>
-          !msg.id.startsWith("local_") || msg.message !== messageData.message
+          !msg?.id?.startsWith("local_") || msg.message !== messageData.message
       );
 
-      // Check if server message already exists
       const exists = filtered.some((msg) => msg.id === messageData.id);
-
-      if (exists) {
-        return filtered;
-      }
+      if (exists) return filtered;
 
       return [...filtered, messageData];
     });
