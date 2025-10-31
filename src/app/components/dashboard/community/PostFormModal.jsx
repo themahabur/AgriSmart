@@ -1,4 +1,3 @@
-// app/community/components/PostFormModal.jsx
 "use client";
 
 import { useForm, Controller } from "react-hook-form";

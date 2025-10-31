@@ -111,6 +111,9 @@ const CommunityPage = () => {
             post={post}
             onLike={handleLike}
             onDelete={handleDelete}
+            onBookmark={() => {
+              toast.success("This feature is not available yet.");
+            }}
           />
         ))}
       </div>
