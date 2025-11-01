@@ -174,7 +174,7 @@ const RecentActivities = () => {
         <FaBell className="mr-2 text-orange-600" />
         সাম্প্রতিক কার্যক্রম
       </h2>
-      <div className="space-y-4 pr-2 md:max-h-[70vh] overflow-y-auto scrollbar-hide">
+      <div className="space-y-4 pr-2 md:max-h-[20vh] overflow-y-auto scrollbar-hide">
         {activities.map((activity) => {
           const IconComponent = getActivityIcon(activity.activityType);
           const bgColor = getActivityColor(activity.activityType);
