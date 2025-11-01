@@ -353,6 +353,7 @@ const FarmProgress = ({ farms = [] }) => {
                   );
                 })}
           </div>
+
         ) : (
           <div className="text-center py-8">
             <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
@@ -365,7 +366,7 @@ const FarmProgress = ({ farms = [] }) => {
           </div>
         )}
       </div>
-
+      
       {/* Activity Modal */}
       <AddActivityModal
         show={showAddActivityForm}

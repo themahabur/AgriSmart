@@ -26,6 +26,9 @@ export default function BlogDetails() {
   const [relatedBlogs, setRelatedBlogs] = useState([]);
   const [showShareOptions, setShowShareOptions] = useState(false);
 
+  console.log("Blog Slug:", slug);
+  console.log("Blog:", blog);
+
   useEffect(() => {
     if (!slug) return;
 
