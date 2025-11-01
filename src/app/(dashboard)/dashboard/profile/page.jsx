@@ -11,18 +11,18 @@ const Profile = () => {
   const { data: session, status, update } = useSession();
 
   const [user, setUser] = useState({
-    "_id": "",
-    "name": "",
-    "email": "",
-    "division": "",
-    "district": "",
-    "upazila": "",
-    "role": "",
-    "accountStatus": "pending",
-    "avatar": null,
-    "primaryCrops": [],
-    "phone": "",
-    "farmSize": ""
+    _id: "",
+    name: "",
+    email: "",
+    division: "",
+    district: "",
+    upazila: "",
+    role: "",
+    accountStatus: "pending",
+    avatar: null,
+    primaryCrops: [],
+    phone: "",
+    farmSize: "",
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -148,9 +148,9 @@ const Profile = () => {
                 ? apiUserData.farmSize.unit
                 : apiUserData.farmSize || "",
               totalCrops: apiUserData.totalCrops || "",
-              address: apiUserData.address || ""
+              address: apiUserData.address || "",
             };
-            
+
             setUser(userData);
             setFormData(userData);
             setHasDatabaseData(true);
@@ -170,9 +170,9 @@ const Profile = () => {
               phone: "",
               farmSize: "",
               totalCrops: "",
-              address: ""
+              address: "",
             };
-            
+
             setUser(sessionUserData);
             setFormData(sessionUserData);
             setHasDatabaseData(false);
@@ -210,7 +210,6 @@ const Profile = () => {
         const upazilasResponse = await fetch("/upazilas.json");
         const upazilasData = await upazilasResponse.json();
         setUpazilas(upazilasData);
-        
       } catch (error) {
         console.error("Error loading location data:", error);
         setError("স্থান ডেটা লোড করতে সমস্যা হয়েছে");
@@ -363,7 +362,7 @@ const Profile = () => {
         avatar: formData.avatar,
         totalCrops: formData.totalCrops,
         address: formData.address,
-        primaryCrops: formData.primaryCrops
+        primaryCrops: formData.primaryCrops,
       };
 
       console.log("Sending update data:", updateData);
@@ -392,7 +391,7 @@ const Profile = () => {
             avatar: formData.avatar,
             totalCrops: formData.totalCrops,
             address: formData.address,
-            primaryCrops: formData.primaryCrops
+            primaryCrops: formData.primaryCrops,
           }));
 
           setEditMode(false);
@@ -590,12 +589,22 @@ const Profile = () => {
               )}
             </div>
             {!editMode && hasDatabaseData && (
-              <button 
+              <button
                 className="bg-white text-green-600 hover:bg-green-50 px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
                 onClick={() => setEditMode(true)}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
                 </svg>
                 প্রোফাইল সম্পাদনা
               </button>
@@ -636,9 +645,6 @@ const Profile = () => {
                 )}
               </div>
             </div>
-
-            
-            
           </div>
 
           {/* Main Profile Content */}
@@ -664,7 +670,10 @@ const Profile = () => {
                       </svg>
                       ব্যক্তিগত তথ্য
                     </h3>
-                    <button onClick={()=>setEditMode(!editMode)} className="text-green-700 flex items-center gap-2 hover:text-green-900 font-bold">
+                    <button
+                      onClick={() => setEditMode(!editMode)}
+                      className="text-green-700 flex items-center gap-2 hover:text-green-900 font-bold"
+                    >
                       <FaPenFancy /> <span>সম্পাদনা করুন</span>
                     </button>
                   </div>
@@ -712,13 +721,16 @@ const Profile = () => {
                     <div>
                       <span>মোট ফসলের পরিমাণ:</span>
                       <span className="ml-2 text-gray-700 ">
-                        {formData.totalCrops ? formData.totalCrops : "নেই - পরিমাণ প্রদান করুন"}
+                        {formData.totalCrops
+                          ? formData.totalCrops
+                          : "নেই - পরিমাণ প্রদান করুন"}
                       </span>
                     </div>
                     <div>
                       <span>প্রধান ফসল:</span>
                       <span className="ml-2 text-gray-700 ">
-                        {formData.primaryCrops && formData.primaryCrops.length > 0
+                        {formData.primaryCrops &&
+                        formData.primaryCrops.length > 0
                           ? formData.primaryCrops.join(", ")
                           : "নেই - প্রধান ফসল প্রদান করুন"}
                       </span>
@@ -727,9 +739,15 @@ const Profile = () => {
                 </div>
 
                 {/* modal */}
-                <div className={`fixed bg-black/60 inset-0 z-50 flex items-center justify-center ${editMode ? "block" : "hidden"}`}>
+                <div
+                  className={`fixed bg-black/60 inset-0 z-50 flex items-center justify-center ${
+                    editMode ? "block" : "hidden"
+                  }`}
+                >
                   <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
-                    <h3 className="text-lg font-bold mb-4">প্রোফাইল সম্পাদনা করুন</h3>
+                    <h3 className="text-lg font-bold mb-4">
+                      প্রোফাইল সম্পাদনা করুন
+                    </h3>
                     <div className="space-y-4">
                       <InputField
                         label="ফোন নম্বর"
@@ -754,14 +772,20 @@ const Profile = () => {
                         name="division"
                         value={formData.division}
                         onChange={handleInputChange}
-                        options={divisions.map(div => ({ value: div.id, label: div.ban_name }))}
+                        options={divisions.map((div) => ({
+                          value: div.id,
+                          label: div.ban_name,
+                        }))}
                       />
                       <SelectField
                         label="জেলা"
                         name="district"
                         value={formData.district}
                         onChange={handleInputChange}
-                        options={getFilteredDistricts().map(dist => ({ value: dist.id, label: dist.bn_name }))}
+                        options={getFilteredDistricts().map((dist) => ({
+                          value: dist.id,
+                          label: dist.bn_name,
+                        }))}
                         disabled={!formData.division}
                       />
                       <SelectField
@@ -769,19 +793,22 @@ const Profile = () => {
                         name="upazila"
                         value={formData.upazila}
                         onChange={handleInputChange}
-                        options={getFilteredUpazilas().map(upz => ({ value: upz.id, label: upz.bn_name }))}
+                        options={getFilteredUpazilas().map((upz) => ({
+                          value: upz.id,
+                          label: upz.bn_name,
+                        }))}
                         disabled={!formData.district}
                       />
                     </div>
                     <div className="flex justify-end space-x-3 mt-6">
-                      <button 
-                        onClick={handleCancel} 
+                      <button
+                        onClick={handleCancel}
                         className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
                       >
                         বাতিল করুন
                       </button>
-                      <button 
-                        onClick={handleSave} 
+                      <button
+                        onClick={handleSave}
                         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                       >
                         পরিবর্তন সংরক্ষণ করুন
