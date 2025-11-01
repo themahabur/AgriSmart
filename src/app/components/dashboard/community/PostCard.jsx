@@ -23,7 +23,7 @@ const get = (obj, path, defaultValue = null, onDelete) => {
   return result === undefined || result === obj ? defaultValue : result;
 };
 
-export const PostCard = ({ post, onLike, onBookmark }) => {
+export const PostCard = ({ post, onLike, onBookmark, onDelete }) => {
   const postContent = post.description;
   const { data: session } = useSession();
 
@@ -44,32 +44,29 @@ export const PostCard = ({ post, onLike, onBookmark }) => {
     : post.comments || 0;
 
   return (
-    <Link href={`/dashboard/community/${post._id}`}>
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow font-hind">
-        <div className="p-4 flex items-start justify-between">
-          <div className="flex items-center">
-            <img
-              src={authorAvatar}
-              alt={authorName}
-              className="w-12 h-12 rounded-full object-cover bg-gray-100"
-            />
-            <div className="ml-3">
-              <h3 className="font-semibold text-gray-800">{authorName}</h3>
-              <p className="text-sm text-gray-500">
-                {new Date(post.createdAt).toLocaleDateString("bn-BD", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
+    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow font-hind">
+      <div className="p-4 flex items-start justify-between">
+        <div className="flex items-center">
+          <img
+            src={authorAvatar}
+            alt={authorName}
+            className="w-12 h-12 rounded-full object-cover bg-gray-100"
+          />
+          <div className="ml-3">
+            <h3 className="font-semibold text-gray-800">{authorName}</h3>
+            <p className="text-sm text-gray-500">
+              {new Date(post.createdAt).toLocaleDateString("bn-BD", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
           </div>
-          <button className="text-gray-400 hover:text-gray-600 p-2 ">
-            <FaEllipsisH />
-            <OptionsMenu post={post} session={session} onDelete={onDelete} />
-          </button>
         </div>
 
+        <OptionsMenu post={post} session={session} onDelete={onDelete} />
+      </div>
+      <Link href={`/dashboard/community/${post._id}`}>
         <div className="px-5 pb-4">
           <h4 className="text-lg font-bold text-gray-900 mb-2">{post.title}</h4>
           {post.image && (
@@ -126,7 +123,7 @@ export const PostCard = ({ post, onLike, onBookmark }) => {
             <FaBookmark />
           </button>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
