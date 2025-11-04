@@ -8,6 +8,7 @@ import { FaThumbsUp, FaComment, FaArrowLeft } from "react-icons/fa";
 import CommentList from "@/app/components/dashboard/community/CommentList";
 import { CommentForm } from "@/app/components/dashboard/community/CommentForm";
 import { OptionsMenu } from "@/app/components/dashboard/community/OptionsMenu";
+import Loading from "../../blog-manage/loading";
 
 const PostDetailPage = () => {
   const { id } = useParams(); // Get post ID from URL
@@ -64,13 +65,7 @@ const PostDetailPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        {/* <ClipLoader color="#22c55e" size={50} />
-         */}{" "}
-        loading...
-      </div>
-    );
+    return <Loading />;
   }
 
   if (!post) {
