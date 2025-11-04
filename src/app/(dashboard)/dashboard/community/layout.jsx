@@ -1,3 +1,5 @@
+import FilterSidebar from "@/app/components/dashboard/community/FilterSidebar";
+import StatsSidebar from "@/app/components/dashboard/community/StatsSidebar";
 import { FaUsers } from "react-icons/fa";
 
 export default function CommunityLayout({ children }) {
@@ -17,13 +19,17 @@ export default function CommunityLayout({ children }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Sidebar */}
-          <aside className="lg:col-span-1">{/* <FilterSidebar /> */}</aside>
+          <aside className="lg:col-span-1">
+            <FilterSidebar />
+          </aside>
 
           {/* Main Content */}
           <main className="lg:col-span-2">{children}</main>
 
           {/* Right Sidebar */}
-          <aside className="lg:col-span-1">{/* <StatsSidebar /> */}</aside>
+          <aside className="lg:col-span-1">
+            <StatsSidebar />
+          </aside>
         </div>
       </div>
     </div>

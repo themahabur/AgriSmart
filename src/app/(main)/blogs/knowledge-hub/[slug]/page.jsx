@@ -124,15 +124,10 @@ export default function BlogDetails() {
     if (!blog?._id) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/knowledge-hub/${blog._id}/bookmark`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }
+      const response = await axiosInstance.post(
+        `/knowledge-hub/${blog._id}/bookmark`
       );
-
-      const data = await res.json();
+      const data = response.data;
 
       if (data.success) {
         setBlog((prev) => ({
