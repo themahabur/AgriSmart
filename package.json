@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@sindresorhus/slugify": "^3.0.0",
     "@tiptap/extension-link": "^3.6.5",
     "@tiptap/extension-placeholder": "^3.6.5",
