@@ -78,7 +78,7 @@ const ExpertAdvice = () => {
   return (
     <ChatProvider>
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-amber-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 ">
           {/* Header */}
           <div className="mb-12 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start mb-4">
@@ -88,7 +88,7 @@ const ExpertAdvice = () => {
             </div>
 
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 font-hind mb-3">
-              কৃষি বিশেষজ্ঞের সাথে যোগাযোগ করুন
+              কৃষি বিশেষজ্ঞের সাথে যোগাযোগ করুন 
             </h1>
 
             <p className="text-lg text-gray-600 font-hind max-w-2xl">
@@ -136,9 +136,9 @@ const ExpertAdvice = () => {
 
           {/* Experts Grid */}
           {!loading && !error && (
-            <>
+            <div className="grid grid-cols-2  gap-6 ">
               {filteredExperts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="col-span-1 space-y-3">
                   {filteredExperts.map((expert) => (
                     <ExpertCard key={expert._id} expert={expert} />
                   ))}
@@ -146,7 +146,8 @@ const ExpertAdvice = () => {
               ) : (
                 <EmptyState searchTerm={searchTerm} />
               )}
-            </>
+              <div className="col-span-1">xyz</div>
+            </div>
           )}
 
           {/* CTA */}
