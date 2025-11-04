@@ -1,11 +1,10 @@
+// app/dashboard/weather/page.js
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios"; // npm install axios
-import { ClipLoader } from "react-spinners";
-// Import your display components
-import CurrentWeather from "./components/CurrentWeather";
+import axios from "axios";
+// import { ClipLoader } from "react-spinners";
 import AiSuggestions from "./components/AiSuggestions";
-import Forecast from "./components/Forecast";
+import Forecast from "@/app/components/dashboard/weather/Forecast";
 
 const WeatherPage = () => {
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -24,7 +23,6 @@ const WeatherPage = () => {
 
       try {
         setLoading(true);
-        // Fetch both endpoints at the same time
         const [currentRes, forecastRes] = await Promise.all([
           axios.get(currentConditionsUrl),
           axios.get(forecastUrl),
@@ -33,9 +31,7 @@ const WeatherPage = () => {
         setCurrentWeather(currentRes.data);
         setForecast(forecastRes.data);
       } catch (err) {
-        setError(
-          "Failed to fetch weather data. Please check your API key and network."
-        );
+        setError("Failed to fetch weather data.");
         console.error(err);
       } finally {
         setLoading(false);
@@ -48,17 +44,16 @@ const WeatherPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <ClipLoader color="#22c55e" size={60} />
+        {/* <ClipLoader color="#22c55e" size={60} /> */}
+        loading...
       </div>
     );
   }
-
   if (error) {
-    return <div className="text-center mt-10 text-red-500">{error}</div>;
+    /* ... */
   }
-
   if (!currentWeather || !forecast) {
-    return <div className="text-center mt-10">No weather data available.</div>;
+    /* ... */
   }
 
   return (
