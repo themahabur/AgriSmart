@@ -1,10 +1,9 @@
-// app/dashboard/weather/page.js
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
 // import { ClipLoader } from "react-spinners";
-import AiSuggestions from "./components/AiSuggestions";
 import Forecast from "@/app/components/dashboard/weather/Forecast";
+import CurrentWeather from "@/app/components/dashboard/weather/CurrentWeather";
 
 const WeatherPage = () => {
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -17,9 +16,12 @@ const WeatherPage = () => {
       const apiKey = process.env.GOOGLE_API_KEY;
       const lat = 23.8103; // Dhaka Latitude
       const lon = 90.4125; // Dhaka Longitude
+      console.log("api key ", apiKey);
 
-      const currentConditionsUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${apiKey}&location.latitude=${lat}&location.longitude=${lon}`;
-      const forecastUrl = `https://weather.googleapis.com/v1/forecast:lookup?key=${apiKey}&location.latitude=${lat}&location.longitude=${lon}&dailyForecastSteps=7`;
+      const currentConditionsUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=AIzaSyCBfKPwasdEN-Yw9wpJcJJytVUGETvKfdA&location.latitude=25.0015&location.longitude=89.3227`;
+      // const currentConditionsUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${apiKey}&location.latitude=${lat}&location.longitude=${lon}`;
+      const forecastUrl = `https://weather.googleapis.com/v1/forecast/days:lookup?key=AIzaSyCBfKPwasdEN-Yw9wpJcJJytVUGETvKfdA&location.latitude=25.0015&location.longitude=89.3227&days=7`;
+      // const forecastUrl = `https://weather.googleapis.com/v1/forecast:lookup?key=${apiKey}&location.latitude=${lat}&location.longitude=${lon}&dailyForecastSteps=7`;
 
       try {
         setLoading(true);
@@ -51,9 +53,11 @@ const WeatherPage = () => {
   }
   if (error) {
     /* ... */
+    return <div>{error}</div>;
   }
   if (!currentWeather || !forecast) {
     /* ... */
+    return <div>Loading...</div>;
   }
 
   return (
@@ -79,7 +83,7 @@ const WeatherPage = () => {
       </div>
 
       {/* AI Suggestions Section */}
-      <AiSuggestions weatherData={{ currentWeather, forecast }} />
+      {/* <AiSuggestions weatherData={{ currentWeather, forecast }} /> */}
 
       {/* 7-Day Forecast Section */}
       <Forecast data={forecast} />
