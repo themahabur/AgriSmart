@@ -11,18 +11,18 @@ const Profile = () => {
   const { data: session, status, update } = useSession();
 
   const [user, setUser] = useState({
-    _id: "",
-    name: "",
-    email: "",
-    division: "",
-    district: "",
-    upazila: "",
-    role: "",
-    accountStatus: "pending",
-    avatar: null,
-    primaryCrops: [],
-    phone: "",
-    farmSize: "",
+    "_id": "",
+    "name": "",
+    "email": "",
+    "division": "",
+    "district": "",
+    "upazila": "",
+    "role": "",
+    "accountStatus": "pending",
+    "avatar": null,
+    "primaryCrops": [],
+    "phone": "",
+    "farmSize": ""
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -148,9 +148,9 @@ const Profile = () => {
                 ? apiUserData.farmSize.unit
                 : apiUserData.farmSize || "",
               totalCrops: apiUserData.totalCrops || "",
-              address: apiUserData.address || "",
+              address: apiUserData.address || ""
             };
-
+            
             setUser(userData);
             setFormData(userData);
             setHasDatabaseData(true);
@@ -170,9 +170,9 @@ const Profile = () => {
               phone: "",
               farmSize: "",
               totalCrops: "",
-              address: "",
+              address: ""
             };
-
+            
             setUser(sessionUserData);
             setFormData(sessionUserData);
             setHasDatabaseData(false);
@@ -210,6 +210,7 @@ const Profile = () => {
         const upazilasResponse = await fetch("/upazilas.json");
         const upazilasData = await upazilasResponse.json();
         setUpazilas(upazilasData);
+        
       } catch (error) {
         console.error("Error loading location data:", error);
         setError("স্থান ডেটা লোড করতে সমস্যা হয়েছে");
@@ -362,7 +363,7 @@ const Profile = () => {
         avatar: formData.avatar,
         totalCrops: formData.totalCrops,
         address: formData.address,
-        primaryCrops: formData.primaryCrops,
+        primaryCrops: formData.primaryCrops
       };
 
       console.log("Sending update data:", updateData);
@@ -391,7 +392,7 @@ const Profile = () => {
             avatar: formData.avatar,
             totalCrops: formData.totalCrops,
             address: formData.address,
-            primaryCrops: formData.primaryCrops,
+            primaryCrops: formData.primaryCrops
           }));
 
           setEditMode(false);
@@ -589,22 +590,12 @@ const Profile = () => {
               )}
             </div>
             {!editMode && hasDatabaseData && (
-              <button
+              <button 
                 className="bg-white text-green-600 hover:bg-green-50 px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
                 onClick={() => setEditMode(true)}
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
                 প্রোফাইল সম্পাদনা
               </button>
@@ -670,10 +661,7 @@ const Profile = () => {
                       </svg>
                       ব্যক্তিগত তথ্য
                     </h3>
-                    <button
-                      onClick={() => setEditMode(!editMode)}
-                      className="text-green-700 flex items-center gap-2 hover:text-green-900 font-bold"
-                    >
+                    <button onClick={()=>setEditMode(!editMode)} className="text-green-700 flex items-center gap-2 hover:text-green-900 font-bold">
                       <FaPenFancy /> <span>সম্পাদনা করুন</span>
                     </button>
                   </div>
