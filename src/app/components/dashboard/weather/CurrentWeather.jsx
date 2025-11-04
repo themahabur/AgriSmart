@@ -1,5 +1,6 @@
 "use client";
 
+import { translateWeatherDescription } from "../../utils/weatherTranslator";
 import { getWeatherIcon } from "./WeatherIcons";
 import { WiHumidity, WiStrongWind, WiRaindrops } from "react-icons/wi";
 
@@ -16,7 +17,7 @@ const InfoPill = ({ icon, label, value }) => (
   </div>
 );
 
-const CurrentWeather = ({ data }) => {
+const CurrentWeather = ({ data, locationName }) => {
   // Guard clause with a translated loading message
   if (!data) {
     return (
@@ -41,8 +42,7 @@ const CurrentWeather = ({ data }) => {
   const conditionType = data?.weatherCondition?.type || "UNKNOWN";
 
   // Translate the description
-  const translatedDescription =
-    description === "Partly cloudy" ? "আংশিক মেঘলা" : description;
+  const translatedDescription = translateWeatherDescription(description);
 
   return (
     <div className="bg-gradient-to-br from-white to-green-50 p-6 sm:p-8 rounded-3xl  shadow-green-100/50 border border-green-200">
@@ -51,7 +51,8 @@ const CurrentWeather = ({ data }) => {
         {/* Left side: Temperature and Text */}
         <div className="w-full">
           <p className="text-gray-500 font-medium text-lg">
-            ঢাকার বর্তমান আবহাওয়া
+            <span className="font-bold text-black"> {locationName}</span>-এর
+            বর্তমান আবহাওয়া
           </p>
           <div className="flex items-center space-x-4 mt-2">
             {/* HUGE Temperature */}

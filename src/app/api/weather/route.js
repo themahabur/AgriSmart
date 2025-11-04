@@ -42,7 +42,7 @@ export async function GET(req) {
     const weatherData = JSON.parse(weatherText);
 
     // 2️⃣ Fetch place name from Nominatim
-    const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+    const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=bn`;
 
     const geoRes = await fetch(geoUrl, {
       headers: {
