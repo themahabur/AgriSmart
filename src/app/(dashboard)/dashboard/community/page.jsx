@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { PostFormModal } from "@/app/components/dashboard/community/PostFormModal";
 import { PostCard } from "@/app/components/dashboard/community/PostCard";
 import { FaPlus } from "react-icons/fa";
+import Loading from "../blog-manage/loading";
 
 const CommunityPage = () => {
   const { data: session, status } = useSession();
@@ -16,7 +17,6 @@ const CommunityPage = () => {
   const fetchPosts = async () => {
     try {
       const res = await axiosInstance.get("/community"); // API: GET all posts
-      console.log(res);
       setPosts(res.data.data);
     } catch (err) {
       toast.error("Failed to load posts.");
@@ -77,9 +77,7 @@ const CommunityPage = () => {
   };
 
   if (loading || status === "loading") {
-    return (
-      <div className="flex justify-center items-center h-64">helloo ....</div>
-    );
+    return <Loading />;
   }
 
   return (
