@@ -774,7 +774,7 @@ const AddFarmModal = ({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="p-4">
+          <div className="p-4 max-h-[60vh] overflow-y-auto">
             {currentStep === 1 && (
               <Step1Form
                 formData={formData}

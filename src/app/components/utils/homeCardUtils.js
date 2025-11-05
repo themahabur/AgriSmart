@@ -1,33 +1,26 @@
-import axiosInstance from "@/lib/axios";
+export const getQuickStats = async (userEmail) => {
+  if (!userEmail) return { farmCount: "০", taskCount: "০" };
 
-export const getDashboardCardData = async (userEmail) => {
-  try {
-    if (!userEmail) {
-      console.warn("No user email provided");
-      return { farmCount: "০", taskCount: "০" };
-    }
-    
-    // Fetch farms data
-    const farmsResponse = await axiosInstance.get(`/farms/${userEmail}`);
-    const farmsData = farmsResponse.data;
-    const farmCount = farmsData?.data?.farms?.length || farmsData?.data?.length || 0;
-    
-    // Fetch tasks data
-    const tasksResponse = await axiosInstance.get(`/farm-tasks/${userEmail}`);
-    const tasksData = tasksResponse.data;
-    const taskCount = tasksData?.tasks?.length || 0;
-    
-    // Format numbers in Bangla
-    const formatter = new Intl.NumberFormat('bn-BD');
-    const formattedFarmCount = formatter.format(farmCount);
-    const formattedTaskCount = formatter.format(taskCount);
-    
-    return {
-      farmCount: formattedFarmCount,
-      taskCount: formattedTaskCount
-    };
-  } catch (error) {
-    console.error("Error fetching dashboard data:", error);
-    return { farmCount: "০", taskCount: "০" };
-  }
+  const [farmsRes, tasksRes] = await Promise.all([
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_API_URL}/api/farms/${userEmail}`, {
+      cache: "force-cache", // build-time cache
+      next: { revalidate: 60 } // প্রতি ৬০ সেকেন্ড পর cache refresh
+    }),
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_API_URL}/api/farm-tasks/${userEmail}`, {
+      cache: "force-cache",
+      next: { revalidate: 60 }
+    }),
+  ]);
+
+  const farmsData = await farmsRes.json();
+  const tasksData = await tasksRes.json();
+
+  const farmCount = farmsData?.data?.farms?.length || farmsData?.data?.length || 0;
+  const taskCount = tasksData?.tasks?.length || 0;
+
+  const formatter = new Intl.NumberFormat('bn-BD');
+  return {
+    farmCount: formatter.format(farmCount),
+    taskCount: formatter.format(taskCount),
+  };
 };

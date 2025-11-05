@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   FaBell,
   FaFileAlt,
@@ -103,27 +103,82 @@ const RecentActivities = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Cache key for storing activities
+  const CACHE_KEY = `recentActivities`;
+  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+  // Function to get cached data
+  const getCachedData = useCallback(() => {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { data, timestamp } = JSON.parse(cached);
+        // Check if cache is still valid
+        if (Date.now() - timestamp < CACHE_DURATION) {
+          return data;
+        } else {
+          // Remove expired cache
+          localStorage.removeItem(CACHE_KEY);
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Error reading from cache:", error);
+      return null;
+    }
+  }, [CACHE_KEY]);
+
+  // Function to set cached data
+  const setCachedData = useCallback((data) => {
+    try {
+      const cacheEntry = {
+        data,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cacheEntry));
+    } catch (error) {
+      console.error("Error writing to cache:", error);
+    }
+  }, [CACHE_KEY]);
+
   useEffect(() => {
     const fetchActivities = async () => {
+      setLoading(true);
+      setError(null);
+      
+      // Try to get cached data first
+      const cachedData = getCachedData();
+      if (cachedData) {
+        setActivities(cachedData);
+        setLoading(false);
+        return;
+      }
+
       try {
-        setLoading(true);
         const response = await axiosInstance.get("/recent-activity");
         setActivities(response.data);
+        // Cache the data
+        setCachedData(response.data);
       } catch (err) {
         console.error("Error fetching activities:", err);
         setError(err.message);
+        // Try to use cached data even if API fails
+        const cachedData = getCachedData();
+        if (cachedData) {
+          setActivities(cachedData);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchActivities();
-  }, []);
+  }, [getCachedData, setCachedData]);
 
   // Loading state
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-pulse">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-pulse h-80">
         <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
@@ -174,7 +229,7 @@ const RecentActivities = () => {
         <FaBell className="mr-2 text-orange-600" />
         সাম্প্রতিক কার্যক্রম
       </h2>
-      <div className="space-y-4 pr-2 md:max-h-[20vh] overflow-y-auto scrollbar-hide">
+      <div className="space-y-4 pr-2 max-h-60 md:max-h-96 overflow-y-auto scrollbar-hide">
         {activities.map((activity) => {
           const IconComponent = getActivityIcon(activity.activityType);
           const bgColor = getActivityColor(activity.activityType);

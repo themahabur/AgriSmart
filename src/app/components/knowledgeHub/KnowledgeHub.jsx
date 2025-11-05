@@ -5,6 +5,7 @@ import KnowledgeFilterButtons from "./KnowledgeFilterButtons";
 import KnowledgePost from "./KnowledgePost";
 import OtherPosts from "./OtherPosts";
 import Image from "next/image";
+import Link from "next/link";
 
 // Sample Data
 const allPosts = [
@@ -114,11 +115,11 @@ const KnowledgeHub = () => {
 
         {/* View All Button */}
         <div className="text-center mt-16">
-          <a href="/blogs">
+          <Link href="/blogs">
             <button className="mt-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-bold py-2 lg:py-3 rounded-full hover:shadow-sm transition-all duration-300 transform hover:-translate-y-1 w-full sm:w-auto px-6">
               সব টিউটোরিয়াল ও ব্লগ দেখুন &rarr;
             </button>
-          </a>
+          </Link>
         </div>
       </section>
     </LayoutBox>

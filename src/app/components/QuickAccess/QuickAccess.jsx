@@ -3,6 +3,7 @@ import { FaCalculator, FaSeedling } from "react-icons/fa";
 import { MdOutlineQuestionAnswer, MdOutlineSchool } from "react-icons/md";
 import { WiDayCloudyWindy } from "react-icons/wi";
 import Image from "next/image";
+import Link from "next/link";
 
 function QuickAccess() {
   const tools = [
@@ -10,31 +11,37 @@ function QuickAccess() {
       icon: <IoStatsChart className="text-primary" />,
       title: "বাজার দর",
       desc: "প্রতিদিনের আপডেটেড ফসলের দাম দেখে সঠিক দামে বিক্রি করুন",
+      href: "/dashboard/market-price",
     },
     {
       icon: <FaSeedling className="text-primary" />,
-      title: "পোকা ব্যবস্থাপনা",
+      title: "ফসল  উপদেশ",
       desc: "ফসলের ছবির মাধ্যমে এআই-ভিত্তিক পোকা ও রোগ শনাক্তকরণ",
+      href: "/dashboard/crop-advice",
     },
     {
       icon: <MdOutlineQuestionAnswer className="text-primary" />,
       title: "এক্সপার্ট পরামর্শ",
       desc: "ব্যক্তিগত পরামর্শের জন্য কৃষি বিশেষজ্ঞদের সাথে যুক্ত হোন",
+      href: "/dashboard/expert-advice",
     },
     {
       icon: <WiDayCloudyWindy className="text-primary" />,
       title: "আবহাওয়া সতর্কতা",
       desc: "বৃষ্টি, ঝড়, খরা ইত্যাদি পূর্বাভাসের রিয়েল-টাইম নোটিফিকেশন",
+      href: "/dashboard/weather",
     },
     {
       icon: <FaCalculator className="text-primary" />,
-      title: "লাভ ক্যালকুলেটর",
+      title: "কৃষি ক্যালেন্ডার",
       desc: "উৎপাদন খরচ ও লাভ/ক্ষতির হিসাব সহজে করুন",
+      href: "/dashboard/agri-calendar",
     },
     {
       icon: <MdOutlineSchool className="text-primary" />,
       title: "চাষাবাদ টিউটোরিয়াল",
       desc: "আধুনিক কৃষি পদ্ধতি ও প্রযুক্তি শেখার সহজ উপায়",
+      href: "/blogs"
     },
   ];
 
@@ -80,9 +87,9 @@ function QuickAccess() {
                   {item.desc}
                 </p>
               </div>
-              <button className="mt-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-bold py-2 lg:py-3 px-4 rounded-full hover:shadow-sm transition-all duration-300 transform hover:-translate-y-1 w-full sm:w-auto">
+              <Link href={item.href} className="mt-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-bold py-2 lg:py-3 px-4 rounded-full hover:shadow-sm transition-all duration-300 transform hover:-translate-y-1 w-full sm:w-auto">
                 এখনই দেখুন →
-              </button>
+              </Link>
             </div>
           ))}
         </div>
