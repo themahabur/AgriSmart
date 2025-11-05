@@ -1,7 +1,8 @@
 import Link from "next/link";
 import React from "react";
+import FeatureBtn from "./FeatureBtn";
 
-const SingleFeatureCard = ({ service }) => {
+const SingleFeatureCard = ({ service, onOpenModal }) => {
   return (
     <div
       className="bg-[#f7fff842] p-8 rounded-xl w-full
@@ -20,13 +21,7 @@ const SingleFeatureCard = ({ service }) => {
         {service.description}
       </p>
       {/* Action Link  */}
-      <Link
-        href={service.link}
-        className="mt-1 font-semibold font-hind text-primary transition-colors duration-300
-                           group-hover:text-secondary"
-      >
-        আরও জানুন &rarr;
-      </Link>
+      <FeatureBtn service={service} onOpenModal={onOpenModal} />
     </div>
   );
 };
