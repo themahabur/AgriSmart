@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaTractor, FaPlus, FaChevronDown } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_SERVER_API_URL || "http://localhost:5000";
-// const API_BASE_URL = "https://agri-smart-server.vercel.app";
 
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
 import FarmCard from "../../../components/dashboard/myfarm/FarmCard";
@@ -13,6 +12,10 @@ import FarmProgress from "../../../components/dashboard/myfarm/FarmProgress";
 import QuickActions from "../../../components/dashboard/myfarm/QuickActions";
 import { useSession } from "next-auth/react";
 import axiosInstance from "@/lib/axios";
+
+// Cache implementation
+const CACHE_KEY = 'agriSmart_farms';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 const MyFarmPage = () => {
   const [farms, setFarms] = useState([]);
@@ -55,9 +58,37 @@ const MyFarmPage = () => {
     },
   ]);
 
-  // Fetch farms
-  useEffect(() => {
-    // Don't fetch if user is not authenticated
+  // Cache helper functions
+  const getCachedFarms = useCallback(() => {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { data, timestamp } = JSON.parse(cached);
+        if (Date.now() - timestamp < CACHE_DURATION) {
+          return data;
+        }
+      }
+      return null;
+    } catch (e) {
+      console.error("Cache read error:", e);
+      return null;
+    }
+  }, []);
+
+  const setCachedFarms = useCallback((data) => {
+    try {
+      const cacheData = {
+        data,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+    } catch (e) {
+      console.error("Cache write error:", e);
+    }
+  }, []);
+
+  // Fetch farms with caching
+  const fetchFarms = useCallback(async () => {
     if (status === "loading") return;
 
     if (!session?.user?.email) {
@@ -66,23 +97,36 @@ const MyFarmPage = () => {
       return;
     }
 
-    const fetchFarms = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    try {
+      setLoading(true);
+      setError(null);
 
-        // Using axiosInstance for better error handling
-        const response = await axiosInstance.get(
-          `/farms/${session.user.email}`
-        );
+      // Check cache first
+      const cachedFarms = getCachedFarms();
+      if (cachedFarms) {
+        setFarms(cachedFarms);
+        setLoading(false);
+        // Continue with fresh data fetch in background
+      }
 
-        if (response.data.status && response.data.data) {
-          setFarms(response.data.data.farms || response.data.data);
-        } else {
-          setFarms([]);
-        }
-      } catch (err) {
-        console.error("Error fetching farms:", err);
+      // Using axiosInstance for better error handling
+      const response = await axiosInstance.get(
+        `/farms/${session.user.email}`
+      );
+
+      if (response.data.status && response.data.data) {
+        const fetchedFarms = response.data.data.farms || response.data.data;
+        setFarms(fetchedFarms);
+        setCachedFarms(fetchedFarms);
+      } else {
+        setFarms([]);
+        setCachedFarms([]);
+      }
+    } catch (err) {
+      console.error("Error fetching farms:", err);
+      // If we have cached data, use it even if fetch fails
+      const cachedFarms = getCachedFarms();
+      if (!cachedFarms) {
         const errorMessage =
           err.response?.data?.message ||
           err.message ||
@@ -90,13 +134,15 @@ const MyFarmPage = () => {
         setError(errorMessage);
         toast.error(errorMessage);
         setFarms([]);
-      } finally {
-        setLoading(false);
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  }, [session?.user?.email, status, getCachedFarms, setCachedFarms]);
 
+  useEffect(() => {
     fetchFarms();
-  }, [session?.user?.email, status]);
+  }, [fetchFarms]);
 
   const displayedFarms = selectedFarmId
     ? farms.filter(
@@ -138,7 +184,9 @@ const MyFarmPage = () => {
 
       const res = await axiosInstance.post("/farms", farmPayload);
       const newFarm = res.data.data || res.data;
-      setFarms([newFarm, ...farms]);
+      const updatedFarms = [newFarm, ...farms];
+      setFarms(updatedFarms);
+      setCachedFarms(updatedFarms);
       setLastSubmittedFarm(farmData);
       setShowSubmittedData(true);
       toast.success("নতুন ফার্ম সফলভাবে যুক্ত হয়েছে! 🎉");
@@ -194,11 +242,12 @@ const MyFarmPage = () => {
 
       const updatedFarm = response.data.data || response.data;
 
-      setFarms(
-        farms.map((farm) =>
-          farm.id === farmId || farm._id === farmId ? updatedFarm : farm
-        )
+      const updatedFarms = farms.map((farm) =>
+        farm.id === farmId || farm._id === farmId ? updatedFarm : farm
       );
+      
+      setFarms(updatedFarms);
+      setCachedFarms(updatedFarms);
 
       toast.success("ফার্ম সফলভাবে আপডেট হয়েছে! ✅");
       setShowAddFormModal(false);
@@ -260,7 +309,9 @@ const MyFarmPage = () => {
       setLoading(true);
       await axiosInstance.delete(`/farms/${id}`);
 
-      setFarms(farms.filter((farm) => farm.id !== id && farm._id !== id));
+      const updatedFarms = farms.filter((farm) => farm.id !== id && farm._id !== id);
+      setFarms(updatedFarms);
+      setCachedFarms(updatedFarms);
       toast.success("ফার্ম সফলভাবে মুছে ফেলা হয়েছে");
       setError(null);
     } catch (err) {
@@ -299,14 +350,14 @@ const MyFarmPage = () => {
   };
 
   return (
-    <div className="flex flex-col font-hind px-1 sm:p-6 md:p-8 md:pb-0 md:max-h-screen bg-white overflow-y-auto scrollbar-hide ">
+    <div className="flex flex-col font-hind px-1 sm:p-6 md:p-8 md:pb-0 md:max-h-screen bg-white overflow-y-auto scrollbar-hide">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-center md:justify-between items-center mb-6 ">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center md:text-start">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <div className="mb-4 md:mb-0">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center md:text-left">
             আমার ফার্ম পরিচালনা
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 mt-2 text-center md:text-left">
             আপনার সব ফার্ম এবং কৃষি কাজের এককেন্দ্রিক পরিচালনা
           </p>
         </div>
@@ -315,7 +366,7 @@ const MyFarmPage = () => {
             setEditingFarm(null);
             setShowAddFormModal(true);
           }}
-          className="mt-4 md:mt-0 bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors shadow-md disabled:opacity-50"
+          className="bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors shadow-md disabled:opacity-50"
           disabled={loading || !session?.user?.email}
         >
           <FaPlus className="mr-2" />
@@ -392,7 +443,7 @@ const MyFarmPage = () => {
                 <FaTractor className="text-green-600 mr-2" />
                 আমার ফার্মসমূহ ({displayedFarms.length}টি)
               </h2>
-              <div className="mb-4 relative inline-block">
+              <div className="relative inline-block w-full sm:w-auto">
                 <select
                   value={selectedFarmId}
                   onChange={(e) => setSelectedFarmId(e.target.value)}
@@ -433,7 +484,7 @@ const MyFarmPage = () => {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-4 md:max-h-[calc(100vh-30vh)] md:overflow-y-auto scrollbar-hide">
+                <div className="grid grid-cols-1 gap-4 md:max-h-screen md:overflow-y-auto scrollbar-hide">
                   {displayedFarms.map((farm, index) => (
                     <FarmCard
                       key={farm.id || farm._id || `farm-${index}`}
@@ -449,7 +500,7 @@ const MyFarmPage = () => {
           </div>
         </div>
 
-        <div className="lg:col-span-1 space-y-6 ">
+        <div className="lg:col-span-1 space-y-6">
           <FarmProgress
             farms={farms}
             activities={activities}
