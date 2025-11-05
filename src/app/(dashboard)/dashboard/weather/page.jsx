@@ -5,6 +5,7 @@ import CurrentWeather from "@/app/components/dashboard/weather/CurrentWeather";
 import Forecast from "@/app/components/dashboard/weather/Forecast";
 import { generateWeatherAlert } from "@/app/components/utils/weatherAlert";
 import WeatherAlert from "@/app/components/dashboard/weather/WeatherAlert";
+import { getLocation } from "@/app/lib/getlocation";
 
 // --- UPDATED HELPER FUNCTION for Nominatim API ---
 const parseNominatimLocation = (nominatimData) => {
@@ -24,10 +25,6 @@ const parseNominatimLocation = (nominatimData) => {
 };
 
 const WeatherPage = () => {
-  const [coordinates, setCoordinates] = useState({
-    lat: 25.0015,
-    lon: 89.3227,
-  }); // Default to Bogura for example
   const [locationName, setLocationName] = useState("Loading location...");
 
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -36,40 +33,25 @@ const WeatherPage = () => {
   const [error, setError] = useState("");
   const [alert, setAlert] = useState(null);
 
-  useEffect(() => {
-    // This effect will run once to get the user's location if they allow it,
-    // otherwise it will proceed with the default coordinates.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCoordinates({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-        },
-        () => {
-          // If user denies, fetch data for the default location
-          fetchDataForLocation(coordinates.lat, coordinates.lon);
-        }
-      );
-    } else {
-      // If browser doesn't support geolocation, fetch for default
-      fetchDataForLocation(coordinates.lat, coordinates.lon);
-    }
-  }, []);
-
   // This effect runs whenever the coordinates change
   useEffect(() => {
-    fetchDataForLocation(coordinates.lat, coordinates.lon);
-  }, [coordinates]);
+    fetchDataForLocation();
+  }, []);
 
   const fetchDataForLocation = async (lat, lon) => {
     const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 
+    const location = await getLocation();
+    if (!location) {
+      throw new Error("Unable to get location");
+    }
+
+    const { latitude, longitude } = location;
+
     // --- UPDATED URLs ---
-    const geocodingUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=bn`;
-    const currentConditionsUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${googleApiKey}&location.latitude=${lat}&location.longitude=${lon}`;
-    const forecastUrl = `https://weather.googleapis.com/v1/forecast/days:lookup?key=${googleApiKey}&location.latitude=${lat}&location.longitude=${lon}&days=7`;
+    const geocodingUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=bn`;
+    const currentConditionsUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${googleApiKey}&location.latitude=${latitude}&location.longitude=${longitude}`;
+    const forecastUrl = `https://weather.googleapis.com/v1/forecast/days:lookup?key=${googleApiKey}&location.latitude=${latitude}&location.longitude=${longitude}&days=7`;
 
     try {
       setLoading(true);
