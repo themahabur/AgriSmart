@@ -5,7 +5,7 @@ import { FaPlay } from "react-icons/fa";
 const KnowledgePost = ({ knowledgePost }) => {
   return (
     <div className="group cursor-pointer bg-white border-gray-200 rounded-2xl transition-shadow h-full border">
-      <a href={knowledgePost.link} className="block">
+      <a href= "#" className="block">
         {/* Thumbnail */}
         <div className="relative overflow-hidden rounded-t-xl shadow-lg max-h-96">
           <Image

@@ -250,7 +250,7 @@ const ChatWindow = ({ expert, onClose }) => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 w-full max-w-md h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col z-50 animate-slideIn">
+    <div className="fixed bottom-4 right-4 w-full max-w-md h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col z-50 animate-slideIn">
       {/* ─────────────────────────────────────── */}
       {/* Chat Header */}
       {/* ─────────────────────────────────────── */}

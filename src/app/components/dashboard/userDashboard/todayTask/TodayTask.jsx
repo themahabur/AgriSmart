@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import TodayFarmTaskCard from "./todayFarmTaskCard";
 import { FaClock } from "react-icons/fa";
 import Link from "next/link";
@@ -13,31 +13,90 @@ const TodayTask = () => {
   const [error, setError] = useState(null);
   const { data: session } = useSession();
 
+  // Cache key for storing tasks
+  const CACHE_KEY = `todayFarmTasks_${session?.user?.email}`;
+  const CACHE_DURATION = 2 * 60 * 1000; // 2 minutes in milliseconds
+
+  // Function to get cached data
+  const getCachedData = useCallback(() => {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { data, timestamp } = JSON.parse(cached);
+        // Check if cache is still valid
+        if (Date.now() - timestamp < CACHE_DURATION) {
+          return data;
+        } else {
+          // Remove expired cache
+          localStorage.removeItem(CACHE_KEY);
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Error reading from cache:", error);
+      return null;
+    }
+  }, [CACHE_KEY]);
+
+  // Function to set cached data
+  const setCachedData = useCallback((data) => {
+    try {
+      const cacheEntry = {
+        data,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cacheEntry));
+    } catch (error) {
+      console.error("Error writing to cache:", error);
+    }
+  }, [CACHE_KEY]);
+
   // Fetch today's farm tasks
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    const farmTask = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `/farm-tasks/${session?.user?.email}`,
-          {
-            params: {
-              status: "in-progress",
-              page: 2,
-              limit: 10,
-            },
-          }
-        );
-        setFarmTasks(res.data.tasks);
+    const fetchFarmTasks = async () => {
+      setLoading(true);
+      setError(null);
+      
+      // Try to get cached data first
+      const cachedData = getCachedData();
+      if (cachedData) {
+        setFarmTasks(cachedData);
         setLoading(false);
-        // console.log("Today's farm tasks:", res.data.tasks);
+        return;
+      }
+
+      try {
+        const response = await axiosInstance.get(`/farm-tasks/${session?.user?.email}`, {
+          params: {
+            status: "in-progress",
+            page: 1,
+            limit: 10
+          }
+        });
+        
+        if (response.data?.tasks) {
+          setFarmTasks(response.data.tasks);
+          // Cache the data
+          setCachedData(response.data.tasks);
+        }
+        setLoading(false);
       } catch (error) {
         console.error("Farm tasks fetch error:", error);
+        setError(error.message || "Failed to fetch tasks");
+        // Try to use cached data even if API fails
+        const cachedData = getCachedData();
+        if (cachedData) {
+          setFarmTasks(cachedData);
+        }
+        setLoading(false);
       }
     };
-    farmTask();
-  }, []);
+
+    if (session?.user?.email) {
+      fetchFarmTasks();
+    }
+  }, [session?.user?.email, getCachedData, setCachedData]);
+
   if (loading) {
     return <TodayFarmTaskCardSkeleton />;
   }
