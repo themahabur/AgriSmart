@@ -2,7 +2,7 @@ import React from "react";
 import QuickStatsCard from "./QuickStatsCard";
 import { FaSeedling } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
-import { getDashboardCardData } from "../../utils/homeCardUtils";
+import { getQuickStats } from "../../utils/homeCardUtils";
 import { useSession } from "next-auth/react";
 
 const QuickStat = () => {
@@ -32,7 +32,7 @@ const QuickStat = () => {
 
   React.useEffect(() => {
     if (userEmail) {
-      getDashboardCardData(userEmail).then(data => {
+      getQuickStats(userEmail).then(data => {
         setQuickStats([
           {
             title: "মোট ফসল",

@@ -42,7 +42,7 @@ const ExpertCard = ({ expert }) => {
     <>
       <button
         onClick={() => setShowChat(true)}
-        className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 overflow-hidden group w-full cursor-pointer "
+        className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-1000 hover:-translate-y-0.5 overflow-hidden group w-full cursor-pointer "
       >
         {/* Card Header */}
         <div className="relative bg-gradient-to-r from-green-50 to-amber-50 p-3 border-b border-gray-100 flex gap-2 ">
@@ -141,7 +141,7 @@ const ExpertCard = ({ expert }) => {
         </div>
 
         {/* Card Body */}
-        <div className="p-6 space-y-4 hidden hover:block group-hover:block transition duration-500 ease-in-out text-start">
+        <div className="p-6 space-y-4 hidden transition-all hover:block group-hover:block  duration-500 delay-300 ease-in-out text-start">
           {/* Location */}
           {expert.district && (
             <div className="flex items-start gap-3">
