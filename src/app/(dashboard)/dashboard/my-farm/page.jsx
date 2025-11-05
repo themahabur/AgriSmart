@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { FaTractor, FaPlus, FaChevronDown } from "react-icons/fa";
 import toast from "react-hot-toast";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_SERVER_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_SERVER_API_URL || "http://localhost:5000";
 // const API_BASE_URL = "https://agri-smart-server.vercel.app";
 
 import AddFarmModal from "../../../components/dashboard/myfarm/AddFarmModal";
@@ -58,7 +59,7 @@ const MyFarmPage = () => {
   useEffect(() => {
     // Don't fetch if user is not authenticated
     if (status === "loading") return;
-    
+
     if (!session?.user?.email) {
       setLoading(false);
       setError("ব্যবহারকারী নথিভুক্ত করা হয়নি। অনুগ্রহ করে লগইন করুন।");
@@ -69,10 +70,12 @@ const MyFarmPage = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Using axiosInstance for better error handling
-        const response = await axiosInstance.get(`/farms/${session.user.email}`);
-        
+        const response = await axiosInstance.get(
+          `/farms/${session.user.email}`
+        );
+
         if (response.data.status && response.data.data) {
           setFarms(response.data.data.farms || response.data.data);
         } else {
@@ -80,9 +83,10 @@ const MyFarmPage = () => {
         }
       } catch (err) {
         console.error("Error fetching farms:", err);
-        const errorMessage = err.response?.data?.message || 
-                            err.message || 
-                            "ফার্ম ডেটা লোড করতে সমস্যা হয়েছে";
+        const errorMessage =
+          err.response?.data?.message ||
+          err.message ||
+          "ফার্ম ডেটা লোড করতে সমস্যা হয়েছে";
         setError(errorMessage);
         toast.error(errorMessage);
         setFarms([]);
@@ -145,9 +149,10 @@ const MyFarmPage = () => {
       setTimeout(() => setShowSubmittedData(false), 10000);
     } catch (err) {
       console.error("Error adding farm:", err);
-      const errorMessage = err.response?.data?.message || 
-                          err.message || 
-                          "ফার্ম যোগ করতে সমস্যা হয়েছে";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "ফার্ম যোগ করতে সমস্যা হয়েছে";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -182,7 +187,10 @@ const MyFarmPage = () => {
         organicPractices: updatedData.organicPractices,
       };
 
-      const response = await axiosInstance.put(`/farms/${farmId}`, updatePayload);
+      const response = await axiosInstance.put(
+        `/farms/${farmId}`,
+        updatePayload
+      );
 
       const updatedFarm = response.data.data || response.data;
 
@@ -198,9 +206,10 @@ const MyFarmPage = () => {
       setError(null);
     } catch (err) {
       console.error("Error updating farm:", err);
-      const errorMessage = err.response?.data?.message || 
-                          err.message || 
-                          "ফার্ম আপডেট করতে সমস্যা হয়েছে";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "ফার্ম আপডেট করতে সমস্যা হয়েছে";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -256,9 +265,10 @@ const MyFarmPage = () => {
       setError(null);
     } catch (err) {
       console.error("Error deleting farm:", err);
-      const errorMessage = err.response?.data?.message || 
-                          err.message || 
-                          "ফার্ম ডিলিট করতে সমস্যা হয়েছে";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "ফার্ম ডিলিট করতে সমস্যা হয়েছে";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -423,7 +433,7 @@ const MyFarmPage = () => {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-4 md:max-h-screen md:overflow-y-auto scrollbar-hide"> 
+                <div className="grid grid-cols-1 gap-4 md:max-h-[calc(100vh-30vh)] md:overflow-y-auto scrollbar-hide">
                   {displayedFarms.map((farm, index) => (
                     <FarmCard
                       key={farm.id || farm._id || `farm-${index}`}

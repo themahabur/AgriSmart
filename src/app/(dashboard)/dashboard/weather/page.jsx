@@ -1,466 +1,133 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { fetchWeather } from "@/app/lib/fetchWeather";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import CurrentWeather from "@/app/components/dashboard/weather/CurrentWeather";
+import Forecast from "@/app/components/dashboard/weather/Forecast";
+// import { ClipLoader } from "react-spinners";
 
-import {
-  FaTint,
-  FaCloudSun,
-  FaWind,
-  FaTemperatureHigh,
-  FaTachometerAlt,
-  FaInfoCircle,
-  FaSync,
-  FaMapMarkerAlt,
-  FaCalendarAlt,
-  FaSeedling,
-  FaSun,
-  FaUmbrella,
-  FaCloud,
-  FaCloudRain,
-  FaSnowflake,
-  FaBolt,
-  FaSmog,
-  FaTree,
-  FaTractor,
-  FaShoppingCart,
-  FaBook,
-  FaChartLine,
-  FaLeaf,
-  FaWater,
-  FaMountain,
-  FaCloudShowersHeavy,
-} from "react-icons/fa";
-import {
-  WiDaySunny,
-  WiRain,
-  WiCloudy,
-  WiSnow,
-  WiThunderstorm,
-  WiFog,
-  WiDayCloudy,
-  WiRainMix,
-} from "react-icons/wi";
-import Link from "next/link";
-import { getLocation } from "@/app/lib/getlocation";
+// --- UPDATED HELPER FUNCTION for Nominatim API ---
+const parseNominatimLocation = (nominatimData) => {
+  if (!nominatimData || !nominatimData.address) {
+    return "Unknown Location";
+  }
+  const addr = nominatimData.address;
+
+  // Prioritize the most specific name available
+  return (
+    addr.town ||
+    addr.county ||
+    addr.state_district ||
+    addr.state ||
+    "Bangladesh"
+  );
+};
 
 const WeatherPage = () => {
-  const [weather, setWeather] = useState(null);
+  const [coordinates, setCoordinates] = useState({
+    lat: 25.0015,
+    lon: 89.3227,
+  }); // Default to Bogura for example
+  const [locationName, setLocationName] = useState("Loading location...");
+
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
-  const getWeatherIcon = (iconCode, size = 24) => {
-    const iconMap = {
-      "01d": <WiDaySunny size={size} className="text-yellow-500" />,
-      "01n": <WiDaySunny size={size} className="text-yellow-300" />,
-      "02d": <WiDayCloudy size={size} className="text-blue-400" />,
-      "02n": <WiDayCloudy size={size} className="text-blue-300" />,
-      "03d": <WiCloudy size={size} className="text-gray-500" />,
-      "03n": <WiCloudy size={size} className="text-gray-400" />,
-      "04d": <WiCloudy size={size} className="text-gray-600" />,
-      "04n": <WiCloudy size={size} className="text-gray-500" />,
-      "09d": <WiRainMix size={size} className="text-blue-500" />,
-      "09n": <WiRainMix size={size} className="text-blue-400" />,
-      "10d": <WiRain size={size} className="text-blue-600" />,
-      "10n": <WiRain size={size} className="text-blue-500" />,
-      "11d": <WiThunderstorm size={size} className="text-purple-500" />,
-      "11n": <WiThunderstorm size={size} className="text-purple-400" />,
-      "13d": <WiSnow size={size} className="text-cyan-400" />,
-      "13n": <WiSnow size={size} className="text-cyan-300" />,
-      "50d": <WiFog size={size} className="text-gray-400" />,
-      "50n": <WiFog size={size} className="text-gray-300" />,
-    };
-    return (
-      iconMap[iconCode] || (
-        <WiDaySunny size={size} className="text-yellow-500" />
-      )
-    );
-  };
+  useEffect(() => {
+    // This effect will run once to get the user's location if they allow it,
+    // otherwise it will proceed with the default coordinates.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoordinates({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
+        },
+        () => {
+          // If user denies, fetch data for the default location
+          fetchDataForLocation(coordinates.lat, coordinates.lon);
+        }
+      );
+    } else {
+      // If browser doesn't support geolocation, fetch for default
+      fetchDataForLocation(coordinates.lat, coordinates.lon);
+    }
+  }, []);
 
-  console.log(weather);
+  // This effect runs whenever the coordinates change
+  useEffect(() => {
+    fetchDataForLocation(coordinates.lat, coordinates.lon);
+  }, [coordinates]);
 
-  const handleWeatherUpdate = async () => {
-    setError("");
-    setLoading(true);
-    setWeather(null);
+  const fetchDataForLocation = async (lat, lon) => {
+    const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+
+    // --- UPDATED URLs ---
+    const geocodingUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=bn`;
+    const currentConditionsUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${googleApiKey}&location.latitude=${lat}&location.longitude=${lon}`;
+    const forecastUrl = `https://weather.googleapis.com/v1/forecast/days:lookup?key=${googleApiKey}&location.latitude=${lat}&location.longitude=${lon}&days=7`;
 
     try {
-      // 📍 Get user location (GPS → fallback IP)
-      const location = await getLocation();
+      setLoading(true);
+      setError("");
 
-      if (!location) {
-        throw new Error("Unable to get location");
-      }
+      const [geoRes, currentRes, forecastRes] = await Promise.all([
+        axios.get(geocodingUrl),
+        axios.get(currentConditionsUrl),
+        axios.get(forecastUrl),
+      ]);
 
-      const { latitude, longitude } = location;
-console.log("📍 User Location:", latitude, longitude);
-      // 🌦️ Fetch weather using lat/lon
-      const data = await fetchWeather(latitude, longitude);
-
-      setWeather(data);
-    } catch (error) {
-      console.error("❌ Weather update failed:", error);
-      setError("Failed to fetch weather. Please try again later.");
+      // --- Use the new parser function ---
+      setLocationName(parseNominatimLocation(geoRes.data));
+      setCurrentWeather(currentRes.data);
+      setForecast(forecastRes.data);
+    } catch (err) {
+      setError("Failed to fetch location or weather data.");
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    handleWeatherUpdate();
-  }, []);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        {/* <ClipLoader color="#22c55e" size={60} /> */}
+        <p className="ml-4 text-lg">Fetching location and weather...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-center mt-10 text-red-500">{error}</div>;
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-cyan-100 p-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Enhanced Header with Icons */}
-        <header className="text-center mb-8 pt-8">
-          <div className="inline-flex items-center justify-center bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-2xl  mb-6">
-            <div className="bg-white/20 p-3 rounded-full mr-4">
-              <FaCloudSun className="text-3xl text-white" />
-            </div>
-            <h1 className="text-3xl md:text-3xl font-bold">
-              কৃষি আবহাওয়া সেবা
-            </h1>
-          </div>
-          <div className="flex justify-center items-center space-x-4 text-gray-600">
-            <FaLeaf className="text-green-500 text-xl" />
-            <p className="text-lg max-w-2xl">
-              আপনার এলাকার সঠিক আবহাওয়া তথ্য এবং কৃষি পরামর্শ পান
-            </p>
-            <FaTree className="text-green-500 text-xl" />
-          </div>
-        </header>
-
-        <main className="space-y-8">
-          {/* Location Card with Enhanced Icons */}
-          <section className="bg-white rounded-3xl  p-8 transform  transition-all ">
-            <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
-              <div className="flex items-center">
-                <div className="bg-gradient-to-br rounded-3xl from-green-500 to-emerald-600 p-4  mr-6 shadow-lg">
-                  <FaMapMarkerAlt className="text-white text-3xl" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800">
-                    {weather ? `${weather.city}, বাংলাদেশ` : "আপনার অবস্থান"}
-                  </h2>
-                  <p className="text-gray-600 mt-1 flex items-center">
-                    <FaTractor className="text-green-500 mr-2" />
-                    বর্তমান অবস্থান অনুযায়ী আবহাওয়া
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={handleWeatherUpdate}
-                disabled={loading}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-2xl transition-all duration-300 flex items-center shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:shadow-xl hover:scale-105"
-              >
-                {loading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
-                    <span className="font-semibold">লোড হচ্ছে...</span>
-                  </>
-                ) : (
-                  <>
-                    <FaSync className="mr-3 text-xl" />
-                    <span className="font-semibold">আপডেট করুন</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </section>
-
-          {loading && (
-            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl ">
-              <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-green-500 mb-6"></div>
-              <FaCloudSun className="text-6xl text-green-500 mb-4 animate-pulse" />
-              <p className="text-gray-700 text-xl font-semibold">
-                আবহাওয়ার তথ্য লোড হচ্ছে...
-              </p>
-              <p className="text-gray-500 mt-2">
-                অনুগ্রহ করে কিছুক্ষণ অপেক্ষা করুন
-              </p>
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-gradient-to-r from-red-50 to-orange-50 border-l-8 border-red-500 text-red-800 px-8 py-6 rounded-3xl ">
-              <div className="flex items-center">
-                <div className="bg-red-500 p-3 rounded-xl mr-4">
-                  <FaInfoCircle className="text-white text-2xl" />
-                </div>
-                <div>
-                  <p className="font-bold text-lg">তথ্য লোড করতে সমস্যা</p>
-                  <p className="text-red-700 mt-1">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && weather && (
-            <>
-              {/* Today's Weather - Enhanced with Icons */}
-              <section className="bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 text-white rounded-3xl  p-8 transform  transition-all ">
-                <div className="flex flex-col lg:flex-row justify-between items-start mb-8">
-                  <div className="flex-1">
-                    <div className="flex items-center mb-4">
-                      <div className="bg-white/20 p-3 rounded-2xl mr-4">
-                        <FaCalendarAlt className="text-2xl" />
-                      </div>
-                      <h3 className="text-3xl font-bold">আজকের আবহাওয়া</h3>
-                    </div>
-                    <p className="text-blue-100 text-lg ml-16">
-                      {new Date().toLocaleDateString("bn-BD", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
-                  </div>
-                  <div className="text-right mt-4 lg:mt-0">
-                    <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 inline-block">
-                      <p className="text-6xl font-bold">
-                        {Math.round(weather.today?.temp)}°C
-                      </p>
-                      <div className="flex items-center justify-center mt-3">
-                        {getWeatherIcon(weather.today.icon, 32)}
-                        <p className="text-blue-100 capitalize ml-3 text-xl font-semibold">
-                          {weather.today.weather}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Weather Metrics Grid with Icons */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-                  {[
-                    {
-                      icon: FaTint,
-                      label: "আর্দ্রতা",
-                      value: `${weather.today.humidity}%`,
-                      bg: "from-blue-400 to-cyan-500",
-                      iconColor: "text-blue-200",
-                    },
-                    {
-                      icon: FaWind,
-                      label: "বাতাস",
-                      value: `${weather.today.windSpeed || "N/A"} m/s`,
-                      bg: "from-green-400 to-emerald-500",
-                      iconColor: "text-green-200",
-                    },
-                    {
-                      icon: FaTachometerAlt,
-                      label: "চাপ",
-                      value: `${weather.today.pressure || "N/A"} hPa`,
-                      bg: "from-purple-400 to-indigo-500",
-                      iconColor: "text-purple-200",
-                    },
-                    {
-                      icon: FaTemperatureHigh,
-                      label: "অনুভূতি",
-                      value: `${Math.round(weather.today.feelsLike)}°C`,
-                      bg: "from-red-400 to-pink-500",
-                      iconColor: "text-red-200",
-                    },
-                  ].map((metric, index) => (
-                    <div
-                      key={index}
-                      className="bg-white/15 backdrop-blur-sm rounded-2xl p-5 text-center border border-white/20 hover:bg-white/25 transition-all "
-                    >
-                      <div
-                        className={`bg-gradient-to-br ${metric.bg} p-3 rounded-full w-16 h-16 mx-auto mb-3 flex items-center justify-center`}
-                      >
-                        <metric.icon className="text-2xl text-white" />
-                      </div>
-                      <p className="text-blue-100 text-sm mb-1">
-                        {metric.label}
-                      </p>
-                      <p className="text-2xl font-bold">{metric.value}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Weather Icon Display */}
-                <div className="flex justify-center mt-8">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-8">
-                    <div className="flex items-center justify-center">
-                      {getWeatherIcon(weather.today.icon, 120)}
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Weekly Forecast - Enhanced with Icons */}
-              <section className="bg-white rounded-3xl  p-8 ">
-                <div className="flex items-center mb-8">
-                  <div className="bg-gradient-to-br from-blue-500 to-cyan-600 p-4 rounded-2xl mr-4 shadow-lg">
-                    <FaCalendarAlt className="text-white text-2xl" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-800">
-                    সাপ্তাহিক পূর্বাভাস
-                  </h3>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                  {weather.weekly.map((day, index) => (
-                    <div
-                      key={index}
-                      className="bg-gradient-to-br from-gray-50 to-blue-50 hover:from-blue-50 hover:to-cyan-50 transition-all  rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-blue-300 hover:shadow-lg transform "
-                    >
-                      <p className="font-bold text-gray-700 mb-3 text-sm">
-                        {day.date}
-                      </p>
-                      <div className="bg-white rounded-xl p-3 mb-3 shadow-inner flex justify-center">
-                        {getWeatherIcon(day.icon, 48)}
-                      </div>
-                      <p className="text-xs capitalize text-gray-600 mb-2 font-medium">
-                        {day.weather}
-                      </p>
-                      <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full py-2 px-3">
-                        <span className="text-sm font-bold">
-                          {Math.round(day.temp)}°C
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Agriculture Advice - Enhanced with Icons */}
-              <section className="bg-white rounded-3xl  p-8 ">
-                <div className="flex items-center mb-8">
-                  <div className="bg-gradient-to-br from-emerald-500 to-green-600 p-4 rounded-2xl mr-4 shadow-lg">
-                    <FaSeedling className="text-white text-2xl" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-800">
-                    কৃষি পরামর্শ
-                  </h3>
-                </div>
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  {/* Today's Special Advice */}
-                  <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-6 border-2 border-emerald-200 hover:shadow-lg transition-all ">
-                    <div className="flex items-center mb-6">
-                      <div className="bg-emerald-500 p-3 rounded-xl mr-4 shadow-md">
-                        <FaInfoCircle className="text-white text-xl" />
-                      </div>
-                      <h4 className="text-xl font-bold text-emerald-800">
-                        আজকের বিশেষ পরামর্শ
-                      </h4>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 border border-emerald-100">
-                      <div className="flex items-start">
-                        <div className="mr-4 mt-1">
-                          {weather.today.temp > 30 ? (
-                            <FaSun className="text-orange-500 text-2xl" />
-                          ) : weather.today.temp < 20 ? (
-                            <FaSnowflake className="text-blue-400 text-2xl" />
-                          ) : (
-                            <FaCloudSun className="text-green-500 text-2xl" />
-                          )}
-                        </div>
-                        <p className="text-gray-700 leading-relaxed text-lg">
-                          {weather.today.temp > 30
-                            ? "🌡️ আজকের তাপমাত্রা বেশি থাকায় ফসলের সেচের পরিমাণ বাড়ান এবং বিকেল বেলায় সেচ দিন।"
-                            : weather.today.temp < 20
-                            ? "❄️ তাপমাত্রা কম থাকায় সকালে সেচ দেবেন না, বরং দুপুরে হালকা সেচ দিন।"
-                            : "🌤️ আবহাওয়া অনুকূল আছে, নিয়মিত সেচ ও পরিচর্যা চালিয়ে যান।"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* General Guidelines */}
-                  <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-6 border-2 border-cyan-200 hover:shadow-lg transition-all duration-300">
-                    <div className="flex items-center mb-6">
-                      <div className="bg-cyan-500 p-3 rounded-xl mr-4 shadow-md">
-                        <FaWater className="text-white text-xl" />
-                      </div>
-                      <h4 className="text-xl font-bold text-cyan-800">
-                        সাধারণ নির্দেশিকা
-                      </h4>
-                    </div>
-                    <div className="space-y-4">
-                      {[
-                        {
-                          icon: FaLeaf,
-                          text: "মাটির আর্দ্রতা পরীক্ষা করুন এবং প্রয়োজন অনুসারে সেচ দিন",
-                        },
-                        {
-                          icon: FaTree,
-                          text: "ফসলের রোগবালাই পর্যবেক্ষণ করুন",
-                        },
-                        { icon: FaSeedling, text: "জৈব সারের ব্যবহার বাড়ান" },
-                        { icon: FaTractor, text: "সময়মতো ফসল সংগ্রহ করুন" },
-                      ].map((item, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center bg-white rounded-lg p-4 border border-cyan-100 hover:shadow-md transition-all duration-200"
-                        >
-                          <div className="bg-cyan-100 p-2 rounded-lg mr-4">
-                            <item.icon className="text-cyan-600 text-lg" />
-                          </div>
-                          <span className="text-gray-700">{item.text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Additional Resources - Enhanced with Icons */}
-              <section className="bg-white rounded-3xl  p-8 border-l-8 border-amber-500">
-                <h3 className="text-2xl font-bold text-gray-800 mb-8 text-center">
-                  কৃষি সম্পদ
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200 hover:shadow-xl transition-all  transform ">
-                    <div className="flex items-center mb-4">
-                      <div className="bg-amber-500 p-3 rounded-xl mr-4 shadow-md">
-                        <FaBook className="text-white text-xl" />
-                      </div>
-                      <h4 className="font-bold text-amber-800 text-xl">
-                        কৃষি পরামর্শ
-                      </h4>
-                    </div>
-                    <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                      বাংলাদেশ কৃষি গবেষণা ইনস্টিটিউট থেকে সর্বশেষ কৃষি
-                      প্রযুক্তি ও আধুনিক চাষাবাদ পদ্ধতি সম্পর্কে জানুন।
-                    </p>
-                    <button className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300 flex items-center shadow-lg hover:scale-105">
-                      <FaBook className="mr-3" />
-                      বিস্তারিত জানুন
-                      <span className="ml-2 text-xl">→</span>
-                    </button>
-                  </div>
-
-                  <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border-2 border-purple-200 hover:shadow-xl transition-all  transform ">
-                    <div className="flex items-center mb-4">
-                      <div className="bg-purple-500 p-3 rounded-xl mr-4 shadow-md">
-                        <FaChartLine className="text-white text-xl" />
-                      </div>
-                      <h4 className="font-bold text-purple-800 text-xl">
-                        বাজার দর
-                      </h4>
-                    </div>
-                    <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                      সর্বশেষ ফসলের বাজার মূল্য, চাহিদা এবং বাজার সংবাদ সম্পর্কে
-                      আপডেট থাকুন এবং ভালো দামে বিক্রয়ের সুযোগ নিন।
-                    </p>
-                    <Link
-                      href={"/dashboard/market-price"}
-                      className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300 flex items-center shadow-lg hover:scale-105"
-                    >
-                      <FaShoppingCart className="mr-3" />
-                      বাজার দেখুন
-                      <span className="ml-2 text-xl">→</span>
-                    </Link>
-                  </div>
-                </div>
-              </section>
-            </>
-          )}
-        </main>
+    <div className="p-4 sm:p-6 lg:p-8 font-sans space-y-8">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-800">Weather & Advice</h1>
+        <p className="text-green-600">AI-powered suggestions for your farm</p>
       </div>
+
+      {/* Main Weather and Alert Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <CurrentWeather data={currentWeather} locationName={locationName} />
+        </div>
+        {/* You can create a dedicated Alert component */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+          <h3 className="font-bold text-yellow-600">Heavy Rain Warning</h3>
+          <p className="text-sm text-yellow-700 mt-2">
+            Risk of flooding in your area. Secure equipment and livestock.
+          </p>
+        </div>
+      </div>
+
+      {/* <AiSuggestions weatherData={{ currentWeather, forecast }} /> */}
+      <Forecast data={forecast} />
     </div>
   );
 };

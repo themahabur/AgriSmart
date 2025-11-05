@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { isValidImageUrl } from "@/lib/imageUtils";
 import Comments from "@/app/components/dashboard/blog/Comments";
 import {
   FaBookmark,
@@ -16,6 +15,7 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 import ShareModal from "@/app/components/dashboard/blog/BlogDetails/ShareModal";
 import FeaturedMedia from "@/app/components/dashboard/blog/BlogDetails/FeaturedMedia";
+import axiosInstance from "@/lib/axios";
 
 export default function BlogDetails() {
   const { slug } = useParams();
@@ -34,10 +34,8 @@ export default function BlogDetails() {
 
     const fetchBlog = async () => {
       try {
-        const res = await fetch(
-          `https://agri-smart-server.vercel.app/api/knowledge-hub/slug/${slug}`
-        );
-        const result = await res.json();
+        const response = await axiosInstance.get(`/knowledge-hub/slug/${slug}`);
+        const result = response.data;
 
         if (result?.data) {
           setBlog(result.data);
@@ -57,11 +55,11 @@ export default function BlogDetails() {
   useEffect(() => {
     const fetchSideBlogs = async () => {
       try {
-        const res = await fetch(`https://agri-smart-server.vercel.app/api/knowledge-hub`);
-        const allBlogs = await res.json();
+        const response = await axiosInstance.get("/knowledge-hub");
+        const allBlogs = response.data.data;
 
-        if (allBlogs?.data?.length) {
-          const sortedByPopularity = [...allBlogs.data]
+        if (allBlogs?.length) {
+          const sortedByPopularity = [...allBlogs]
             .filter((item) => item._id !== blog?._id)
             .sort((a, b) => (b.likes || 0) - (a.likes || 0));
 
@@ -103,15 +101,10 @@ export default function BlogDetails() {
     if (!blog?._id) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/knowledge-hub/${blog._id}/like`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }
+      const response = await axiosInstance.post(
+        `/knowledge-hub/${blog._id}/like`
       );
-
-      const data = await res.json();
+      const data = response.data;
 
       if (data.success) {
         setBlog((prev) => ({
@@ -131,15 +124,10 @@ export default function BlogDetails() {
     if (!blog?._id) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/knowledge-hub/${blog._id}/bookmark`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }
+      const response = await axiosInstance.post(
+        `/knowledge-hub/${blog._id}/bookmark`
       );
-
-      const data = await res.json();
+      const data = response.data;
 
       if (data.success) {
         setBlog((prev) => ({

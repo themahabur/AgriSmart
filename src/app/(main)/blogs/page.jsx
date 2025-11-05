@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { isValidImageUrl } from "@/lib/imageUtils";
+import axiosInstance from "@/lib/axios";
 
 export default function Home() {
   const [featured, setFeatured] = useState(null);
@@ -13,10 +14,10 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          "https://agri-smart-server.vercel.app/api/knowledge-hub?limit=10&status=published"
+        const response = await axiosInstance.get(
+          "/knowledge-hub?limit=10&status=published"
         );
-        const result = await res.json();
+        const result = response.data;
 
         const blogs = result.data || result;
 
