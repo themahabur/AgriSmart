@@ -6,6 +6,7 @@ import Forecast from "@/app/components/dashboard/weather/Forecast";
 import { generateWeatherAlert } from "@/app/components/utils/weatherAlert";
 import WeatherAlert from "@/app/components/dashboard/weather/WeatherAlert";
 import { getLocation } from "@/app/lib/getlocation";
+import Loading from "@/app/components/loading/Loading";
 
 // --- UPDATED HELPER FUNCTION for Nominatim API ---
 const parseNominatimLocation = (nominatimData) => {
@@ -82,12 +83,7 @@ const WeatherPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        {/* <ClipLoader color="#22c55e" size={60} /> */}
-        <p className="ml-4 text-lg">Fetching location and weather...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
