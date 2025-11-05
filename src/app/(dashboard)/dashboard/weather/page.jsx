@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import CurrentWeather from "@/app/components/dashboard/weather/CurrentWeather";
 import Forecast from "@/app/components/dashboard/weather/Forecast";
-// import { ClipLoader } from "react-spinners";
+import { generateWeatherAlert } from "@/app/components/utils/weatherAlert";
+import WeatherAlert from "@/app/components/dashboard/weather/WeatherAlert";
 
 // --- UPDATED HELPER FUNCTION for Nominatim API ---
 const parseNominatimLocation = (nominatimData) => {
@@ -33,6 +34,7 @@ const WeatherPage = () => {
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     // This effect will run once to get the user's location if they allow it,
@@ -79,10 +81,16 @@ const WeatherPage = () => {
         axios.get(forecastUrl),
       ]);
 
+      const generatedAlert = generateWeatherAlert(
+        currentRes.data,
+        forecastRes.data
+      );
+
       // --- Use the new parser function ---
       setLocationName(parseNominatimLocation(geoRes.data));
       setCurrentWeather(currentRes.data);
       setForecast(forecastRes.data);
+      setAlert(generatedAlert);
     } catch (err) {
       setError("Failed to fetch location or weather data.");
       console.error(err);
@@ -117,13 +125,7 @@ const WeatherPage = () => {
         <div className="lg:col-span-2">
           <CurrentWeather data={currentWeather} locationName={locationName} />
         </div>
-        {/* You can create a dedicated Alert component */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 flex flex-col items-center justify-center text-center">
-          <h3 className="font-bold text-yellow-600">Heavy Rain Warning</h3>
-          <p className="text-sm text-yellow-700 mt-2">
-            Risk of flooding in your area. Secure equipment and livestock.
-          </p>
-        </div>
+        <WeatherAlert alert={alert} />
       </div>
 
       {/* <AiSuggestions weatherData={{ currentWeather, forecast }} /> */}
