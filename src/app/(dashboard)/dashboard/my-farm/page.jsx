@@ -155,34 +155,9 @@ const MyFarmPage = () => {
     try {
       setLoading(true);
 
-      const farmPayload = {
-        userEmail: session?.user?.email,
-        name: farmData.name,
-        location: farmData.location,
-        sizeAcre: parseFloat(farmData.size) || 0,
-        coordinates: { latitude: 0, longitude: 0 },
-        cropDetails: {
-          type: farmData.cropType,
-          variety: farmData.cropVariety,
-          plantingDate: farmData.plantingDate,
-        },
-        soilDetails: {
-          type: farmData.soilType,
-          pH: parseFloat(farmData.soilPH) || 0,
-          nutrients: "অজানা",
-        },
-        irrigation: {
-          source: farmData.irrigationSource,
-          lastDate: new Date().toISOString().split("T")[0],
-          tubeWellDepth: parseInt(farmData.tubeWellDepth) || null,
-        },
-        pestAlert: false,
-        organicPractices: farmData.organicPractices,
-      };
+      if (!farmData?.userEmail) throw new Error("User email missing");
 
-      if (!farmPayload?.userEmail) throw new Error("User email missing");
-
-      const res = await axiosInstance.post("/farms", farmPayload);
+      const res = await axiosInstance.post("/farms", farmData);
       const newFarm = res.data.data || res.data;
       const updatedFarms = [newFarm, ...farms];
       setFarms(updatedFarms);
