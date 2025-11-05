@@ -291,86 +291,12 @@ const Dashboard = () => {
             <RecentActivities />
 
             {/* Agricultural Tips */}
-            {/* <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                <FaLeaf className="mr-2 text-green-600" />
-                আজকের টিপস
-              </h2>
-              <div className="space-y-3">
-                <div className="bg-white rounded-lg p-3 border border-green-100">
-                  <h3 className="font-medium text-green-800 mb-1">
-                    সেচের সময়
-                  </h3>
-                  <p className="text-sm text-gray-700">
-                    অক্টোবর মাসে ধানের ক্ষেতে নিয়মিত সেচ দিন এবং মাটির আর্দ্রতা
-                    বজায় রাখুন।
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-green-100">
-                  <h3 className="font-medium text-green-800 mb-1">
-                    কীটপতঙ্গ নিয়ন্ত্রণ
-                  </h3>
-                  <p className="text-sm text-gray-700">
-                    শীতকালীন সবজির জন্য জৈব কীটনাশক ব্যবহার করুন। রাসায়নিক
-                    স্প্রে এড়িয়ে চলুন।
-                  </p>
-                </div>
-              </div>
-              <Link
-                href="/dashboard/blog"
-                className="block mt-4 text-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
-              >
-                আরও টিপস পড়ুন
-              </Link>
-            </div> */}
+            
           </div>
         </div>
 
-        {/* Bottom Action Cards */}
-        {/* <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Link
-            href="/dashboard/market-price"
-            className="group bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl p-6 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <FaChartLine className="text-2xl" />
-              <HiOutlineChartBar className="text-3xl opacity-20" />
-            </div>
-            <h3 className="text-lg font-bold mb-2">বাজার দাম চেক করুন</h3>
-            <p className="text-green-100 text-sm">
-              সর্বশেষ ফসলের দাম জানুন এবং বিক্রির সঠিক সময় নির্ধারণ করুন।
-            </p>
-          </Link>
-
-          <Link
-            href="/dashboard/ai-chatbot"
-            className="group bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl p-6 hover:from-purple-600 hover:to-pink-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <FaRobot className="text-2xl" />
-              <FaRobot className="text-3xl opacity-20" />
-            </div>
-            <h3 className="text-lg font-bold mb-2">এআই সহায়তা নিন</h3>
-            <p className="text-purple-100 text-sm">
-              কৃষি বিষয়ক যেকোনো প্রশ্নের তাৎক্ষণিক উত্তর পান আমাদের স্মার্ট বট
-              থেকে।
-            </p>
-          </Link>
-
-          <Link
-            href="/dashboard/community"
-            className="group bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl p-6 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <FaUsers className="text-2xl" />
-              <FaUsers className="text-3xl opacity-20" />
-            </div>
-            <h3 className="text-lg font-bold mb-2">কমিউনিটিতে যোগ দিন</h3>
-            <p className="text-blue-100 text-sm">
-              অন্যান্য কৃষকদের সাথে অভিজ্ঞতা শেয়ার করুন এবং নতুন কিছু শিখুন।
-            </p>
-          </Link>
-        </div> */}
+        
+        
       </div>
     </div>
   );
