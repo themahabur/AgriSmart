@@ -5,6 +5,8 @@ import CurrentWeather from "@/app/components/dashboard/weather/CurrentWeather";
 import Forecast from "@/app/components/dashboard/weather/Forecast";
 import { generateWeatherAlert } from "@/app/components/utils/weatherAlert";
 import WeatherAlert from "@/app/components/dashboard/weather/WeatherAlert";
+import { getLocation } from "@/app/lib/getlocation";
+import Loading from "@/app/components/loading/Loading";
 
 // --- UPDATED HELPER FUNCTION for Nominatim API ---
 const parseNominatimLocation = (nominatimData) => {
@@ -24,10 +26,6 @@ const parseNominatimLocation = (nominatimData) => {
 };
 
 const WeatherPage = () => {
-  const [coordinates, setCoordinates] = useState({
-    lat: 25.0015,
-    lon: 89.3227,
-  }); // Default to Bogura for example
   const [locationName, setLocationName] = useState("Loading location...");
 
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -36,40 +34,25 @@ const WeatherPage = () => {
   const [error, setError] = useState("");
   const [alert, setAlert] = useState(null);
 
-  useEffect(() => {
-    // This effect will run once to get the user's location if they allow it,
-    // otherwise it will proceed with the default coordinates.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCoordinates({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-        },
-        () => {
-          // If user denies, fetch data for the default location
-          fetchDataForLocation(coordinates.lat, coordinates.lon);
-        }
-      );
-    } else {
-      // If browser doesn't support geolocation, fetch for default
-      fetchDataForLocation(coordinates.lat, coordinates.lon);
-    }
-  }, []);
-
   // This effect runs whenever the coordinates change
   useEffect(() => {
-    fetchDataForLocation(coordinates.lat, coordinates.lon);
-  }, [coordinates]);
+    fetchDataForLocation();
+  }, []);
 
   const fetchDataForLocation = async (lat, lon) => {
     const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 
+    const location = await getLocation();
+    if (!location) {
+      throw new Error("Unable to get location");
+    }
+
+    const { latitude, longitude } = location;
+
     // --- UPDATED URLs ---
-    const geocodingUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=bn`;
-    const currentConditionsUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${googleApiKey}&location.latitude=${lat}&location.longitude=${lon}`;
-    const forecastUrl = `https://weather.googleapis.com/v1/forecast/days:lookup?key=${googleApiKey}&location.latitude=${lat}&location.longitude=${lon}&days=7`;
+    const geocodingUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=bn`;
+    const currentConditionsUrl = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${googleApiKey}&location.latitude=${latitude}&location.longitude=${longitude}`;
+    const forecastUrl = `https://weather.googleapis.com/v1/forecast/days:lookup?key=${googleApiKey}&location.latitude=${latitude}&location.longitude=${longitude}&days=7`;
 
     try {
       setLoading(true);
@@ -100,12 +83,7 @@ const WeatherPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        {/* <ClipLoader color="#22c55e" size={60} /> */}
-        <p className="ml-4 text-lg">Fetching location and weather...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -116,8 +94,8 @@ const WeatherPage = () => {
     <div className="p-4 sm:p-6 lg:p-8 font-sans space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-800">Weather & Advice</h1>
-        <p className="text-green-600">AI-powered suggestions for your farm</p>
+        <h1 className="text-3xl font-bold text-gray-800">আবহাওয়া ও পরামর্শ</h1>
+        <p className="text-green-600">আপনার খামারের জন্য AI-চালিত পরামর্শ</p>
       </div>
 
       {/* Main Weather and Alert Section */}
