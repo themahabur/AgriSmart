@@ -193,7 +193,7 @@ const Dashboard = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           {/* Left Column - Today's Tasks & Quick Tools */}
           <div className="lg:col-span-2 space-y-6">
             {/* Today's Tasks */}
@@ -205,7 +205,7 @@ const Dashboard = () => {
                 <FaTractor className="mr-2 text-green-600" />
                 দ্রুত প্রবেশ
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {quickTools.map((tool, index) => (
                   <Link
                     key={index}
@@ -233,7 +233,7 @@ const Dashboard = () => {
           <div className="space-y-6">
             {/* Weather Widget */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-4  text-center">
+              <h2 className="text-lg font-bold text-gray-800 mb-4 text-center">
                 আজকের আবহাওয়া
               </h2>
               {weatherData ? (
@@ -287,7 +287,7 @@ const Dashboard = () => {
               )}
             </div>
 
-            {/* <RecentActivities /> */}
+            {/* Recent Activities */}
             <RecentActivities />
 
             {/* Agricultural Tips */}
