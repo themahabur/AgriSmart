@@ -682,6 +682,14 @@ const AddFarmModal = ({
             latitude: 24.4365,
             longitude: 88.9741,
           },
+          harvestSummary: {
+            totalCost: formData.totalCost ? parseFloat(formData.totalCost) : 0,
+            salesAmount: formData.salesAmount
+              ? parseFloat(formData.salesAmount)
+              : 0,
+            yield: formData.yield ? parseFloat(formData.yield) : 0,
+            yieldUnit: formData.yieldUnit || "মন",
+          },
           userEmail: userEmail || "",
         };
 
@@ -693,9 +701,10 @@ const AddFarmModal = ({
         handleClose();
       } catch (error) {
         console.error("Submit error:", error);
-        const errorMessage = error.response?.data?.message || 
-                           error.message || 
-                           "ডেটা সেভ করতে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          "ডেটা সেভ করতে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
         alert(errorMessage);
       }
     } else {
