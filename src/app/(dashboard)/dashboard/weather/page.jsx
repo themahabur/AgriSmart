@@ -116,8 +116,8 @@ const WeatherPage = () => {
     <div className="p-4 sm:p-6 lg:p-8 font-sans space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-800">Weather & Advice</h1>
-        <p className="text-green-600">AI-powered suggestions for your farm</p>
+        <h1 className="text-3xl font-bold text-gray-800">আবহাওয়া ও পরামর্শ</h1>
+        <p className="text-green-600">আপনার খামারের জন্য AI-চালিত পরামর্শ</p>
       </div>
 
       {/* Main Weather and Alert Section */}
