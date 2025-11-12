@@ -41,7 +41,10 @@ const AddActivityModal = ({
                 placeholder="বিবরণ"
                 value={newActivity.description}
                 onChange={(e) =>
-                  setNewActivity({ ...newActivity, description: e.target.value })
+                  setNewActivity({
+                    ...newActivity,
+                    description: e.target.value,
+                  })
                 }
                 rows="3"
                 className="w-full px-3 py-2.5 bg-gray-50 text-gray-800 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500 focus:bg-white transition-colors resize-none"
@@ -64,17 +67,28 @@ const AddActivityModal = ({
             {/* ফার্ম নির্বাচন */}
             <div>
               <select
-                value={newActivity.farmName}
-                onChange={(e) =>
-                  setNewActivity({ ...newActivity, farmName: e.target.value })
-                }
+                value={newActivity.farmId}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const selectedFarm = farms.find(
+                    (farm) => farm.id === selectedId
+                  );
+                  setNewActivity({
+                    ...newActivity,
+                    farmId: selectedId,
+                    farmName: selectedFarm?.name || "",
+                  });
+                }}
                 required
                 className="w-full px-3 py-2.5 bg-gray-50 text-gray-800 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500 focus:bg-white transition-colors"
               >
                 <option value="">ফার্ম নির্বাচন করুন</option>
                 {farms.length > 0 ? (
                   farms.map((farm) => (
-                    <option key={farm._id || farm.id} value={farm.name}>
+                    <option
+                      key={farm._id || farm.id}
+                      value={farm.id || farm._id}
+                    >
                       {farm.name}
                     </option>
                   ))
