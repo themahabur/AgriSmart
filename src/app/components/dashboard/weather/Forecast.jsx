@@ -16,15 +16,13 @@ const Forecast = ({ data }) => {
 
   // --- DYNAMIC TITLE SOLUTION ---
   // The title now uses the actual length of the returned forecast array.
-  const forecastLength = data.forecastDays.length;
+  const forecastLength = data.forecastDays?.length;
   const title = `${forecastLength}-দিনের পূর্বাভাস`;
 
   return (
     <div>
       <h2 className="text-2xl font-bold text-gray-800 mb-4">{title}</h2>
-      <div
-        className={`grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-${forecastLength} gap-4`}
-      >
+      <div className={`grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4`}>
         {data.forecastDays.map((day, index) => {
           const date = new Date(
             day.displayDate.year,

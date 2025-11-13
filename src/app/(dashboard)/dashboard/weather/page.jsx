@@ -7,6 +7,7 @@ import { generateWeatherAlert } from "@/app/components/utils/weatherAlert";
 import WeatherAlert from "@/app/components/dashboard/weather/WeatherAlert";
 import { getLocation } from "@/app/lib/getlocation";
 import Loading from "@/app/components/loading/Loading";
+import AiSuggestions from "@/app/components/dashboard/weather/AiSuggestions";
 
 // --- UPDATED HELPER FUNCTION for Nominatim API ---
 const parseNominatimLocation = (nominatimData) => {
@@ -106,7 +107,8 @@ const WeatherPage = () => {
         <WeatherAlert alert={alert} />
       </div>
 
-      {/* <AiSuggestions weatherData={{ currentWeather, forecast }} /> */}
+      <AiSuggestions weatherData={{ currentWeather, forecast }} />
+
       <Forecast data={forecast} />
     </div>
   );

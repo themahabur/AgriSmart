@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import { FaCheckCircle, FaTimesCircle, FaLightbulb } from "react-icons/fa";
 import Link from "next/link";
-import { ClipLoader } from "react-spinners";
+// import { ClipLoader } from "react-spinners";
 
 const suggestionStyles = {
   Recommended: { icon: <FaCheckCircle />, color: "green" },
@@ -49,10 +49,7 @@ const AiSuggestions = ({ weatherData, farmId }) => {
           requestBody.farmId = farmId;
         }
 
-        const res = await axiosInstance.post(
-          "/api/ai-suggestions",
-          requestBody
-        );
+        const res = await axiosInstance.post("/ai-suggestions", requestBody);
         setSuggestions(res.data.data);
       } catch (err) {
         if (err.response && err.response.status === 404) {
@@ -73,7 +70,7 @@ const AiSuggestions = ({ weatherData, farmId }) => {
       <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">কৃষি পরামর্শ</h2>
         <div className="text-center p-8 bg-white rounded-2xl border">
-          <ClipLoader color="#22c55e" />
+          {/* <ClipLoader color="#22c55e" /> */}
           <p className="mt-4 text-gray-600">
             আপনার খামারের জন্য পরামর্শ তৈরি করা হচ্ছে...
           </p>
