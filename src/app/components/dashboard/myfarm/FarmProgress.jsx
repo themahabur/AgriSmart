@@ -30,6 +30,7 @@ const FarmProgress = ({ farms = [] }) => {
     date: "",
     priority: "medium",
     farmName: "",
+    farmId: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -136,6 +137,7 @@ const FarmProgress = ({ farms = [] }) => {
       priority: newActivity.priority,
       date: newActivity.date,
       farmName: newActivity.farmName,
+      farmId: newActivity.farmId,
     };
 
     try {
@@ -268,9 +270,7 @@ const FarmProgress = ({ farms = [] }) => {
                           </h3>
                           <p
                             className={`text-sm mb-2 ${
-                              isCompleted
-                                ? "text-green-600"
-                                : "text-gray-600"
+                              isCompleted ? "text-green-600" : "text-gray-600"
                             }`}
                           >
                             {activity.des}
@@ -279,9 +279,7 @@ const FarmProgress = ({ farms = [] }) => {
                           <div className="flex flex-wrap items-center gap-3 text-sm">
                             <span
                               className={`flex items-center ${
-                                isCompleted
-                                  ? "text-green-500"
-                                  : "text-gray-500"
+                                isCompleted ? "text-green-500" : "text-gray-500"
                               }`}
                             >
                               <FaCalendarAlt className="mr-1.5" />
@@ -295,8 +293,7 @@ const FarmProgress = ({ farms = [] }) => {
                                 )}`}
                               >
                                 <PriorityIcon className="mr-1.5" />
-                                {priorityMap[activity.priority] ||
-                                  "মাধ্যমিক"}
+                                {priorityMap[activity.priority] || "মাধ্যমিক"}
                               </span>
                             )}
 
