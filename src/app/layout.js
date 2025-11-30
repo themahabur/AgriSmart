@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 
 const hindSiliguri = Hind_Siliguri({
   weight: ["400", "700"],
-  subsets: ["bengali"], // "bengali" subset ব্যবহার করো
+  subsets: ["bengali"],
   variable: "--font-hind-siliguri",
 });
 
