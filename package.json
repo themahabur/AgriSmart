@@ -9,10 +9,27 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
+    "@sindresorhus/slugify": "^3.0.0",
+    "@tiptap/extension-link": "^3.6.5",
+    "@tiptap/extension-placeholder": "^3.6.5",
+    "@tiptap/pm": "^3.6.5",
+    "@tiptap/react": "^3.6.5",
+    "@tiptap/starter-kit": "^3.6.5",
+    "axios": "^1.12.2",
+    "cloudinary": "^2.7.0",
+    "date-fns": "^4.1.0",
     "next": "15.5.3",
+    "next-auth": "^4.24.11",
     "react": "19.1.0",
+    "react-countup": "^6.0.0-2",
     "react-dom": "19.1.0",
+    "react-hook-form": "^7.65.0",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
+    "recharts": "^3.2.1",
+    "socket.io-client": "^4.8.1",
     "swiper": "^12.0.1"
   },
   "devDependencies": {
