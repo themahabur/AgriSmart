@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 import {
   FaArrowLeft,
   FaMapMarkerAlt,
@@ -164,7 +165,7 @@ const FarmDetailsPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Farm Details Card */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div className="lg:col-span-2 bg-white rounded-xl p-6 border border-gray-200">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
             <FaSeedling className="mr-2 text-green-600" />
             ফার্মের বিস্তারিত তথ্য
@@ -292,8 +293,8 @@ const FarmDetailsPage = () => {
         </div>
 
         {/* AI Suggestion Card */}
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 h-fit">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+        <div className="bg-white rounded-xl p-6 border border-gray-200 flex flex-col" style={{ height: 'fit-content', maxHeight: aiSuggestion ? '600px' : 'fit-content' }}>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center flex-shrink-0">
             <FaLightbulb className="mr-2 text-yellow-500" />
             AI পরামর্শ
           </h2>
@@ -317,14 +318,16 @@ const FarmDetailsPage = () => {
               )}
             </button>
           ) : (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                {aiSuggestion}
-              </p>
+            <div className="flex flex-col flex-1 overflow-hidden">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 overflow-y-auto flex-1">
+                <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none">
+                  <ReactMarkdown>{aiSuggestion}</ReactMarkdown>
+                </div>
+              </div>
               <button
                 onClick={handleGetAISuggestion}
                 disabled={loadingAI}
-                className="mt-4 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 text-sm flex items-center"
+                className="mt-4 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 text-sm flex items-center justify-center flex-shrink-0"
               >
                 {loadingAI ? (
                   <>
@@ -341,7 +344,7 @@ const FarmDetailsPage = () => {
       </div>
 
       {/* Completed Tasks Section */}
-      <div className="mt-6 bg-white rounded-xl shadow-md p-6 border border-gray-200">
+      <div className="mt-6 bg-white rounded-xl p-6 border border-gray-200">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
           <FaCheckCircle className="mr-2 text-green-600" />
           সম্পন্ন কাজসমূহ ({completedTasks.length})
