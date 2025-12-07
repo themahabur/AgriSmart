@@ -1,9 +1,51 @@
 export async function POST(req) {
   try {
-    const { question } = await req.json();
+    const { question, farmDetails, completedTasks } = await req.json();
 
     if (!question) {
       return Response.json({ error: "No question provided" }, { status: 400 });
+    }
+
+    // Build context-aware prompt
+    let contextPrompt = question;
+
+    if (farmDetails) {
+      contextPrompt += `\n\nফার্মের তথ্য:\n`;
+      contextPrompt += `- নাম: ${farmDetails.name}\n`;
+      contextPrompt += `- অবস্থান: ${farmDetails.location}\n`;
+      contextPrompt += `- আকার: ${farmDetails.size} একর\n`;
+      contextPrompt += `- ফসল: ${farmDetails.crop}\n`;
+
+      if (farmDetails.variety) {
+        contextPrompt += `- জাত: ${farmDetails.variety}\n`;
+      }
+
+      if (farmDetails.plantingDate) {
+        contextPrompt += `- রোপণের তারিখ: ${new Date(farmDetails.plantingDate).toLocaleDateString('bn-BD')}\n`;
+      }
+
+      if (farmDetails.soilType) {
+        contextPrompt += `- মাটির ধরন: ${farmDetails.soilType}\n`;
+      }
+
+      if (farmDetails.soilPH) {
+        contextPrompt += `- মাটির pH: ${farmDetails.soilPH}\n`;
+      }
+
+      if (farmDetails.irrigationSource) {
+        contextPrompt += `- সেচের উৎস: ${farmDetails.irrigationSource}\n`;
+      }
+
+      if (farmDetails.organicPractices !== undefined) {
+        contextPrompt += `- অর্গানিক চাষ: ${farmDetails.organicPractices ? 'হ্যাঁ' : 'না'}\n`;
+      }
+    }
+
+    if (completedTasks && completedTasks.length > 0) {
+      contextPrompt += `\n\nসম্পন্ন কাজসমূহ:\n`;
+      completedTasks.forEach((task, index) => {
+        contextPrompt += `${index + 1}. ${task.title} - ${task.description} (${task.date})\n`;
+      });
     }
 
     // OpenRouter API কল
@@ -21,9 +63,9 @@ export async function POST(req) {
             {
               role: "system",
               content:
-                "You are AgriBot, a smart Bangla-speaking AI assistant for AgriSmart. Help farmers by giving clear, short, and useful farming advice in Bangla.",
+                "You are AgriBot, a smart Bangla-speaking AI assistant for AgriSmart. You are an expert in Bangladesh agriculture. Help farmers by giving clear, practical, and useful farming advice in Bangla (Bengali language). When given farm details and completed tasks, provide specific suggestions based on that context. Consider the crop type, soil conditions, location, and completed activities to give personalized recommendations. Always respond in Bengali language.",
             },
-            { role: "user", content: question },
+            { role: "user", content: contextPrompt },
           ],
         }),
       }
