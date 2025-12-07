@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import { FaCheckCircle, FaTimesCircle, FaLightbulb } from "react-icons/fa";
 import Link from "next/link";
-// import { ClipLoader } from "react-spinners";
 
 const suggestionStyles = {
   Recommended: { icon: <FaCheckCircle />, color: "green" },
@@ -69,8 +68,7 @@ const AiSuggestions = ({ weatherData, farmId }) => {
     return (
       <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">কৃষি পরামর্শ</h2>
-        <div className="text-center p-8 bg-white rounded-2xl border">
-          {/* <ClipLoader color="#22c55e" /> */}
+        <div className="text-center p-8 bg-white rounded-2xl border border-gray-200">
           <p className="mt-4 text-gray-600">
             আপনার খামারের জন্য পরামর্শ তৈরি করা হচ্ছে...
           </p>
