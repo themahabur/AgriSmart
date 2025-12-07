@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import {
   FaMapMarkerAlt,
   FaRulerCombined,
@@ -11,6 +12,7 @@ import {
   FaCheckCircle,
   FaPause,
   FaCalendarAlt as FaPlanning,
+  FaInfoCircle,
 } from "react-icons/fa";
 
 const FarmCard = ({ farm, onEdit, onDelete }) => {
@@ -139,6 +141,14 @@ const FarmCard = ({ farm, onEdit, onDelete }) => {
 
         {/* Action Buttons */}
         <div className="flex space-x-2 ml-4">
+          <Link href={`/dashboard/my-farm/${farm._id || farm.id}`}>
+            <button
+              title="বিস্তারিত দেখুন"
+              className="text-green-600 hover:text-green-800 p-2 hover:bg-green-50 rounded-md transition-colors"
+            >
+              <FaInfoCircle />
+            </button>
+          </Link>
           <button
             title="সম্পাদনা করুন"
             onClick={() => onEdit && onEdit(farm)}
